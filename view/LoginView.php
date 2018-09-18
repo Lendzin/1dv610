@@ -12,6 +12,10 @@ class LoginView {
 
 	
 
+	// public function userWantsToLogin() : bool {
+	// 	return isset($_POST[self::$name]);
+	// 	echo $_POST[self::$name];
+    // }
 	/**
 	 * Create HTTP response
 	 *
@@ -21,6 +25,14 @@ class LoginView {
 	 */
 	public function response() {
 		$message = '';
+
+		if ($this->triedLogingIn()) {
+			if ($this->getRequestUserName() == null) {
+				$message = 'Username is missing';
+			} else if ( $this->getRequestPassword() == null) {
+				$message ='Password is missing';
+			}
+		}		
 		
 		$response = $this->generateLoginFormHTML($message);
 		//$response .= $this->generateLogoutButtonHTML($message);
@@ -47,6 +59,7 @@ class LoginView {
 	* @return  void, BUT writes to standard output!
 	*/
 	private function generateLoginFormHTML($message) {
+
 		return '
 			<form method="post" > 
 				<fieldset>
@@ -54,7 +67,7 @@ class LoginView {
 					<p id="' . self::$messageId . '">' . $message . '</p>
 					
 					<label for="' . self::$name . '">Username :</label>
-					<input type="text" id="' . self::$name . '" name="' . self::$name . '" value="" />
+					<input type="text" id="' . self::$name . '" name="' . self::$name . '" value="' . $this->getRequestUserName() . '" />
 
 					<label for="' . self::$password . '">Password :</label>
 					<input type="password" id="' . self::$password . '" name="' . self::$password . '" />
@@ -70,7 +83,27 @@ class LoginView {
 	
 	//CREATE GET-FUNCTIONS TO FETCH REQUEST VARIABLES
 	private function getRequestUserName() {
-		//RETURN REQUEST VARIABLE: USERNAME
+		if (isset($_POST[self::$name])) {
+			return $_POST[self::$name];
+		} else {
+			return null;
+		}
 	}
 	
+	private function triedLogingIn() : bool {
+		return isset($_POST[self::$login]);
+	}
+
+	private function getRequestPassword() {
+		if (isset($_POST[self::$password])) {
+			return $_POST[self::$password];
+		} else {
+			return null;
+		}
+	}
+
+	private function stayLoggedInStatus() : bool{
+		return isset($_POST[self::$keep]);	
+	}
+
 }
