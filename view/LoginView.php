@@ -10,12 +10,6 @@ class LoginView {
 	private static $keep = 'LoginView::KeepMeLoggedIn';
 	private static $messageId = 'LoginView::Message';
 
-	
-
-	// public function userWantsToLogin() : bool {
-	// 	return isset($_POST[self::$name]);
-	// 	echo $_POST[self::$name];
-    // }
 	/**
 	 * Create HTTP response
 	 *
@@ -31,6 +25,12 @@ class LoginView {
 				$message = 'Username is missing';
 			} else if ( $this->getRequestPassword() == null) {
 				$message ='Password is missing';
+			} else {
+				if ($this->checkLoginInformation()) {
+					$message = 'User logged in.';
+				} else {
+					$message = "Wrong name or password";
+				}
 			}
 		}		
 		
@@ -89,7 +89,7 @@ class LoginView {
 			return null;
 		}
 	}
-	
+
 	private function triedLogingIn() : bool {
 		return isset($_POST[self::$login]);
 	}
@@ -104,6 +104,17 @@ class LoginView {
 
 	private function stayLoggedInStatus() : bool{
 		return isset($_POST[self::$keep]);	
+	}
+
+	private function checkLoginInformation() {
+		$settings = new AppSettings();
+		$sqlConnection = mysqli_connect($settings->localhost, $settings->user, $settings->password, $settings->database, $settings->port);
+		$query = "SELECT * FROM users WHERE username = " . "'" . $this->getRequestUserName() . "'" ;
+		$result =  mysqli_query($sqlConnection, $query);
+		$row = mysqli_fetch_assoc($result);
+		if ($row["password"] == $this->getRequestPassword()) {
+			return true;
+		} return false;
 	}
 
 }
