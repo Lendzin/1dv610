@@ -84,6 +84,10 @@ class LoginView {
 		return isset($_POST[self::$login]);
 	}
 
+	public function triedLogingOut() : bool {
+		return isset($_POST[self::$logout]);
+	}
+
 	public function getRequestPassword() {
 		if (isset($_POST[self::$password])) {
 			return $_POST[self::$password];
