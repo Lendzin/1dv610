@@ -1,5 +1,5 @@
 <?php
-
+namespace view;
 class LoginView {
 	private static $login = 'LoginView::Login';
 	private static $logout = 'LoginView::Logout';
@@ -17,25 +17,15 @@ class LoginView {
 	 *
 	 * @return  void BUT writes to standard output and cookies!
 	 */
-	public function response() {
-		$message = '';
+	public function response($newMessage, $userLoggedIn) {
+		$message = $newMessage;
 
-		if ($this->triedLogingIn()) {
-			if ($this->getRequestUserName() == null) {
-				$message = 'Username is missing';
-			} else if ( $this->getRequestPassword() == null) {
-				$message ='Password is missing';
-			} else {
-				if ($this->checkLoginInformation()) {
-					$message = 'User logged in.';
-				} else {
-					$message = "Wrong name or password";
-				}
-			}
-		}		
-		
-		$response = $this->generateLoginFormHTML($message);
-		//$response .= $this->generateLogoutButtonHTML($message);
+		$response = '';
+		if ($userLoggedIn) {
+			$response .= $this->generateLogoutButtonHTML($message);
+		} else {
+			$response = $this->generateLoginFormHTML($message);
+		}
 		return $response;
 	}
 
@@ -82,7 +72,7 @@ class LoginView {
 	}
 	
 	//CREATE GET-FUNCTIONS TO FETCH REQUEST VARIABLES
-	private function getRequestUserName() {
+	public function getRequestUserName() {
 		if (isset($_POST[self::$name])) {
 			return $_POST[self::$name];
 		} else {
@@ -90,11 +80,11 @@ class LoginView {
 		}
 	}
 
-	private function triedLogingIn() : bool {
+	public function triedLogingIn() : bool {
 		return isset($_POST[self::$login]);
 	}
 
-	private function getRequestPassword() {
+	public function getRequestPassword() {
 		if (isset($_POST[self::$password])) {
 			return $_POST[self::$password];
 		} else {
@@ -102,12 +92,12 @@ class LoginView {
 		}
 	}
 
-	private function stayLoggedInStatus() : bool{
+	public function stayLoggedInStatus() : bool{
 		return isset($_POST[self::$keep]);	
 	}
 
-	private function checkLoginInformation() {
-		$settings = new AppSettings();
+	public function checkLoginInformation() {
+		$settings = new \AppSettings();
 		$sqlConnection = mysqli_connect($settings->localhost, $settings->user, $settings->password, $settings->database, $settings->port);
 		$query = "SELECT * FROM users WHERE username = " . "'" . $this->getRequestUserName() . "'" ;
 		$result =  mysqli_query($sqlConnection, $query);
@@ -115,6 +105,10 @@ class LoginView {
 		if ($row["password"] == $this->getRequestPassword()) {
 			return true;
 		} return false;
+	}
+
+	public function getLoggedInStatus() {
+		return $this->loggedInStatus;
 	}
 
 }

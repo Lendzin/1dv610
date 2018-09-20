@@ -1,11 +1,12 @@
 <?php
+namespace view;
 
 class DateTimeView {
 
 
 	public function show() {
 
-		$dateObject = new DateTime();
+		$dateObject = new \DateTime();
 
 		$dayOfWeek = $dateObject->format('l');
 		$dayOfMonth = $dateObject->format('d');
