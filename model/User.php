@@ -30,8 +30,12 @@ class User {
             }
             return "";
         }
-        if ($this->checkCookie()) {
-            return "Welcome back with cookie";
+        if (isset($_COOKIE['keepUser'])) {
+            if ($this->checkCookie()) {
+                return "Welcome back with cookie";
+            } else {
+                return "Wrong information in cookies";
+            }
         }
         if ($this->loginView->triedLogingIn()) {
             $userName = $this->loginView->getRequestUserName();
@@ -69,18 +73,15 @@ class User {
 
         private function checkCookie() {
             $cookie = '';
-            if (isset($_COOKIE['keepUser'])) {
-                $cookie = $_COOKIE['keepUser'];
-                list ($userName, $hashedToken) = explode(':', $cookie);
-                $retrievedUserToken = $this->retrieveTokenFromDatabase($userName);
-                if (password_verify($retrievedUserToken, $hashedToken)) {
-                    $_SESSION["loginStatus"] = true;
-                    return true;
-                } else {
-                    return false;
-                }
+            $cookie = $_COOKIE['keepUser'];
+            list ($userName, $hashedToken) = explode(':', $cookie);
+            $retrievedUserToken = $this->retrieveTokenFromDatabase($userName);
+            if (password_verify($retrievedUserToken, $hashedToken)) {
+                $_SESSION["loginStatus"] = true;
+                return true;
+            } else {
+                return false;
             }
-            return false;
         }
 
         private function saveTokenToDatabase($userName, $token) {
