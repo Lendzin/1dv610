@@ -9,6 +9,12 @@ class LoginView {
 	private static $cookiePassword = 'LoginView::CookiePassword';
 	private static $keep = 'LoginView::KeepMeLoggedIn';
 	private static $messageId = 'LoginView::Message';
+	
+	private $settings;
+
+	public function __construct(\AppSettings $settings) {
+		$this->settings = $settings;
+	}
 
 	/**
 	 * Create HTTP response
@@ -101,11 +107,11 @@ class LoginView {
 	}
 
 	public function checkLoginInformation() {
-		$settings = new \AppSettings();
-		$sqlConnection = mysqli_connect($settings->localhost, $settings->user, $settings->password, $settings->database, $settings->port);
+		$sqlConnection = mysqli_connect($this->settings->localhost, $this->settings->user, $this->settings->password, $this->settings->database, $this->settings->port);
 		$query = "SELECT * FROM users WHERE username = " . "'" . $this->getRequestUserName() . "'" ;
 		$result =  mysqli_query($sqlConnection, $query);
 		$row = mysqli_fetch_assoc($result);
+		mysqli_close($sqlConnection);
 		if ($row["password"] == $this->getRequestPassword()) {
 			return true;
 		} return false;

@@ -14,10 +14,7 @@ ini_set('display_errors', 'On');
 
 
 //CREATE OBJECTS OF THE VIEWS
-$layoutView = new \view\LayoutView();
-$loginView = new \view\LoginView();
-$dateView = new \view\DateTimeView();
-$rc = new \controller\RenderController($layoutView, $loginView, $dateView);
+$rc = new \controller\RenderController();
 $rc->render();
 
 
