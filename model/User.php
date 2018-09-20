@@ -22,6 +22,7 @@ class User {
     public function getReturnMessage () {
         if ($this->loginView->triedLogingOut()) {
             $this->logOutUser();
+            return "Bye bye!";
         }
         if ($this->isLoggedIn()) {
             return "";
