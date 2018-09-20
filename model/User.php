@@ -20,12 +20,13 @@ class User {
         $_SESSION["loginStatus"] = false;
     }
     public function getReturnMessage () {
-        if ($this->loginView->triedLogingOut()) {
-            $this->logOutUser();
-            return "Bye bye!";
-        }
         if ($this->isLoggedIn()) {
+            if ($this->loginView->triedLogingOut()) {
+                $this->logOutUser();
+                return "Bye bye!";
+            }
             return "";
+
         }
         if ($this->loginView->triedLogingIn()) {
             if ($this->loginView->getRequestUserName() == null) {
