@@ -23,7 +23,9 @@ class User {
         if ($this->loginView->triedLogingOut()) {
             $this->logOutUser();
         }
-
+        if ($this->isLoggedIn()) {
+            return "";
+        }
         if ($this->loginView->triedLogingIn()) {
             if ($this->loginView->getRequestUserName() == null) {
                 return $message = 'Username is missing';
