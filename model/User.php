@@ -23,6 +23,7 @@ class User {
         $this->removeCookie($this->loginView->getRequestUserName());
     }
     public function getReturnMessage () {
+        $userName = $this->loginView->getRequestUserName();
         if ($this->isLoggedIn()) {
             if ($this->loginView->triedLogingOut()) {
                 $this->logOutUser();
@@ -34,16 +35,17 @@ class User {
             if ($this->checkCookie()) {
                 return "Welcome back with cookie";
             } else {
+                $this->removeCookie($userName);
                 return "Wrong information in cookies";
             }
         }
         if ($this->loginView->triedLogingIn()) {
-            $userName = $this->loginView->getRequestUserName();
+            
             if ($userName == null) {
-                return $message = 'Username is missing';
+                return 'Username is missing';
             }
             if ( $this->loginView->getRequestPassword() == null) {
-                return $message ='Password is missing';
+                return 'Password is missing';
             }
             if ($this->loginView->checkLoginInformation()) {
                     $_SESSION["loginStatus"] = true;
@@ -56,23 +58,24 @@ class User {
                     }
                     
                 } else {
-                return   $message = "Wrong name or password";
+                return "Wrong name or password";
                 }
             }
         }    
         private function removeCookie($userName) {
-            $cookie = "nonsense";
-            setcookie('keepUser', $cookie, time() + (-86400 * 30), "/");
+            $token = random_bytes(60);
+            $this->saveTokenToDatabase($userName, $token);
+            $cookie = $this->loginView->getRequestUserName() . ':' . password_hash($token, PASSWORD_DEFAULT);
+            setcookie('keepUser', $cookie, time() + (-86400 * 30), "/"); // NEGATIVE TIME FOR REMOVAL
         }
         private function createCookie($userName) {
             $token = random_bytes(60);
             $this->saveTokenToDatabase($userName, $token);
             $cookie = $this->loginView->getRequestUserName() . ':' . password_hash($token, PASSWORD_DEFAULT);
-            setcookie('keepUser', $cookie, time() + (86400 * 30), "/");
+            setcookie('keepUser', $cookie, time() + (86400 * 30), "/"); //POSITIVE TIME WHEN ADDING
         }
 
         private function checkCookie() {
-            $cookie = '';
             $cookie = $_COOKIE['keepUser'];
             list ($userName, $hashedToken) = explode(':', $cookie);
             $retrievedUserToken = $this->retrieveTokenFromDatabase($userName);
