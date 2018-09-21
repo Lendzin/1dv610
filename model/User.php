@@ -32,12 +32,7 @@ class User {
             return "";
         }
         if (isset($_COOKIE['keepUser'])) {
-            if ($this->checkCookie()) {
-                return "Welcome back with cookie";
-            } else {
-                $this->removeCookie($userName);
-                return "Wrong information in cookies";
-            }
+            return $this->getCookieReturnMessage();
         }
         if ($this->loginView->triedLogingIn()) {
             
@@ -74,19 +69,19 @@ class User {
             setcookie('keepUser', $cookie, time() + (86400 * 30), "/"); //POSITIVE TIME WHEN ADDING
         }
 
-        private function checkCookie() {
+        private function getCookieReturnMessage() {
             $cookie = $_COOKIE['keepUser'];
             list ($userName, $hashedToken) = explode(':', $cookie);
             if ($userName === "LoggedOut") {
                 $_SESSION["loginStatus"] = false;
-                return true;
+                return "";
             } else {
                 $retrievedUserToken = $this->retrieveTokenFromDatabase($userName);
                 if (password_verify($retrievedUserToken, $hashedToken)) {
                     $_SESSION["loginStatus"] = true;
-                    return true;
+                    return "Welcome back with cookie";
                 } else {
-                    return false;
+                    return "Wrong information in cookies";
                 }
             }
         }
