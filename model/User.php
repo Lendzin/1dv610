@@ -14,15 +14,16 @@ class User {
     }
 
     public function isLoggedIn() {
-        session_regenerate_id();
         if(isset($_SESSION["loginStatus"])){
-            return $_SESSION["loginStatus"];
-
+            if (isset($_COOKIE['keepUser'])) {
+                return $_SESSION["loginStatus"];
+            } else {
+                return false;
+            }
         }
     }
     public function logOutUser() {
         $_SESSION["loginStatus"] = false;
-        session_regenerate_id();
         $this->removeCookie();
     }
     public function getReturnMessage () {
