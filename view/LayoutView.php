@@ -3,7 +3,7 @@ namespace view;
 
 class LayoutView {
   
-  public function render($isLoggedIn, LoginView $v, DateTimeView $dtv, $message) {
+  public function render($isLoggedIn, LoginView $loginView, DateTimeView $dtv, RegisterView $registerView, $message) {
     echo '<!DOCTYPE html>
       <html>
         <head>
@@ -12,16 +12,24 @@ class LayoutView {
         </head>
         <body>
           <h1>Assignment 2</h1>
+          ' . $this->renderLinks($this->userWantsToRegister()) . '
           ' . $this->renderIsLoggedIn($isLoggedIn) . '
           
           <div class="container">
-              ' . $v->response($message, $isLoggedIn) . '
+              ' . $this->selectView($loginView, $registerView, $message, $isLoggedIn) . '
               
               ' . $dtv->show() . '
           </div>
          </body>
       </html>
     ';
+  }
+  private function renderLinks($userWantsToRegister) {
+    if ($userWantsToRegister) {
+      return '<a href="?">Back to login</a>';
+    } else {
+      return '<a href="index.php?register">Register a new user</a>';
+    }
   }
   
   private function renderIsLoggedIn($isLoggedIn) {
@@ -31,5 +39,16 @@ class LayoutView {
     else {
       return '<h2>Not logged in</h2>';
     }
+  }
+  private function userWantsToRegister () : bool {
+    return isset($_GET["register"]);
+  }
+  private function selectView(LoginView $loginView, RegisterView $registerView, $message, $isLoggedIn) {
+    if ($this->userWantsToRegister()) {
+      return $registerView->render();
+    } else {
+      return $loginView->response($message, $isLoggedIn);
+    }
+    
   }
 }
