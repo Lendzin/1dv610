@@ -32,10 +32,12 @@ class User {
             return "";
         }
         if (isset($_COOKIE['keepUser'])) {
-            return $this->getCookieReturnMessage();
+            $message = $this->getCookieReturnMessage();
+            if (!($message == '')) {
+                return $message;
+            }
         }
         if ($this->loginView->triedLogingIn()) {
-            
             if ($userName == null) {
                 return 'Username is missing';
             }
@@ -81,6 +83,7 @@ class User {
                     $_SESSION["loginStatus"] = true;
                     return "Welcome back with cookie";
                 } else {
+                    $this->removeCookie();
                     return "Wrong information in cookies";
                 }
             }
