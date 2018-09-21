@@ -13,12 +13,14 @@ class User {
     }
 
     public function isLoggedIn() {
-        if(isset($_SESSION["loginStatus"])){
-            return $_SESSION["loginStatus"];
-        } return false;
+        if(isset($_SESSION["loggedIn"])){
+            return $_SESSION["loggedIn"];
+        } else {
+            return false;
+        }
     }
     public function logOutUser() {
-        $_SESSION["loginStatus"] = false;
+        $_SESSION["loggedIn"] = false;
         $this->removeCookie();
     }
     public function getReturnMessage () {
@@ -45,7 +47,7 @@ class User {
             }
             if ($this->loginView->checkLoginInformation()) {
                     session_start();
-                    $_SESSION["loginStatus"] = true;
+                    $_SESSION["loggedIn"] = true;
                     if ($this->loginView->stayLoggedInStatus()) {
                         $this->createCookie($userName);
                         return "Welcome and you will be remembered";
@@ -75,13 +77,12 @@ class User {
             $cookie = $_COOKIE['keepUser'];
             list ($userName, $hashedToken) = explode(':', $cookie);
             if ($userName === "LoggedOut") {
-                $_SESSION["loginStatus"] = false;
                 return "";
             } else {
                 $retrievedUserToken = $this->retrieveTokenFromDatabase($userName);
                 if (password_verify($retrievedUserToken, $hashedToken)) {
                     session_start();
-                    $_SESSION["loginStatus"] = true;
+                    $_SESSION["loggedIn"] = true;
                     return "Welcome back with cookie";
                 } else {
                     $this->removeCookie();
