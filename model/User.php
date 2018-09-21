@@ -10,17 +10,16 @@ class User {
         $this->loginView = $loginView;
         $this->isLoggedIn = false;
         $this->settings = $settings;
+        session_start();
     }
 
     public function isLoggedIn() {
-        if(isset($_SESSION["loggedIn"])){
-            return $_SESSION["loggedIn"];
-        } else {
-            return false;
+        if(isset($_SESSION["loginStatus"])){
+            return $_SESSION["loginStatus"];
         }
     }
     public function logOutUser() {
-        $_SESSION["loggedIn"] = false;
+        $_SESSION["loginStatus"] = false;
         $this->removeCookie();
     }
     public function getReturnMessage () {
@@ -34,11 +33,10 @@ class User {
         }
         if (isset($_COOKIE['keepUser'])) {
             $message = $this->getCookieReturnMessage();
-            if (!($message == '')) {
-                return $message;
-            }
+            return $message;
         }
         if ($this->loginView->triedLogingIn()) {
+            
             if ($userName == null) {
                 return 'Username is missing';
             }
@@ -46,8 +44,7 @@ class User {
                 return 'Password is missing';
             }
             if ($this->loginView->checkLoginInformation()) {
-                    session_start();
-                    $_SESSION["loggedIn"] = true;
+                    $_SESSION["loginStatus"] = true;
                     if ($this->loginView->stayLoggedInStatus()) {
                         $this->createCookie($userName);
                         return "Welcome and you will be remembered";
@@ -77,15 +74,14 @@ class User {
             $cookie = $_COOKIE['keepUser'];
             list ($userName, $hashedToken) = explode(':', $cookie);
             if ($userName === "LoggedOut") {
+                $_SESSION["loginStatus"] = false;
                 return "";
             } else {
                 $retrievedUserToken = $this->retrieveTokenFromDatabase($userName);
                 if (password_verify($retrievedUserToken, $hashedToken)) {
-                    session_start();
-                    $_SESSION["loggedIn"] = true;
+                    $_SESSION["loginStatus"] = true;
                     return "Welcome back with cookie";
                 } else {
-                    $this->removeCookie();
                     return "Wrong information in cookies";
                 }
             }

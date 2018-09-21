@@ -18,10 +18,6 @@ class RenderController {
     
     public function render () {
         $message = $this->user->getReturnMessage();
-        if ($this->user->isLoggedIn()) {
-            $this->layoutView->render(true, $this->loginView, $this->dateView, $message);
-        } else {
-            $this->layoutView->render(false, $this->loginView, $this->dateView, $message);
-        }
-    }
+        $this->layoutView->render($this->user->isLoggedIn(), $this->loginView, $this->dateView, $message);
+     }
 }
