@@ -20,7 +20,7 @@ class User {
     }
     public function logOutUser() {
         $_SESSION["loginStatus"] = false;
-        $this->removeCookie($this->loginView->getRequestUserName());
+        $this->removeCookie();
     }
     public function getReturnMessage () {
         $userName = $this->loginView->getRequestUserName();
@@ -53,7 +53,7 @@ class User {
                         $this->createCookie($userName);
                         return "Welcome and you will be remembered";
                     } else {
-                        $this->removeCookie($userName);
+                        $this->removeCookie();
                         return "Welcome";
                     }
                     
@@ -62,10 +62,9 @@ class User {
                 }
             }
         }    
-        private function removeCookie($userName) {
+        private function removeCookie() {
             $token = random_bytes(60);
-            $this->saveTokenToDatabase($userName, $token);
-            $cookie = $this->loginView->getRequestUserName() . ':' . password_hash($token, PASSWORD_DEFAULT);
+            $cookie = "LoggedOut" . ':' . password_hash($token, PASSWORD_DEFAULT);
             setcookie('keepUser', $cookie, time() + (-86400 * 30), "/"); // NEGATIVE TIME FOR REMOVAL
         }
         private function createCookie($userName) {
@@ -78,12 +77,17 @@ class User {
         private function checkCookie() {
             $cookie = $_COOKIE['keepUser'];
             list ($userName, $hashedToken) = explode(':', $cookie);
-            $retrievedUserToken = $this->retrieveTokenFromDatabase($userName);
-            if (password_verify($retrievedUserToken, $hashedToken)) {
-                $_SESSION["loginStatus"] = true;
+            if ($userName === "LoggedOut") {
+                $_SESSION["loginStatus"] = false;
                 return true;
             } else {
-                return false;
+                $retrievedUserToken = $this->retrieveTokenFromDatabase($userName);
+                if (password_verify($retrievedUserToken, $hashedToken)) {
+                    $_SESSION["loginStatus"] = true;
+                    return true;
+                } else {
+                    return false;
+                }
             }
         }
 
