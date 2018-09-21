@@ -82,6 +82,7 @@ class User {
                     $_SESSION["loginStatus"] = true;
                     return "Welcome back with cookie";
                 } else {
+                    $this->removeCookie();
                     return "Wrong information in cookies";
                 }
             }
