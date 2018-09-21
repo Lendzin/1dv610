@@ -10,13 +10,12 @@ class User {
         $this->loginView = $loginView;
         $this->isLoggedIn = false;
         $this->settings = $settings;
-        session_start();
     }
 
     public function isLoggedIn() {
         if(isset($_SESSION["loginStatus"])){
             return $_SESSION["loginStatus"];
-        }
+        } return false;
     }
     public function logOutUser() {
         $_SESSION["loginStatus"] = false;
@@ -45,6 +44,7 @@ class User {
                 return 'Password is missing';
             }
             if ($this->loginView->checkLoginInformation()) {
+                    session_start();
                     $_SESSION["loginStatus"] = true;
                     if ($this->loginView->stayLoggedInStatus()) {
                         $this->createCookie($userName);
@@ -80,6 +80,7 @@ class User {
             } else {
                 $retrievedUserToken = $this->retrieveTokenFromDatabase($userName);
                 if (password_verify($retrievedUserToken, $hashedToken)) {
+                    session_start();
                     $_SESSION["loginStatus"] = true;
                     return "Welcome back with cookie";
                 } else {
