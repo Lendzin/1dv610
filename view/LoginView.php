@@ -121,4 +121,8 @@ class LoginView {
 		return $this->loggedInStatus;
 	}
 
+	public function userWantsToRegister () : bool {
+		return isset($_GET["register"]);
+	  }
+
 }

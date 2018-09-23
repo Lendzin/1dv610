@@ -15,7 +15,7 @@ class RenderController {
         $this->loginView = new \view\LoginView($this->settings);
         $this->dateView = new \view\DateTimeView();
         $this->registerView = new \view\RegisterView($this->settings);
-        $this->user = new \model\User($this->loginView, $this->settings);
+        $this->user = new \model\User($this->loginView, $this->registerView, $this->settings);
     }
     
     public function render () {

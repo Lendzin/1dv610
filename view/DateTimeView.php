@@ -7,7 +7,6 @@ class DateTimeView {
 	public function show() {
 
 		$dateObject = new \DateTime();
-		\date_modify($dateObject, "1 hours"); 
 		$dayOfWeek = $dateObject->format('l');
 		$dayOfMonth = $dateObject->format('dS');
 		$month = $dateObject->format('F');
