@@ -17,7 +17,7 @@ class RegisterView {
  
 
     public function response ($message) {
-        return '
+        $response = '
                     <h2>Register new user</h2>
                     <form action="?register" method="post" enctype="multipart/form-data">
                         <fieldset>
@@ -35,6 +35,7 @@ class RegisterView {
                             <input id="submit" type="submit" name="' . self::$register . '"  value="Register" />
                             <br/>
                         </fieldset>';
+        return $response;
     }
 
     public function triedToRegisterAccount() {
