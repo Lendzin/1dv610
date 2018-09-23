@@ -24,7 +24,7 @@ class RegisterView {
                         <legend>Register a new user - Write username and password</legend>
                             <p id="' . self::$messageId . '">' . $message . '</p>
                             <label for="' . self::$username . '" >Username :</label>
-                            <input type="text" size="20" name="' . self::$username . '" id="' . self::$username . '" value="" />
+                            <input type="text" size="20" name="' . self::$username . '" id="' . self::$username . '" value="' . $this->getRequestedUsername() . '" />
                             <br/>
                             <label for="' . self::$password . '" >Password  :</label>
                             <input type="password" size="20" name="' . self::$password . '" id="' . self::$password . '" value="" />

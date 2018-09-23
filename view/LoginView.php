@@ -86,20 +86,20 @@ class LoginView {
 		}
 	}
 
-	public function triedLogingIn() : bool {
-		return isset($_POST[self::$login]);
-	}
-
-	public function triedLogingOut() : bool {
-		return isset($_POST[self::$logout]);
-	}
-
 	public function getRequestPassword() {
 		if (isset($_POST[self::$password])) {
 			return $_POST[self::$password];
 		} else {
 			return null;
 		}
+	}
+
+	public function triedLogingIn() : bool {
+		return isset($_POST[self::$login]);
+	}
+
+	public function triedLogingOut() : bool {
+		return isset($_POST[self::$logout]);
 	}
 
 	public function stayLoggedInStatus() : bool{
@@ -115,10 +115,6 @@ class LoginView {
 		if ($row["password"] == $this->getRequestPassword()) {
 			return true;
 		} return false;
-	}
-
-	public function getLoggedInStatus() {
-		return $this->loggedInStatus;
 	}
 
 	public function userWantsToRegister () : bool {
