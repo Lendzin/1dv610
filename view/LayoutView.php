@@ -12,7 +12,7 @@ class LayoutView {
         </head>
         <body>
           <h1>Assignment 2</h1>
-          ' . $this->renderLinks($loginView->userWantsToRegister()) . '
+          ' . $this->renderLinks($loginView->userWantsToRegister(), $isLoggedIn) . '
           ' . $this->renderIsLoggedIn($isLoggedIn) . '
           
           <div class="container">
@@ -24,11 +24,13 @@ class LayoutView {
       </html>
     ';
   }
-  private function renderLinks($userWantsToRegister) {
-    if ($userWantsToRegister) {
-      return '<a href="?">Back to login</a>';
-    } else {
-      return '<a href="index.php?register">Register a new user</a>';
+  private function renderLinks($userWantsToRegister, $isLoggedIn) {
+    if (!$isLoggedIn) {
+      if ($userWantsToRegister) {
+        return '<a href="?">Back to login</a>';
+      } else {
+        return '<a href="index.php?register">Register a new user</a>';
+      }
     }
   }
   
@@ -43,7 +45,7 @@ class LayoutView {
 
   private function selectView(LoginView $loginView, RegisterView $registerView, $message, $isLoggedIn) {
     if ($loginView->userWantsToRegister()) {
-      return $registerView->render($message);
+      return $registerView->response($message);
     } else {
       return $loginView->response($message, $isLoggedIn);
     }

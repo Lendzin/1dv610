@@ -16,7 +16,7 @@ class RegisterView {
 
  
 
-    public function render ($message) {
+    public function response ($message) {
         return '
                     <h2>Register new user</h2>
                     <form action="?register" method="post" enctype="multipart/form-data">
