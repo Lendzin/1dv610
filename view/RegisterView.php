@@ -71,13 +71,14 @@ class RegisterView {
         }
 
         if (($password !== $this->getPasswordRepeat())) {
-            return "Password and repeated password do not match.";
+            return "Passwords do not match";
         }
         if (preg_match('/[^a-zA-Z0-9]+/', $username) === 1){
             return "Username contains invalid characters.";
         }
         $this->saveUserToDatabase($username, $password);
-        return "User saved to database.";
+        header("Location:?");
+        return "Registered new user.";
         
     }
 
