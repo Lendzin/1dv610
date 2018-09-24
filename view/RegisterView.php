@@ -24,7 +24,7 @@ class RegisterView {
                         <legend>Register a new user - Write username and password</legend>
                             <p id="' . self::$messageId . '">' . $message . '</p>
                             <label for="' . self::$username . '" >Username :</label>
-                            <input type="text" size="20" name="' . self::$username . '" id="' . self::$username . '" value="' . $this->getRequestedUsername() . '" />
+                            <input type="text" size="20" name="' . self::$username . '" id="' . self::$username . '" value="' . strip_tags($this->getRequestedUsername()) . '" />
                             <br/>
                             <label for="' . self::$password . '" >Password  :</label>
                             <input type="password" size="20" name="' . self::$password . '" id="' . self::$password . '" value="" />
@@ -43,17 +43,17 @@ class RegisterView {
     }
     public function getRequestedUsername() {
         if (isset($_POST[self::$username])) {
-            return strip_tags($_POST[self::$username]);
+            return $_POST[self::$username];
         }
     }
     public function getRequestedPassword() {
         if (isset($_POST[self::$password])) {
-            return strip_tags($_POST[self::$password]);
+            return $_POST[self::$password];
         }
     }
     public function getPasswordRepeat() {
         if (isset($_POST[self::$passwordRepeat])) {
-            return strip_tags($_POST[self::$passwordRepeat]);
+            return $_POST[self::$passwordRepeat];
         }
     }
     public function getRegisterReturnMessage() {
