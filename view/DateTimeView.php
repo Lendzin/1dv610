@@ -6,7 +6,7 @@ class DateTimeView {
 
 	public function show() {
 
-		$dateObject = new \DateTime();
+		$dateObject = new \DateTime('now', new \DateTimeZone('Europe/Stockholm'));
 		$dayOfWeek = $dateObject->format('l');
 		$dayOfMonth = $dateObject->format('dS');
 		$month = $dateObject->format('F');
