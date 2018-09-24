@@ -43,17 +43,17 @@ class RegisterView {
     }
     public function getRequestedUsername() {
         if (isset($_POST[self::$username])) {
-            return $_POST[self::$username];
+            return strip_tags($_POST[self::$username]);
         }
     }
     public function getRequestedPassword() {
         if (isset($_POST[self::$password])) {
-            return $_POST[self::$password];
+            return strip_tags($_POST[self::$password]);
         }
     }
     public function getPasswordRepeat() {
         if (isset($_POST[self::$passwordRepeat])) {
-            return $_POST[self::$passwordRepeat];
+            return strip_tags($_POST[self::$passwordRepeat]);
         }
     }
     public function getRegisterReturnMessage() {
