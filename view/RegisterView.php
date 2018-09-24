@@ -59,15 +59,16 @@ class RegisterView {
     public function getRegisterReturnMessage() {
        $username = $this->getRequestedUsername();
        $password = $this->getRequestedPassword();
+     
+       if (!(strlen($password) >= 6)) {
+        return "Password has too few characters, at least 6 characters.";            
+        }
 
        if (!(strlen($username) >= 3)) {
             return "Username has too few characters, at least 3 characters.";
                     }
         if ($this->userExistsInDatabase($username)) {
             return "User exists, pick another username.";
-        }
-        if (!(strlen($password) >= 6)) {
-            return "Password has too few characters, at least 6 characters.";            
         }
 
         if (($password !== $this->getPasswordRepeat())) {
