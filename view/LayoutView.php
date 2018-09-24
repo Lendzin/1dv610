@@ -35,7 +35,7 @@ class LayoutView {
   }
   
   private function renderIsLoggedIn($session) {
-    if ($session->getSessionLoginStatus()) {
+    if ($session->getSessionLoginStatus() && $this->session->validateSession()) {
       return '<h2>Logged in</h2>';
     }
     else {
