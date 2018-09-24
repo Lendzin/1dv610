@@ -57,30 +57,47 @@ class RegisterView {
         }
     }
     public function getRegisterReturnMessage() {
-       $username = $this->getRequestedUsername();
-       $password = $this->getRequestedPassword();
+        $errorMessages = [];
+        $username = $this->getRequestedUsername();
+        $password = $this->getRequestedPassword();
      
-       if (!(strlen($password) >= 6)) {
-        return "Password has too few characters, at least 6 characters.";            
+        if ($this->userExistsInDatabase($username)) {
+            array_push($errorMessages, "User exists, pick another username.");
+        }
+        
+        if (!(strlen($username) >= 3)) {
+            array_push($errorMessages, "Username has too few characters, at least 3 characters.");
         }
 
-       if (!(strlen($username) >= 3)) {
-            return "Username has too few characters, at least 3 characters.";
-                    }
-        if ($this->userExistsInDatabase($username)) {
-            return "User exists, pick another username.";
+        if (!(strlen($password) >= 6)) {
+            array_push($errorMessages, "Password has too few characters, at least 6 characters.");            
         }
 
         if (($password !== $this->getPasswordRepeat())) {
-            return "Passwords do not match.";
+            array_push($errorMessages, "Passwords do not match.");
         }
         if (preg_match('/[^a-zA-Z]+/', $username) === 1){
-            return "Username contains invalid characters.";
+            array_push($errorMessages, "Username contains invalid characters.");
         }
-        $this->saveUserToDatabase($username, $password);
-        header("Location:?");
-        return "Registered new user.";
-        
+        if (count($errorMessages) === 0) {
+            $this->saveUserToDatabase($username, $password);
+            header("Location:?");
+            return "Registered new user.";
+        } else {
+            return $this->returnAllErrors($errorMessages);
+        }
+       
+    }
+
+    private function returnAllErrors ($messages) {
+        $returnMessage = "";
+        for ($count=0; count($messages) > $count; $count++) {
+            $returnMessage .= $messages[$count];
+            if ($count !== count($messages)) {
+                $returnMessage .= "<br>";
+            }
+        }
+        return $returnMessage;
     }
 
     private function userExistsInDatabase($username) {
