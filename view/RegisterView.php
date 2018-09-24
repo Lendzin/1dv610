@@ -9,22 +9,24 @@ class RegisterView {
     private static $register = "RegisterView::Register";
 
     private $settings;
+    private $session;
 
-    public function __construct(\AppSettings $settings) {
+    public function __construct(\AppSettings $settings, \model\Session $session) {
         $this->settings = $settings;
+        $this->session = $session;
     }
 
  
 
-    public function response ($message) {
+    public function response () {
         $response = '
                     <h2>Register new user</h2>
                     <form action="?register" method="post" enctype="multipart/form-data">
                         <fieldset>
                         <legend>Register a new user - Write username and password</legend>
-                            <p id="' . self::$messageId . '">' . $message . '</p>
+                            <p id="' . self::$messageId . '">' . $this->session->getSessionUserMessage() . '</p>
                             <label for="' . self::$username . '" >Username :</label>
-                            <input type="text" size="20" name="' . self::$username . '" id="' . self::$username . '" value="' . strip_tags($this->getRequestedUsername()) . '" />
+                            <input type="text" size="20" name="' . self::$username . '" id="' . self::$username . '" value="' . strip_tags($this->session->getSessionUsername()) . '" />
                             <br/>
                             <label for="' . self::$password . '" >Password  :</label>
                             <input type="password" size="20" name="' . self::$password . '" id="' . self::$password . '" value="" />
@@ -56,7 +58,7 @@ class RegisterView {
             return $_POST[self::$passwordRepeat];
         }
     }
-    public function getRegisterReturnMessage() {
+    public function setRegisterReturnMessage() {
         $errorMessages = [];
         $username = $this->getRequestedUsername();
         $password = $this->getRequestedPassword();
@@ -81,10 +83,11 @@ class RegisterView {
         }
         if (count($errorMessages) === 0) {
             $this->saveUserToDatabase($username, $password);
+            $this->session->setSessionUserMessage("Registered new user.");
+            $this->session->setSessionUsername($username);
             header("Location:?");
-            return "Registered new user.";
         } else {
-            return $this->returnAllErrors($errorMessages);
+            $this->session->setSessionUserMessage($this->returnAllErrors($errorMessages));
         }
        
     }

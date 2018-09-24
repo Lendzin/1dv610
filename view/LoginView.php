@@ -11,9 +11,11 @@ class LoginView {
 	private static $messageId = 'LoginView::Message';
 	
 	private $settings;
+	private $session;
 
-	public function __construct(\AppSettings $settings) {
+	public function __construct(\AppSettings $settings, \model\Session $session) {
 		$this->settings = $settings;
+		$this->session = $session;
 	}
 
 	/**
@@ -23,14 +25,12 @@ class LoginView {
 	 *
 	 * @return  void BUT writes to standard output and cookies!
 	 */
-	public function response($newMessage, $userLoggedIn) {
-		$message = $newMessage;
-
+	public function response() {
 		$response = '';
-		if ($userLoggedIn) {
-			$response .= $this->generateLogoutButtonHTML($message);
+		if ($this->session->getSessionLoginStatus() && $this->session->validateSession()) {
+			$response .= $this->generateLogoutButtonHTML();
 		} else {
-			$response = $this->generateLoginFormHTML($message);
+			$response = $this->generateLoginFormHTML();
 		}
 		return $response;
 	}
@@ -40,10 +40,10 @@ class LoginView {
 	* @param $message, String output message
 	* @return  void, BUT writes to standard output!
 	*/
-	private function generateLogoutButtonHTML($message) {
+	private function generateLogoutButtonHTML() {
 		return '
 			<form  method="post" >
-				<p id="' . self::$messageId . '">' . $message .'</p>
+				<p id="' . self::$messageId . '">' . $this->session->getSessionUserMessage() .'</p>
 				<input type="submit" name="' . self::$logout . '" value="logout"/>
 			</form>
 		';
@@ -54,16 +54,16 @@ class LoginView {
 	* @param $message, String output message
 	* @return  void, BUT writes to standard output!
 	*/
-	private function generateLoginFormHTML($message) {
+	private function generateLoginFormHTML() {
 
 		return '
 			<form method="post" > 
 				<fieldset>
 					<legend>Login - enter Username and password</legend>
-					<p id="' . self::$messageId . '">' . $message . '</p>
+					<p id="' . self::$messageId . '">' . $this->session->getSessionUserMessage() . '</p>
 					
 					<label for="' . self::$name . '">Username :</label>
-					<input type="text" id="' . self::$name . '" name="' . self::$name . '" value="' . strip_tags($this->getRequestUserName()) . '" />
+					<input type="text" id="' . self::$name . '" name="' . self::$name . '" value="' . strip_tags($this->session->getSessionUsername()) . '" />
 
 					<label for="' . self::$password . '">Password :</label>
 					<input type="password" id="' . self::$password . '" name="' . self::$password . '" />

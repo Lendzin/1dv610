@@ -6,64 +6,73 @@ class User {
     private $loginView;
     private $registerView;
     private $settings;
+    private $session;
 
-    public function __construct(\view\LoginView $loginView, \view\RegisterView $registerView, \AppSettings $settings) {
+    public function __construct(\view\LoginView $loginView, \view\RegisterView $registerView, \AppSettings $settings, \model\Session $session) {
         $this->loginView = $loginView;
         $this->registerView = $registerView;
-        $this->isLoggedIn = false;
         $this->settings = $settings;
-        session_start();
+        $this->session = $session;
     }
 
-    public function isLoggedIn() {
-        if(isset($_SESSION["loginStatus"])){
-            return $_SESSION["loginStatus"];
-        }
-    }
     public function logOutUser() {
-        $_SESSION["loginStatus"] = false;
+        $this->session->setSessionUserName("");
+        $this->session->setSessionLoginStatus(false);
         $this->removeCookie();
     }
-    public function getReturnMessage () {
-        $username = $this->loginView->getRequestUserName();
-        if ($this->isLoggedIn()) {
+    public function setReturnMessageForSession() {
+        $messageToSet = $this->getReturnMessageFromViews();
+        if ($this->session->getSessionLoginStatus()) {
             if ($this->loginView->triedLogingOut()) {
                 $this->logOutUser();
-                return "Bye bye!";
+                $messageToSet = "Bye bye!";
             }
-            return "";
         }
-        if (isset($_COOKIE['keepUser'])) {
-            return $this->getCookieReturnMessage();
-        }
+        $this->session->setSessionUserMessage($messageToSet);
+    }
 
-        if ($this->registerView->triedToRegisterAccount()) {
-            return $this->registerView->getRegisterReturnMessage();
-        }
-
-        if ($this->loginView->triedLogingIn()) {
-            
-            if ($username == null) {
-                return 'Username is missing';
-            }
-            if ( $this->loginView->getRequestPassword() == null) {
-                return 'Password is missing';
-            }
-            if ($this->loginView->checkLoginInformation()) {
-                    $_SESSION["loginStatus"] = true;
-                    if ($this->loginView->stayLoggedInStatus()) {
-                        $this->createCookie($username);
-                        return "Welcome and you will be remembered";
-                    } else {
-                        $this->removeCookie();
-                        return "Welcome";
-                    }
-                    
-                } else {
-                return "Wrong name or password";
+    public function getReturnMessageFromViews () {
+        $username = $this->loginView->getRequestUserName();
+            if (!$this->session->getSessionLoginStatus()) {
+                if (isset($_COOKIE['keepUser'])) {
+                    return $this->getCookieReturnMessage();
                 }
-            }
-        }    
+        
+                if ($this->registerView->triedToRegisterAccount()) {
+                    $this->registerView->setRegisterReturnMessage();
+                    return $this->session->getSessionUserMessage();
+                }
+        
+                if ($this->loginView->triedLogingIn()) {
+                    
+                    if ($username == null) {
+                        return 'Username is missing';
+                    } else {
+                        $this->session->setSessionUsername($username);
+                    }
+                    if ( $this->loginView->getRequestPassword() == null) {
+                        return 'Password is missing';
+                    }
+                    if ($this->loginView->checkLoginInformation()) {
+                        $this->session->setSessionSecurityKey();
+                            $this->session->setSessionLoginStatus(true);
+                            if ($this->loginView->stayLoggedInStatus()) {
+                                $this->createCookie($username);
+                                return "Welcome and you will be remembered";
+                            } else {
+                                $this->removeCookie();
+                                return "Welcome";
+                            }
+                            
+                        } else {
+                        return "Wrong name or password";
+                        }
+                    }
+            
+            } return "";
+            
+    }    
+    
         private function removeCookie() {
             $token = random_bytes(60);
             $cookie = "LoggedOut" . ':' . password_hash($token, PASSWORD_DEFAULT);
@@ -80,12 +89,14 @@ class User {
             $cookie = $_COOKIE['keepUser'];
             list ($username, $hashedToken) = explode(':', $cookie);
             if ($username === "LoggedOut") {
-                $_SESSION["loginStatus"] = false;
+                $this->session->setSessionLoginStatus(false);
                 return "";
             } else {
                 $retrievedUserToken = $this->retrieveTokenFromDatabase($username);
                 if (password_verify($retrievedUserToken, $hashedToken)) {
-                    $_SESSION["loginStatus"] = true;
+                    $this->session->setSessionLoginStatus(true);
+                    $this->session->setSessionUsername($username);
+                    $this->session->setSessionSecurityKey();
                     return "Welcome back with cookie";
                 } else {
                     $this->removeCookie();

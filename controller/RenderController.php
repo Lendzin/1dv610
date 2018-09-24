@@ -8,18 +8,20 @@ class RenderController {
     private $registerView;
     private $settings;
     private $user;
+    private $session;
 
     public function __construct() {
         $this->settings = new \AppSettings();
+        $this->session = new \model\Session();
         $this->layoutView = new \view\LayoutView();
-        $this->loginView = new \view\LoginView($this->settings);
+        $this->loginView = new \view\LoginView($this->settings, $this->session);
         $this->dateView = new \view\DateTimeView();
-        $this->registerView = new \view\RegisterView($this->settings);
-        $this->user = new \model\User($this->loginView, $this->registerView, $this->settings);
+        $this->registerView = new \view\RegisterView($this->settings, $this->session);
+        $this->user = new \model\User($this->loginView, $this->registerView, $this->settings, $this->session);
     }
     
     public function render () {
-        $message = $this->user->getReturnMessage();
-        $this->layoutView->render($this->user->isLoggedIn(), $this->loginView, $this->dateView, $this->registerView, $message);
+        $this->user->setReturnMessageForSession();
+        $this->layoutView->render($this->loginView, $this->dateView, $this->registerView, $this->session);
      }
 }

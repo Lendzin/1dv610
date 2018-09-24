@@ -3,7 +3,7 @@ namespace view;
 
 class LayoutView {
   
-  public function render($isLoggedIn, LoginView $loginView, DateTimeView $dtv, RegisterView $registerView, $message) {
+  public function render(LoginView $loginView, DateTimeView $dtv, RegisterView $registerView, \model\Session $session) {
     echo '<!DOCTYPE html>
       <html>
         <head>
@@ -12,11 +12,11 @@ class LayoutView {
         </head>
         <body>
           <h1>Assignment 2</h1>
-          ' . $this->renderLinks($loginView->userWantsToRegister(), $isLoggedIn) . '
-          ' . $this->renderIsLoggedIn($isLoggedIn) . '
+          ' . $this->renderLinks($loginView->userWantsToRegister(), $session) . '
+          ' . $this->renderIsLoggedIn($session) . '
           
           <div class="container">
-              ' . $this->selectView($loginView, $registerView, $message, $isLoggedIn) . '
+              ' . $this->selectView($loginView, $registerView) . '
               
               ' . $dtv->show() . '
           </div>
@@ -24,8 +24,8 @@ class LayoutView {
       </html>
     ';
   }
-  private function renderLinks($userWantsToRegister, $isLoggedIn) {
-    if (!$isLoggedIn) {
+  private function renderLinks($userWantsToRegister, $session) {
+    if (!$session->getSessionLoginStatus()) {
       if ($userWantsToRegister) {
         return '<a href="?">Back to login</a>';
       } else {
@@ -34,8 +34,8 @@ class LayoutView {
     }
   }
   
-  private function renderIsLoggedIn($isLoggedIn) {
-    if ($isLoggedIn) {
+  private function renderIsLoggedIn($session) {
+    if ($session->getSessionLoginStatus()) {
       return '<h2>Logged in</h2>';
     }
     else {
@@ -43,11 +43,11 @@ class LayoutView {
     }
   }
 
-  private function selectView(LoginView $loginView, RegisterView $registerView, $message, $isLoggedIn) {
+  private function selectView(LoginView $loginView, RegisterView $registerView) {
     if ($loginView->userWantsToRegister()) {
-      return $registerView->response($message);
+      return $registerView->response();
     } else {
-      return $loginView->response($message, $isLoggedIn);
+      return $loginView->response();
     }
     
   }
