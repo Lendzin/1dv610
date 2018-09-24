@@ -88,6 +88,7 @@ class RegisterView {
             header("Location:?");
         } else {
             $this->session->setSessionUserMessage($this->returnAllErrors($errorMessages));
+            $this->session->setSessionUsername($username);
         }
        
     }
