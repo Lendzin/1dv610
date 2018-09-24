@@ -71,7 +71,7 @@ class RegisterView {
         }
 
         if (($password !== $this->getPasswordRepeat())) {
-            return "Passwords do not match";
+            return "Passwords do not match.";
         }
         if (preg_match('/[^a-zA-Z0-9!"#$£€%&*+,.:;=?@_`|~]++/', $username) === 1){
             return "Username contains invalid characters.";
