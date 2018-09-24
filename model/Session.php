@@ -37,7 +37,9 @@ class Session {
     }
 
     public function validateSession() {
-        return ($this->getSessionSecurityKey() === md5($_SERVER['HTTP_USER_AGENT']));
+        if (isset($_SESSION["user"]["securityKey"])) {
+            return ($this->getSessionSecurityKey() === md5($_SERVER['HTTP_USER_AGENT']));
+        }else return false;
     }
     public function setSessionSecurityKey() {
         $_SESSION["user"]["securityKey"] = md5($_SERVER['HTTP_USER_AGENT']);
