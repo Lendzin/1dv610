@@ -6,7 +6,7 @@ class RegisterView {
     private static $username = "RegisterView::UserName";
     private static $password = "RegisterView::Password";
     private static $passwordRepeat = "RegisterView::PasswordRepeat";
-    private static $register = "DoRegistration";
+    private static $register = "RegisterView::Register";
 
     private $settings;
 
@@ -73,7 +73,7 @@ class RegisterView {
         if (($password !== $this->getPasswordRepeat())) {
             return "Passwords do not match";
         }
-        if (preg_match('/[^a-zA-Z0-9]+/', $username) === 1){
+        if (preg_match('/[^a-zA-Z0-9!"#$£€%&*+,.:;=?@_`|~]++/', $username) === 1){
             return "Username contains invalid characters.";
         }
         $this->saveUserToDatabase($username, $password);
