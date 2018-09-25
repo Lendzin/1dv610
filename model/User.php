@@ -97,14 +97,12 @@ class User {
             } else {
                 $retrievedUserToken = $this->retrieveTokenFromDatabase($username);
                 if (password_verify(($retrievedUserToken . $_SERVER["HTTP_USER_AGENT"]), $generatedKey)) {
-                    echo $_COOKIE["keepUser"];
                         $this->session->setSessionLoginStatus(true);
                         $this->session->setSessionUsername($username);
                         $this->session->setSessionSecurityKey();
                         return "Welcome back with cookie";
                     
                 } else {
-                    echo $_COOKIE["keepUser"];
                     $this->removeCookie();
                     return "Wrong information in cookies";
                 }
