@@ -86,6 +86,8 @@ class RegisterView {
             $this->session->setSessionUserMessage("Registered new user.");
             $this->session->setSessionUsername($username);
             header("Location:?");
+            
+
         } else {
             $this->session->setSessionUserMessage($this->returnAllErrors($errorMessages));
             $this->session->setSessionUsername($username);

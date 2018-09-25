@@ -25,13 +25,13 @@ class Session {
              return false;
             }
     }
-    
+
     public function setSessionUserMessage(string $userMessage) {
         $_SESSION["user"]["userMessage"] = $userMessage;
 
     }
     public function getSessionUserMessage() : string  {
-        if (isset($_SESSION["user"]["userMessage"])) {
+         if (isset($_SESSION["user"]["userMessage"])) {
             return $_SESSION["user"]["userMessage"];
         } else return "";
     }

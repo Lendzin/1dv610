@@ -45,10 +45,7 @@ class LayoutView {
 
   private function selectView(LoginView $loginView, RegisterView $registerView) {
     if ($loginView->userWantsToRegister()) {
-      return $registerView->response();
-    } else {
-      return $loginView->response();
-    }
-    
+        return $registerView->response();
+    } else return $loginView->response();
   }
 }

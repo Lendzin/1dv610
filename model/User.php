@@ -28,14 +28,7 @@ class User {
                 $messageToSet = "Bye bye!";
             }
         }
-        if ($messageToSet === null) {
-            if (!($this->session->getSessionUserMessage() !== null)) {
-                $messageToSet = "";
-                $this->session->setSessionUserMessage($messageToSet);
-            }
-        } else {
-            $this->session->setSessionUserMessage($messageToSet);
-        } 
+        $this->session->setSessionUserMessage($messageToSet);
     }
 
     public function getReturnMessageFromViews () {
@@ -74,9 +67,9 @@ class User {
                         } else {
                         return "Wrong name or password";
                         }
-                    }
-            
-            }
+                    } 
+            } 
+            return "";
             
     }    
     

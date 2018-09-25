@@ -120,5 +120,4 @@ class LoginView {
 	public function userWantsToRegister () : bool {
 		return isset($_GET["register"]);
 	  }
-
 }
