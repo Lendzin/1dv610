@@ -80,32 +80,43 @@ class User {
         }
         private function createCookie($username) {
             $token = random_bytes(60);
-            $this->saveTokenToDatabase($username, $token);
-            $cookie = $this->loginView->getRequestUserName() . ':' . password_hash($token, PASSWORD_DEFAULT);
-            setcookie('keepUser', $cookie, time() + (86400 * 30), "/"); //POSITIVE TIME WHEN ADDING
+            $time = time() + (86400 * 30);
+            $agent = $_SERVER["HTTP_USER_AGENT"];
+            $generatedKey = $token . $agent;
+            $cookie = $this->loginView->getRequestUserName() . ':' . password_hash($generatedKey, PASSWORD_DEFAULT);
+            setcookie('keepUser', $cookie, $time, "/"); //POSITIVE TIME WHEN ADDING
+            $this->saveCookieToDatabase($username, $token);
         }
 
         private function getCookieReturnMessage() {
             $cookie = $_COOKIE['keepUser'];
-            list ($username, $hashedToken) = explode(':', $cookie);
+            list ($username, $generatedKey) = explode(':', $cookie);
             if ($username === "LoggedOut") {
                 $this->session->setSessionLoginStatus(false);
                 return "";
             } else {
                 $retrievedUserToken = $this->retrieveTokenFromDatabase($username);
-                if (password_verify($retrievedUserToken, $hashedToken)) {
-                    $this->session->setSessionLoginStatus(true);
-                    $this->session->setSessionUsername($username);
-                    $this->session->setSessionSecurityKey();
-                    return "Welcome back with cookie";
+                if (password_verify(($retrievedUserToken . $_SERVER["HTTP_USER_AGENT"]), $generatedKey)) {
+                    echo $_COOKIE["keepUser"];
+                        $this->session->setSessionLoginStatus(true);
+                        $this->session->setSessionUsername($username);
+                        $this->session->setSessionSecurityKey();
+                        return "Welcome back with cookie";
+                    
                 } else {
+                    echo $_COOKIE["keepUser"];
                     $this->removeCookie();
                     return "Wrong information in cookies";
                 }
             }
         }
+        private function getCookie() {
+            if (isset($_COOKIE["keepUser"])) {
+                return $_COOKIE["keepUser"];
+            } else return "";
+        }
 
-        private function saveTokenToDatabase($username, $token) {
+        private function saveCookieToDatabase($username, $token) {
             $sqlConnection = mysqli_connect($this->settings->localhost, $this->settings->user, $this->settings->password, $this->settings->database, $this->settings->port);
             $query = "UPDATE users SET token = " . "'" . $token . "' WHERE username = " . "'" . $username . "'";
             mysqli_query($sqlConnection, $query);
@@ -118,5 +129,13 @@ class User {
             $row = mysqli_fetch_assoc($result);
             mysqli_close($sqlConnection);
             return $row["token"];
+        }
+        private function getCookieFromDatabase($username) {
+            $sqlConnection = mysqli_connect($this->settings->localhost, $this->settings->user, $this->settings->password, $this->settings->database, $this->settings->port);
+            $query = "SELECT * FROM users WHERE username = " . "'" . $username . "'" ;
+            $result =  mysqli_query($sqlConnection, $query);
+            $row = mysqli_fetch_assoc($result);
+            mysqli_close($sqlConnection);
+            return $row["cookie"];
         }
     }
