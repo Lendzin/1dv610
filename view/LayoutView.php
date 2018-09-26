@@ -12,7 +12,7 @@ class LayoutView {
         </head>
         <body>
           <h1>Assignment 2</h1>
-          ' . $this->renderLinks($loginView->userWantsToRegister(), $session) . '
+          ' . $this->renderLinks($session, $loginView) . '
           ' . $this->renderIsLoggedIn($session) . '
           
           <div class="container">
@@ -24,9 +24,9 @@ class LayoutView {
       </html>
     ';
   }
-  private function renderLinks($userWantsToRegister, $session) {
+  private function renderLinks($session, $loginView) {
     if (!$session->getSessionLoginStatus()) {
-      if ($userWantsToRegister) {
+      if ($loginView->userWantsToRegister()) {
         return '<a href="?">Back to login</a>';
       } else {
         return '<a href="index.php?register">Register a new user</a>';

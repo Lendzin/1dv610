@@ -57,7 +57,7 @@ class LoginView {
 	private function generateLoginFormHTML() {
 
 		return '
-			<form method="post" > 
+			<form action="?" method="post" > 
 				<fieldset>
 					<legend>Login - enter Username and password</legend>
 					<p id="' . self::$messageId . '">' . $this->session->getSessionUserMessage() . '</p>
@@ -118,6 +118,10 @@ class LoginView {
 	}
 
 	public function userWantsToRegister () : bool {
-		return isset($_GET["register"]);
+		if (isset($_GET["register"])) {
+			return true;
+		} else {
+			return false;
+		}
 	  }
 }
