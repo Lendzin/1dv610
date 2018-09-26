@@ -112,7 +112,9 @@ class LoginView {
 		$result =  mysqli_query($sqlConnection, $query);
 		$row = mysqli_fetch_assoc($result);
 		mysqli_close($sqlConnection);
-		if ($row["password"] == $this->getRequestPassword()) {
+		$dbPassword = $row["password"];
+		$password = $this->getRequestPassword();
+		if (password_verify($password, $dbPassword)) {
 			return true;
 		} return false;
 	}
