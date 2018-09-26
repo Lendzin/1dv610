@@ -86,8 +86,6 @@ class RegisterView {
             $this->session->setSessionUserMessage("Registered new user.");
             $this->session->setSessionUsername($username);
             header("Location:?");
-            
-
         } else {
             $this->session->setSessionUserMessage($this->returnAllErrors($errorMessages));
             $this->session->setSessionUsername($username);
@@ -120,25 +118,11 @@ class RegisterView {
     }
 
     private function saveUserToDatabase($username, $password) {
-        
-    }
-    private function saveTokenToDatabase($username, $token) {
         $sqlConnection = mysqli_connect($this->settings->localhost, $this->settings->user, $this->settings->password, $this->settings->database, $this->settings->port);
-        $query = "UPDATE users SET token = " . "'" . $token . "' WHERE username = " . "'" . $username . "'";
+        $query = "INSERT INTO users (username, password) VALUES ('" . $username . "','" . $password . "')";
         mysqli_query($sqlConnection, $query);
         mysqli_close($sqlConnection);
     }
-    private function retrieveTokenFromDatabase($username) {
-        $sqlConnection = mysqli_connect($this->settings->localhost, $this->settings->user, $this->settings->password, $this->settings->database, $this->settings->port);
-        $query = "SELECT * FROM users WHERE username = " . "'" . $username . "'" ;
-        $result =  mysqli_query($sqlConnection, $query);
-        $row = mysqli_fetch_assoc($result);
-        mysqli_close($sqlConnection);
-        return $row["token"];
-}
-    
-
-
 }
     
 //User exists, pick another username.
