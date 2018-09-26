@@ -119,7 +119,7 @@ class RegisterView {
 
     private function saveUserToDatabase($username, $password) {
         $sqlConnection = mysqli_connect($this->settings->localhost, $this->settings->user, $this->settings->password, $this->settings->database, $this->settings->port);
-        $query = "INSERT INTO users (username, password) VALUES ('" . $username . "','" . $password . "')";
+        $query = "INSERT INTO users (username, password, token, cookie) VALUES ('" . $username . "','" . $password . "','','')";
         mysqli_query($sqlConnection, $query);
         mysqli_close($sqlConnection);
     }
