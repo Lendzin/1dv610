@@ -34,7 +34,7 @@ class User {
     public function getReturnMessageFromViews () {
         $username = $this->loginView->getRequestUserName();
             if (!$this->session->getSessionLoginStatus()) {
-                if (isset($_COOKIE['keepUser'])) {
+                if (isset($_COOKIE['LoginView::CookiePassword'])) {
                     return $this->getCookieReturnMessage();
                 }
         
@@ -76,7 +76,7 @@ class User {
         private function removeCookie() {
             $token = random_bytes(60);
             $cookie = "LoggedOut" . ':' . password_hash($token, PASSWORD_DEFAULT);
-            setcookie('keepUser', $cookie, time() + (-86400 * 30), "/"); // NEGATIVE TIME FOR REMOVAL
+            setcookie('LoginView::CookiePassword', $cookie, time() + (-86400 * 30), "/"); // NEGATIVE TIME FOR REMOVAL
         }
         private function createCookie($username) {
             $token = random_bytes(60);
@@ -84,12 +84,12 @@ class User {
             $agent = $_SERVER["HTTP_USER_AGENT"];
             $generatedKey = $token . $agent;
             $cookie = $this->loginView->getRequestUserName() . ':' . password_hash($generatedKey, PASSWORD_DEFAULT);
-            setcookie('keepUser', $cookie, $time, "/"); //POSITIVE TIME WHEN ADDING
+            setcookie('LoginView::CookiePassword', $cookie, $time, "/"); //POSITIVE TIME WHEN ADDING
             $this->saveCookieToDatabase($username, $token);
         }
 
         private function getCookieReturnMessage() {
-            $cookie = $_COOKIE['keepUser'];
+            $cookie = $_COOKIE['LoginView::CookiePassword'];
             list ($username, $generatedKey) = explode(':', $cookie);
             if ($username === "LoggedOut") {
                 $this->session->setSessionLoginStatus(false);
@@ -109,8 +109,8 @@ class User {
             }
         }
         private function getCookie() {
-            if (isset($_COOKIE["keepUser"])) {
-                return $_COOKIE["keepUser"];
+            if (isset($_COOKIE["LoginView::CookiePassword"])) {
+                return $_COOKIE["LoginView::CookiePassword"];
             } else return "";
         }
 
