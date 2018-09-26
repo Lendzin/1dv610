@@ -90,7 +90,12 @@ class User {
 
         private function getCookieReturnMessage() {
             $cookie = $_COOKIE['LoginView::CookiePassword'];
-            list ($username, $generatedKey) = explode(':', $cookie);
+            try {
+                list ($username, $generatedKey) = explode(':', $cookie);
+            } catch (Exception $error) {
+                $this->removeCookie();
+                return "Wrong information in cookies";
+            }
             if ($username === "LoggedOut") {
                 $this->session->setSessionLoginStatus(false);
                 return "";
