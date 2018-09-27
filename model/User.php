@@ -5,14 +5,14 @@ class User {
 
     private $loginView;
     private $registerView;
-    private $settings;
     private $session;
+    private $database;
 
-    public function __construct(\view\LoginView $loginView, \view\RegisterView $registerView, \AppSettings $settings, \model\Session $session) {
+    public function __construct(\view\LoginView $loginView, \view\RegisterView $registerView, \model\Session $session, \model\Database $database) {
         $this->loginView = $loginView;
         $this->registerView = $registerView;
-        $this->settings = $settings;
         $this->session = $session;
+        $this->database = $database;
     }
 
     public function logOutUser() {
@@ -53,7 +53,7 @@ class User {
                     if ( $this->loginView->getRequestPassword() == null) {
                         return 'Password is missing';
                     }
-                    if ($this->loginView->checkLoginInformation()) {
+                    if ($this->checkLoginInformation()) {
                         $this->session->setSessionSecurityKey();
                             $this->session->setSessionLoginStatus(true);
                             if ($this->loginView->stayLoggedInStatus()) {
@@ -72,6 +72,15 @@ class User {
             return "";
             
     }    
+
+    private function checkLoginInformation() {
+		$username = $this->loginView->getRequestUserName();
+        $dbPassword = $this->database->getItemFromDatabase($username, "password");
+        $password = $this->loginView->getRequestPassword();
+		if (password_verify($password, $dbPassword)) {
+			return true;
+		} return false;
+	}
     
         private function removeCookie() {
             $token = random_bytes(60);
@@ -85,7 +94,7 @@ class User {
             $generatedKey = $token . $agent;
             $cookie = $this->loginView->getRequestUserName() . ':' . password_hash($generatedKey, PASSWORD_DEFAULT);
             setcookie('LoginView::CookiePassword', $cookie, $time, "/"); //POSITIVE TIME WHEN ADDING
-            $this->saveCookieToDatabase($username, $token);
+            $this->database->saveCookieToDatabase($username, $token);
         }
 
         private function getCookieReturnMessage() {
@@ -100,7 +109,7 @@ class User {
                 $this->session->setSessionLoginStatus(false);
                 return "";
             } else {
-                $retrievedUserToken = $this->retrieveTokenFromDatabase($username);
+                $retrievedUserToken = $this->database->getItemFromDatabase($username, "token");
                 if (password_verify(($retrievedUserToken . $_SERVER["HTTP_USER_AGENT"]), $generatedKey)) {
                         $this->session->setSessionLoginStatus(true);
                         $this->session->setSessionUsername($username);
@@ -112,33 +121,5 @@ class User {
                     return "Wrong information in cookies";
                 }
             }
-        }
-        private function getCookie() {
-            if (isset($_COOKIE["LoginView::CookiePassword"])) {
-                return $_COOKIE["LoginView::CookiePassword"];
-            } else return "";
-        }
-
-        private function saveCookieToDatabase($username, $token) {
-            $sqlConnection = mysqli_connect($this->settings->localhost, $this->settings->user, $this->settings->password, $this->settings->database, $this->settings->port);
-            $query = "UPDATE users SET token = " . "'" . $token . "' WHERE username = " . "'" . $username . "'";
-            mysqli_query($sqlConnection, $query);
-            mysqli_close($sqlConnection);
-        }
-        private function retrieveTokenFromDatabase($username) {
-            $sqlConnection = mysqli_connect($this->settings->localhost, $this->settings->user, $this->settings->password, $this->settings->database, $this->settings->port);
-            $query = "SELECT * FROM users WHERE username = " . "'" . $username . "'" ;
-            $result =  mysqli_query($sqlConnection, $query);
-            $row = mysqli_fetch_assoc($result);
-            mysqli_close($sqlConnection);
-            return $row["token"];
-        }
-        private function getCookieFromDatabase($username) {
-            $sqlConnection = mysqli_connect($this->settings->localhost, $this->settings->user, $this->settings->password, $this->settings->database, $this->settings->port);
-            $query = "SELECT * FROM users WHERE username = " . "'" . $username . "'" ;
-            $result =  mysqli_query($sqlConnection, $query);
-            $row = mysqli_fetch_assoc($result);
-            mysqli_close($sqlConnection);
-            return $row["cookie"];
         }
     }

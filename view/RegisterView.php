@@ -8,12 +8,12 @@ class RegisterView {
     private static $passwordRepeat = "RegisterView::PasswordRepeat";
     private static $register = "RegisterView::Register";
 
-    private $settings;
     private $session;
+    private $database;
 
-    public function __construct(\AppSettings $settings, \model\Session $session) {
-        $this->settings = $settings;
+    public function __construct(\model\Session $session, \model\Database $database) {
         $this->session = $session;
+        $this->database = $database;
     }
 
  
@@ -82,7 +82,7 @@ class RegisterView {
             array_push($errorMessages, "Username contains invalid characters.");
         }
         if (count($errorMessages) === 0) {
-            $this->saveUserToDatabase($username, $password);
+            $this->database->saveUserToDatabase($username, $password);
             $this->session->setSessionUserMessage("Registered new user.");
             $this->session->setSessionUsername($username);
             unset($_GET["register"]);
@@ -105,24 +105,12 @@ class RegisterView {
     }
 
     private function userExistsInDatabase($username) {
-        $sqlConnection = mysqli_connect($this->settings->localhost, $this->settings->user, $this->settings->password, $this->settings->database, $this->settings->port);
-        $query = "SELECT * FROM users WHERE username = " . "'" . $username . "'" ;
-        $result =  mysqli_query($sqlConnection, $query);
-        $row = mysqli_fetch_assoc($result);
-        mysqli_close($sqlConnection);
-        if ($row["username"]) {
+        $dbUsername = $this->database->getItemFromDatabase($username, "username");
+        if ($dbUsername) {
             return true;
         } else {
             return false;
         }
     }
-
-    private function saveUserToDatabase($username, $password) {
-        $sqlConnection = mysqli_connect($this->settings->localhost, $this->settings->user, $this->settings->password, $this->settings->database, $this->settings->port);
-        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-        $query = "INSERT INTO users (username, password, token, cookie) VALUES ('" . $username . "','" . $hashedPassword . "','','')";
-        mysqli_query($sqlConnection, $query);
-        mysqli_close($sqlConnection);
-    }
 }
-  
+    

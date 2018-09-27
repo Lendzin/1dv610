@@ -10,11 +10,9 @@ class LoginView {
 	private static $keep = 'LoginView::KeepMeLoggedIn';
 	private static $messageId = 'LoginView::Message';
 	
-	private $settings;
 	private $session;
 
-	public function __construct(\AppSettings $settings, \model\Session $session) {
-		$this->settings = $settings;
+	public function __construct(\model\Session $session) {
 		$this->session = $session;
 	}
 
@@ -104,19 +102,6 @@ class LoginView {
 
 	public function stayLoggedInStatus() : bool{
 		return isset($_POST[self::$keep]);	
-	}
-
-	public function checkLoginInformation() {
-		$sqlConnection = mysqli_connect($this->settings->localhost, $this->settings->user, $this->settings->password, $this->settings->database, $this->settings->port);
-		$query = "SELECT * FROM users WHERE username = " . "'" . $this->getRequestUserName() . "'" ;
-		$result =  mysqli_query($sqlConnection, $query);
-		$row = mysqli_fetch_assoc($result);
-		mysqli_close($sqlConnection);
-		$dbPassword = $row["password"];
-		$password = $this->getRequestPassword();
-		if (password_verify($password, $dbPassword)) {
-			return true;
-		} return false;
 	}
 
 	public function userWantsToRegister () : bool {
