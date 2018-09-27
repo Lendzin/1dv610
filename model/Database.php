@@ -29,7 +29,7 @@ class Database {
 
     public function saveCookieToDatabase($username, $token) {
         $mysqli = $this->startMySQLi();
-        if (!($prepStatement = $mysqli->prepare("UPDATE users SET ? WHERE username =?"))) {
+        if (!($prepStatement = $mysqli->prepare("UPDATE users SET token = ? WHERE username = ?"))) {
             throw new Exception("Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error);
         }
         if (!$prepStatement->bind_param("ss", $token, $username)) {
