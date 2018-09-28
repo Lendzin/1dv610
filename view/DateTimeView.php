@@ -3,15 +3,18 @@ namespace view;
 
 class DateTimeView {
 
+	private $dateObject;
 
+	public function __construct() {
+	$this->dateObject = new \DateTime('now', new \DateTimeZone('Europe/Stockholm'));
+	}
 	public function show() {
 
-		$dateObject = new \DateTime('now', new \DateTimeZone('Europe/Stockholm'));
-		$dayOfWeek = $dateObject->format('l');
-		$dayOfMonth = $dateObject->format('dS');
-		$month = $dateObject->format('F');
-		$year = $dateObject->format('Y');
-		$time = $dateObject->format('H:i:s');
+		$dayOfWeek = $this->dateObject->format('l');
+		$dayOfMonth = $this->dateObject->format('dS');
+		$month = $this->dateObject->format('F');
+		$year = $this->dateObject->format('Y');
+		$time = $this->dateObject->format('H:i:s');
 
 		$dateString = $dayOfWeek . ", the " . $dayOfMonth . " of ". $month . " " . $year . ", The time is " . $time;
 

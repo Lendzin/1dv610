@@ -27,12 +27,19 @@ class Database {
         $this->killMySQLi($mysqli);
     }
 
-    public function saveCookieToDatabase($username, $token) {
+    public function saveCookieToDatabase($username, $token, $time) {
+        $tokenStatement = "UPDATE users SET token = ? WHERE username = ?";
+        $timeStatement = "UPDATE users SET cookie = ? WHERE username = ?";
+        $this->updateVariableInDatabase($username, $token, $tokenStatement);
+        $this->updateVariableInDatabase($username, $time, $timeStatement);
+    }
+
+    private function updateVariableInDatabase($username, $variableToUpdate, $preparedStatement) {
         $mysqli = $this->startMySQLi();
-        if (!($prepStatement = $mysqli->prepare("UPDATE users SET token = ? WHERE username = ?"))) {
+        if (!($prepStatement = $mysqli->prepare($preparedStatement))) {
             throw new Exception("Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error);
         }
-        if (!$prepStatement->bind_param("ss", $token, $username)) {
+        if (!$prepStatement->bind_param("ss", $variableToUpdate, $username)) {
             throw new Exception( "Binding parameters failed: (" . $prepStatement->errno . ") " . $prepStatement->error);
         }
         if (!$prepStatement->execute()) {

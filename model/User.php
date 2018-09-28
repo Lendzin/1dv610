@@ -84,8 +84,9 @@ class User {
     
         private function removeCookie() {
             $token = random_bytes(60);
-            $cookie = "LoggedOut" . ':' . password_hash($token, PASSWORD_DEFAULT);
-            setcookie('LoginView::CookiePassword', $cookie, time() + (-86400 * 30), "/"); // NEGATIVE TIME FOR REMOVAL
+            $time = time() + (-86400 * 30);
+            $cookie = "LoggedOut" . ':' . $token;
+            setcookie('LoginView::CookiePassword', $cookie, $time, "/"); // NEGATIVE TIME FOR REMOVAL
         }
         private function createCookie($username) {
             $token = random_bytes(60);
@@ -94,7 +95,7 @@ class User {
             $generatedKey = $token . $agent;
             $cookie = $this->loginView->getRequestUserName() . ':' . password_hash($generatedKey, PASSWORD_DEFAULT);
             setcookie('LoginView::CookiePassword', $cookie, $time, "/"); //POSITIVE TIME WHEN ADDING
-            $this->database->saveCookieToDatabase($username, $token);
+            $this->database->saveCookieToDatabase($username, $token, $time);
         }
 
         private function getCookieReturnMessage() {
@@ -110,14 +111,19 @@ class User {
                 return "";
             } else {
                 $retrievedUserToken = $this->database->getItemFromDatabase($username, "token");
+                $retrievedCookieExpireTime = intval($this->database->getItemFromDatabase($username, "cookie"));
                 if (password_verify(($retrievedUserToken . $_SERVER["HTTP_USER_AGENT"]), $generatedKey)) {
+                    if (time() > $retrievedCookieExpireTime) {
+                        $this->logOutUser();
+                        return "Wrong information in cookies";
+                    } else {
                         $this->session->setSessionLoginStatus(true);
                         $this->session->setSessionUsername($username);
                         $this->session->setSessionSecurityKey();
                         return "Welcome back with cookie";
-                    
+                    }
                 } else {
-                    $this->removeCookie();
+                    $this->logOutUser();
                     return "Wrong information in cookies";
                 }
             }
