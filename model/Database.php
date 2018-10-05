@@ -45,10 +45,12 @@ class Database {
         $this->killMySQLi($mysqli);
     }
 
-    public function saveCookieToDatabase($username, $token, $time) {
+    public function saveTokenToDatabase($username, $token) {
         $tokenStatement = "UPDATE users SET token = ? WHERE username = ?";
-        $timeStatement = "UPDATE users SET cookie = ? WHERE username = ?";
         $this->updateVariableInDatabase($username, $token, $tokenStatement);
+    }
+    public function saveExpiretimeToDatabase($username, $time) {
+        $timeStatement = "UPDATE users SET cookie = ? WHERE username = ?";
         $this->updateVariableInDatabase($username, $time, $timeStatement);
     }
 

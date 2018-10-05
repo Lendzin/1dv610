@@ -226,6 +226,8 @@ class LoginView {
 		$generatedKey = $token . $agent;
 		$cookie = $this->getRequestUserName() . ':' . password_hash($generatedKey, PASSWORD_DEFAULT);
 		setcookie('LoginView::CookiePassword', $cookie, $time, "/"); //POSITIVE TIME WHEN ADDING
-		$this->database->saveCookieToDatabase($username, $token, $time);
+		$this->database->saveTokenToDatabase($username, $token);
+		$this->database->saveExpiretimeToDatabase($username, $time);
+		
 	}
 }
