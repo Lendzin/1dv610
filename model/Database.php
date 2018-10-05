@@ -8,6 +8,24 @@ class Database {
     public function __construct() {
         $this->settings = new \AppSettings();
     }
+    public function userExistsInDatabase($username) {
+        $dbUsername = $this->getItemFromDatabase($username, "username");
+        if ($dbUsername) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function getPasswordForUser($username) {
+        $this->getItemFromDatabase($username, "password");
+    }
+    public function getTokenForUser($username) {
+        $this->getItemFromDatabase($username, "token");
+    }
+    public function getCookieExpiretimeForUser($username) {
+        $this->getItemFromDatabase($username, "cookie");
+    }
 
 
     public function saveUserToDatabase($username, $password) {
@@ -48,7 +66,7 @@ class Database {
         $this->killMySQLi($mysqli);
     }
 
-    public function getItemFromDatabase($username, $object) {
+    public function getItemFromDatabase($username, $itemFromDatabase) {
         $mysqli = $this->startMySQLi();
         if (!($prepStatement = $mysqli->prepare("SELECT * FROM users WHERE username =?"))) {
             throw new Exception("Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error);
@@ -62,7 +80,7 @@ class Database {
         $result = $prepStatement->get_result();
         $row = $result->fetch_assoc();
         $this->killMySQLi($mysqli);
-        return $row[$object];
+        return $row[$itemFromDatabase];
     }
 
     private function startMySQLi() {

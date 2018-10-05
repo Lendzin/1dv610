@@ -167,11 +167,11 @@ class LoginView {
 		} catch (Exception $error) {
 			return true;
 		}
-		$retrievedUserToken = $this->database->getItemFromDatabase($username, "token");
+		$retrievedUserToken = $this->database->getTokenForUser($username);
 		if (!password_verify(($retrievedUserToken . $this->session->getUserAgent()), $generatedKey)) {
 			return true;
 		}
-		$retrievedCookieExpireTime = intval($this->database->getItemFromDatabase($username, "cookie"));
+		$retrievedCookieExpireTime = intval($this->database->getCookieExpiretimeForUser($username));
 		if (time() > $retrievedCookieExpireTime) {
 			return true;
 		}
@@ -207,7 +207,7 @@ class LoginView {
 	}
 	private function loginIsCorrect() {
 		$username = $this->getRequestUserName();
-        $dbPassword = $this->database->getItemFromDatabase($username, "password");
+        $dbPassword = $this->database->getPasswordForUser($username);
         $password = $this->getRequestPassword();
 		if (password_verify($password, $dbPassword)) {
 			return true;

@@ -58,7 +58,7 @@ class RegisterView {
             return $_POST[self::$passwordRepeat];
         }
     }
-    public function unsetRegister() {
+    private function unsetRegister() {
         unset($_GET['register']);
         header('Location: ?');
         exit();
@@ -68,7 +68,7 @@ class RegisterView {
         $username = $this->getRequestedUsername();
         $password = $this->getRequestedPassword();
      
-        if ($this->userExistsInDatabase($username)) {
+        if ($this->database->userExistsInDatabase($username)) {
             array_push($errorMessages, "User exists, pick another username.");
         }
         
@@ -107,15 +107,6 @@ class RegisterView {
             }
         }
         return $returnMessage;
-    }
-
-    private function userExistsInDatabase($username) {
-        $dbUsername = $this->database->getItemFromDatabase($username, "username");
-        if ($dbUsername) {
-            return true;
-        } else {
-            return false;
-        }
     }
 }
     
