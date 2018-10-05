@@ -10,7 +10,6 @@ require_once('view/RegisterView.php');
 require_once('view/DateTimeView.php');
 require_once('view/LayoutView.php');
 require_once('model/Session.php');
-require_once('model/User.php');
 require_once('model/Database.php');
 
 //MAKE SURE ERRORS ARE SHOWN... MIGHT WANT TO TURN THIS OFF ON A PUBLIC SERVER

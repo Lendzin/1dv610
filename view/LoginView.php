@@ -119,7 +119,7 @@ class LoginView {
 	}
 	
 	public function setSessionLogoutMessage() {
-		$this->loginView->logOutUser();
+		$this->logOutUser();
 		$this->session->setSessionUserMessage("Bye bye!");
 	}
 
@@ -149,7 +149,7 @@ class LoginView {
 		}
 		$this->session->setSessionUserMessage($this->returnAllMessages($messages));
 	}
-	
+
 	private function returnAllMessages ($messages) {
         $returnMessage = "";
         for ($count=0; count($messages) > $count; $count++) {
