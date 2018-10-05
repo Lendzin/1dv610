@@ -15,7 +15,6 @@ class MessageController {
     }
 
     public function initializeSessionMessage() {
-        $username = $this->loginView->getRequestUserName();
         $sessionLoggedIn = $this->session->getSessionLoginStatus();
         if (!$sessionLoggedIn) {
             if ($this->loginView->getCookieStatus()) {
