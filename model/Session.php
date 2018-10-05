@@ -25,6 +25,12 @@ class Session {
              return false;
             }
     }
+    public function getUserAgent() : string {
+        if (isset($_SERVER["HTTP_USER_AGENT"])) {
+            return $_SERVER["HTTP_USER_AGENT"];
+        }
+        return "";
+    }
 
     public function setSessionUserMessage(string $userMessage) {
         $_SESSION["user"]["userMessage"] = $userMessage;
@@ -34,6 +40,12 @@ class Session {
          if (isset($_SESSION["user"]["userMessage"])) {
             return $_SESSION["user"]["userMessage"];
         } else return "";
+    }
+    public function unsetSessionUserMessage() {
+        unset($_SESSION["user"]["userMessage"]);
+    }
+    public function unsetSessionUsername() {
+        unset($_SESSION["user"]["username"]);
     }
 
     public function validateSession() {

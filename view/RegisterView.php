@@ -58,7 +58,12 @@ class RegisterView {
             return $_POST[self::$passwordRepeat];
         }
     }
-    public function setRegisterReturnMessage() {
+    public function unsetRegister() {
+        unset($_GET['register']);
+        header('Location: ?');
+        exit();
+    }
+    public function setSessionRegisterMessage() {
         $errorMessages = [];
         $username = $this->getRequestedUsername();
         $password = $this->getRequestedPassword();
@@ -85,7 +90,7 @@ class RegisterView {
             $this->database->saveUserToDatabase($username, $password);
             $this->session->setSessionUserMessage("Registered new user.");
             $this->session->setSessionUsername($username);
-            unset($_GET["register"]);
+            $this->unsetRegister();
         } else {
             $this->session->setSessionUserMessage($this->returnAllErrors($errorMessages));
             $this->session->setSessionUsername($username);
