@@ -151,12 +151,8 @@ class LoginView {
 	}
 
 
-	private function checkCookieIssues($cookie) : bool {
-		try {
-			list ($username, $generatedKey) = explode(':', $cookie);
-		} catch (Exception $error) {
-			return true;
-		}
+	private function checkCookieIssues($username, $generatedKey) : bool {
+
 		$retrievedUserToken = $this->database->getTokenForUser($username);
 		if (!password_verify(($retrievedUserToken . $this->session->getUserAgent()), $generatedKey)) {
 			return true;
@@ -171,23 +167,28 @@ class LoginView {
 	private function getCookieReturnMessage() {
 		$cookie = $_COOKIE['LoginView::CookiePassword'];
 
-		$errorInCookies = $this->checkCookieIssues($cookie);
-		if ($errorInCookies) {
-			$this->logOutUser();
+		try {
+			list ($username, $generatedKey) = explode(':', $cookie);
+		} catch (Exception $error) {
 			return "Wrong information in cookies";
 		}
 
-		list ($username, $generatedKey) = explode(':', $cookie);
+		$errorInCookies = $this->checkCookieIssues($username, $generatedKey);
 		
 		if ($username === "LoggedOut") {
 			$this->session->setSessionLoginStatus($loggedIn = false);
 			return "";
-		} else {
-			$this->session->setSessionLoginStatus(true);
-			$this->session->setSessionUsername($username);
-			$this->session->setSessionSecurityKey();
-			return "Welcome back with cookie";
 		}
+
+		if ($errorInCookies) {
+			$this->logOutUser();
+			return "Wrong information in cookies";
+		}
+		
+ 		$this->session->setSessionLoginStatus(true);
+		$this->session->setSessionUsername($username);
+		$this->session->setSessionSecurityKey();
+		return "Welcome back with cookie";
 	}
 
 	private function logOutUser() {
