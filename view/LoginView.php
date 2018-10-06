@@ -208,7 +208,6 @@ class LoginView {
 	private function loginIsCorrect() {
 		$username = $this->getRequestUserName();
 		$dbPassword = $this->database->getPasswordForUser($username);
-		var_dump($dbPassword);
         $password = $this->getRequestPassword();
 		if (password_verify($password, $dbPassword)) {
 			return true;
