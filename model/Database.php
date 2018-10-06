@@ -18,13 +18,13 @@ class Database {
     }
 
     public function getPasswordForUser($username) {
-        $this->getItemFromDatabase($username, "password");
+        return $this->getItemFromDatabase($username, "password");
     }
     public function getTokenForUser($username) {
-        $this->getItemFromDatabase($username, "token");
+        return $this->getItemFromDatabase($username, "token");
     }
     public function getCookieExpiretimeForUser($username) {
-        $this->getItemFromDatabase($username, "cookie");
+        return $this->getItemFromDatabase($username, "cookie");
     }
 
 
