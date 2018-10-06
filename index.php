@@ -22,6 +22,3 @@ session_start();
 //CREATE OBJECTS OF THE VIEWS
 $rc = new \controller\RenderController();
 $rc->render();
-
-
-// phpinfo();

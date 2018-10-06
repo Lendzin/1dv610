@@ -43,26 +43,7 @@ class RegisterView {
     public function triedToRegisterAccount() {
         return isset($_POST[self::$register]);
     }
-    public function getRequestedUsername() {
-        if (isset($_POST[self::$username])) {
-            return $_POST[self::$username];
-        }
-    }
-    public function getRequestedPassword() {
-        if (isset($_POST[self::$password])) {
-            return $_POST[self::$password];
-        }
-    }
-    public function getPasswordRepeat() {
-        if (isset($_POST[self::$passwordRepeat])) {
-            return $_POST[self::$passwordRepeat];
-        }
-    }
-    private function unsetRegister() {
-        unset($_GET['register']);
-        header('Location: ?');
-        exit();
-    }
+
     public function setSessionRegisterMessage() {
         $errorMessages = [];
         $username = $this->getRequestedUsername();
@@ -96,6 +77,27 @@ class RegisterView {
             $this->session->setSessionUsername($username);
         }
        
+    }
+    
+    private function getRequestedUsername() {
+        if (isset($_POST[self::$username])) {
+            return $_POST[self::$username];
+        }
+    }
+    private function getRequestedPassword() {
+        if (isset($_POST[self::$password])) {
+            return $_POST[self::$password];
+        }
+    }
+    private function getPasswordRepeat() {
+        if (isset($_POST[self::$passwordRepeat])) {
+            return $_POST[self::$passwordRepeat];
+        }
+    }
+    private function unsetRegister() {
+        unset($_GET['register']);
+        header('Location: ?');
+        exit();
     }
 
     private function returnAllErrors ($messages) {

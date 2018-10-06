@@ -77,22 +77,6 @@ class LoginView {
 		';
 	}
 	
-	//CREATE GET-FUNCTIONS TO FETCH REQUEST VARIABLES
-	public function getRequestUserName() {
-		if (isset($_POST[self::$name])) {
-			return $_POST[self::$name];
-		} else {
-			return null;
-		}
-	}
-
-	public function getRequestPassword() {
-		if (isset($_POST[self::$password])) {
-			return $_POST[self::$password];
-		} else {
-			return null;
-		}
-	}
 	public function getCookieStatus() {
 		return isset($_COOKIE['LoginView::CookiePassword']);
 	}
@@ -103,10 +87,6 @@ class LoginView {
 
 	public function triedLogingOut() : bool {
 		return isset($_POST[self::$logout]);
-	}
-
-	public function stayLoggedInStatus() : bool{
-		return isset($_POST[self::$keep]);	
 	}
 
 	public function userWantsToRegister () : bool {
@@ -133,7 +113,7 @@ class LoginView {
 		if ($username == null) {
 			$message = 'Username is missing';
 		} else {
-			$this->session->setSessionUsername($username);   // extra action.
+			$this->session->setSessionUsername($username); 
 		}
 		if ($this->loginIsCorrect()) {
 			$this->session->setSessionSecurityKey();
@@ -148,6 +128,26 @@ class LoginView {
 			$message = "Wrong name or password";
 		}
 		$this->session->setSessionUserMessage($message);
+	}
+
+	private function stayLoggedInStatus() : bool{
+		return isset($_POST[self::$keep]);	
+	}
+
+	private function getRequestUserName() {
+		if (isset($_POST[self::$name])) {
+			return $_POST[self::$name];
+		} else {
+			return null;
+		}
+	}
+
+	private function getRequestPassword() {
+		if (isset($_POST[self::$password])) {
+			return $_POST[self::$password];
+		} else {
+			return null;
+		}
 	}
 
 
