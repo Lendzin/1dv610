@@ -11,7 +11,7 @@ class DateTimeView {
 	public function show() {
 
 		$dayOfWeek = $this->dateObject->format('l');
-		$dayOfMonth = $this->dateObject->format('dS');
+		$dayOfMonth = $this->dateObject->format('jS');
 		$month = $this->dateObject->format('F');
 		$year = $this->dateObject->format('Y');
 		$time = $this->dateObject->format('H:i:s');
