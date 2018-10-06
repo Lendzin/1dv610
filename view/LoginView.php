@@ -126,40 +126,30 @@ class LoginView {
 
 	public function setSessionLoginMessage() {
 		$username = $this->getRequestUserName();
-		$messages = [];
+		$message = "";
+		if ( $this->getRequestPassword() == null) {
+			$message = 'Password is missing';
+		}
 		if ($username == null) {
-			array_push($messages,'Username is missing');
+			$message = 'Username is missing';
 		} else {
 			$this->session->setSessionUsername($username);   // extra action.
-		}
-		if ( $this->getRequestPassword() == null) {
-			array_push($messages, 'Password is missing');
 		}
 		if ($this->loginIsCorrect()) {
 			$this->session->setSessionSecurityKey();
 			$this->session->setSessionLoginStatus($loggedIn = true);
 			if ($this->stayLoggedInStatus()) {
 				$this->createCookie($username);
-				array_push($messages,"Welcome and you will be remembered");
+				$message = "Welcome and you will be remembered";
 			} else {
-				array_push($messages, "Welcome");
+				$message = "Welcome";
 			}
-		} else {
-			array_push($messages,"Wrong name or password");
+		} else if ($message === "" ){
+			$message = "Wrong name or password";
 		}
-		$this->session->setSessionUserMessage($this->returnAllMessages($messages));
+		$this->session->setSessionUserMessage($message);
 	}
 
-	private function returnAllMessages ($messages) {
-        $returnMessage = "";
-        for ($count=0; count($messages) > $count; $count++) {
-            $returnMessage .= $messages[$count];
-            if ($count !== count($messages)) {
-                $returnMessage .= "<br>";
-            }
-        }
-        return $returnMessage;
-    }
 
 	private function checkCookieIssues($cookie) : bool {
 		try {
