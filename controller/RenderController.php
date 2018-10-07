@@ -16,7 +16,6 @@ class RenderController {
         $this->database = new \model\Database();
         $this->session = new \model\Session();
         $this->layoutView = new \view\LayoutView();
-        $this->dateView = new \view\DateTimeView();
         $this->loginView = new \view\LoginView($this->session, $this->database);
         $this->registerView = new \view\RegisterView($this->session, $this->database);
         $this->messageController = new \controller\MessageController($this->loginView, $this->registerView, $this->session);
@@ -24,7 +23,7 @@ class RenderController {
     
     public function render () {
         $this->messageController->initializeSessionMessage();
-        $this->layoutView->render($this->loginView, $this->dateView, $this->registerView, $this->session);
+        $this->layoutView->render($this->loginView, $this->registerView, $this->session);
         $this->session->unsetSessionUserMessage();
         $this->session->unsetSessionUsername();
      }

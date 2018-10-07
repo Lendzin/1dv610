@@ -3,7 +3,7 @@ namespace view;
 
 class LayoutView {
   
-  public function render(LoginView $loginView, DateTimeView $dtv, RegisterView $registerView, \model\Session $session) {
+  public function render(LoginView $loginView, RegisterView $registerView, \model\Session $session) {
     echo '<!DOCTYPE html>
       <html>
         <head>
@@ -18,7 +18,7 @@ class LayoutView {
           <div class="container">
               ' . $this->selectView($loginView, $registerView) . '
               
-              ' . $dtv->show() . '
+              ' . $this->getTimeTag() . '
           </div>
          </body>
       </html>
@@ -48,4 +48,17 @@ class LayoutView {
         return $registerView->response();
     } else return $loginView->response();
   }
+
+  public function getTimeTag() {
+		$this->dateObject = new \DateTime('now', new \DateTimeZone('Europe/Stockholm'));
+		$dayOfWeek = $this->dateObject->format('l');
+		$dayOfMonth = $this->dateObject->format('jS');
+		$month = $this->dateObject->format('F');
+		$year = $this->dateObject->format('Y');
+		$time = $this->dateObject->format('H:i:s');
+
+		$dateString = $dayOfWeek . ", the " . $dayOfMonth . " of ". $month . " " . $year . ", The time is " . $time;
+
+		return "<p>" . $dateString. "</p>";
+	}
 }
