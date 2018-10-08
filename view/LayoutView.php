@@ -7,6 +7,7 @@ class LayoutView {
     echo '<!DOCTYPE html>
       <html>
         <head>
+          <link rel="stylesheet" href="https://lendzin.se/styles.css">
           <meta charset="utf-8">
           <title>Login Example</title>
         </head>

@@ -17,18 +17,7 @@ class Database {
         }
     }
 
-    public function getPasswordForUser($username) {
-        return $this->getItemFromDatabase($username, "password");
-    }
-    public function getTokenForUser($username) {
-        return $this->getItemFromDatabase($username, "token");
-    }
-    public function getCookieExpiretimeForUser($username) {
-        return $this->getItemFromDatabase($username, "cookie");
-    }
-
-
-    public function saveUserToDatabase($username, $password) {
+    public function saveUserToDatabase(string $username,string $password) {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
         $mysqli = $this->startMySQLi();
         if (!($prepStatement = $mysqli->prepare("INSERT INTO users (username, password, token, cookie) VALUES (?,?,?,?)"))) {
@@ -45,16 +34,26 @@ class Database {
         $this->killMySQLi($mysqli);
     }
 
-    public function saveTokenToDatabase($username, $token) {
+    public function getPasswordForUser(string $username) {
+        return $this->getItemFromDatabase($username, "password");
+    }
+    public function getTokenForUser(string $username) {
+        return $this->getItemFromDatabase($username, "token");
+    }
+    public function getCookieExpiretimeForUser(string $username) {
+        return $this->getItemFromDatabase($username, "cookie");
+    }
+
+    public function saveTokenToDatabase(string $username, string $token) {
         $tokenStatement = "UPDATE users SET token = ? WHERE username = ?";
         $this->updateVariableInDatabase($username, $token, $tokenStatement);
     }
-    public function saveExpiretimeToDatabase($username, $time) {
+    public function saveExpiretimeToDatabase(string $username,string $time) {
         $timeStatement = "UPDATE users SET cookie = ? WHERE username = ?";
         $this->updateVariableInDatabase($username, $time, $timeStatement);
     }
 
-    private function updateVariableInDatabase($username, $variableToUpdate, $preparedStatement) {
+    private function updateVariableInDatabase(string $username, string $variableToUpdate, string $preparedStatement) {
         $mysqli = $this->startMySQLi();
         if (!($prepStatement = $mysqli->prepare($preparedStatement))) {
             throw new Exception("Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error);
