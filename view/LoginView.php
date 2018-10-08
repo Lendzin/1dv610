@@ -77,7 +77,7 @@ class LoginView {
 		';
 	}
 	
-	public function getCookieStatus() {
+	public function getCookieStatus() : bool {
 		return isset($_COOKIE['LoginView::CookiePassword']);
 	}
 
@@ -93,18 +93,18 @@ class LoginView {
 		return (isset($_GET["register"]));
 	  }
 
-	public function setSessionCookieMessage() {
+	public function setSessionCookieMessage() : string {
 		$messageToSet =  $this->getCookieReturnMessage();
 		$this->session->setSessionUserMessage($messageToSet);
 	}
 	
-	public function setSessionLogoutMessage() {
+	public function setSessionLogoutMessage() : string {
 		$this->logOutUser();
 		$this->session->setSessionUserMessage("Bye bye!");
 	}
 
 
-	public function setSessionLoginMessage() {
+	public function setSessionLoginMessage() : void {
 		$username = $this->getRequestUserName();
 		$message = "";
 		if ( $this->getRequestPassword() == null) {
@@ -128,11 +128,7 @@ class LoginView {
 			$message = "Wrong name or password";
 		}
 		$this->session->setSessionUserMessage($message);
-	}
-
-	private function stayLoggedInStatus() : bool{
-		return isset($_POST[self::$keep]);	
-	}
+		}
 
 	private function getRequestUserName() {
 		if (isset($_POST[self::$name])) {
@@ -150,21 +146,32 @@ class LoginView {
 		}
 	}
 
-
-	private function checkCookieIssues($username, $generatedKey) : bool {
-
-		$retrievedUserToken = $this->database->getTokenForUser($username);
-		if (!password_verify(($retrievedUserToken . $this->session->getUserAgent()), $generatedKey)) {
+	private function loginIsCorrect() : bool {
+		$username = $this->getRequestUserName();
+		$dbPassword = $this->database->getPasswordForUser($username);
+        $password = $this->getRequestPassword();
+		if (password_verify($password, $dbPassword)) {
 			return true;
-		}
-		$retrievedCookieExpireTime = intval($this->database->getCookieExpiretimeForUser($username));
-		if (time() > $retrievedCookieExpireTime) {
-			return true;
-		}
-		return false;
+		} return false;
 	}
 
-	private function getCookieReturnMessage() {
+	private function stayLoggedInStatus() : bool{
+		return isset($_POST[self::$keep]);	
+	}
+
+	private function createCookie($username) : void {
+		$token = random_bytes(60);
+		$time = time() + (86400 * 30);
+		$agent = $this->session->getUserAgent();
+		$generatedKey = $token . $agent;
+		$cookie = $this->getRequestUserName() . ':' . password_hash($generatedKey, PASSWORD_DEFAULT);
+		setcookie('LoginView::CookiePassword', $cookie, $time, "/"); //POSITIVE TIME WHEN ADDING
+		$this->database->saveTokenToDatabase($username, $token);
+		$this->database->saveExpiretimeToDatabase($username, $time);
+		
+	}
+
+	private function getCookieReturnMessage() : string {
 		$cookie = $_COOKIE['LoginView::CookiePassword'];
 
 		try {
@@ -191,34 +198,29 @@ class LoginView {
 		return "Welcome back with cookie";
 	}
 
-	private function logOutUser() {
+	private function checkCookieIssues($username, $generatedKey) : bool {
+
+		$retrievedUserToken = $this->database->getTokenForUser($username);
+		if (!password_verify(($retrievedUserToken . $this->session->getUserAgent()), $generatedKey)) {
+			return true;
+		}
+		$retrievedCookieExpireTime = intval($this->database->getCookieExpiretimeForUser($username));
+		if (time() > $retrievedCookieExpireTime) {
+			return true;
+		}
+		return false;
+	}
+
+	private function logOutUser() : void {
         $this->session->setSessionUserName("");
         $this->session->setSessionLoginStatus($loggedIn = false);
         $this->removeCookie();
 	}
-	private function loginIsCorrect() {
-		$username = $this->getRequestUserName();
-		$dbPassword = $this->database->getPasswordForUser($username);
-        $password = $this->getRequestPassword();
-		if (password_verify($password, $dbPassword)) {
-			return true;
-		} return false;
-	}
-	private function removeCookie() {
+
+	private function removeCookie() : void {
 		$token = random_bytes(60);
 		$time = time() + (-86400 * 30);
 		$cookie = "LoggedOut" . ':' . $token;
 		setcookie('LoginView::CookiePassword', $cookie, $time, "/"); // NEGATIVE TIME FOR REMOVAL
-	}
-	private function createCookie($username) {
-		$token = random_bytes(60);
-		$time = time() + (86400 * 30);
-		$agent = $this->session->getUserAgent();
-		$generatedKey = $token . $agent;
-		$cookie = $this->getRequestUserName() . ':' . password_hash($generatedKey, PASSWORD_DEFAULT);
-		setcookie('LoginView::CookiePassword', $cookie, $time, "/"); //POSITIVE TIME WHEN ADDING
-		$this->database->saveTokenToDatabase($username, $token);
-		$this->database->saveExpiretimeToDatabase($username, $time);
-		
 	}
 }

@@ -25,7 +25,7 @@ class LayoutView {
       </html>
     ';
   }
-  private function renderLinks($session, $loginView) {
+  private function renderLinks( \model\Session $session, LoginView $loginView) {
     if (!$session->getSessionLoginStatus()) {
       if ($loginView->userWantsToRegister()) {
         return '<a href="?">Back to login</a>';
