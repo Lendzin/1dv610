@@ -46,7 +46,7 @@ class LoginView {
 			$string = "Logged in as: " .  $this->session->getSessionUsername();
 		}
 		return '
-			<form  class="form" method="post" >
+			<form  method="post" class="form">
 				<fieldset class="fieldset">
 					<legend> ' . $string . '</legend>
 					<p id="' . self::$messageId . '" class="' . $this->session->getSessionMessageClass() .'">' . $this->session->getSessionUserMessage() .'</p>
