@@ -41,10 +41,14 @@ class LoginView {
 	* @return  void, BUT writes to standard output!
 	*/
 	private function generateLogoutButtonHTML() {
+		$string ="";
+		if ($this->session->getSessionUsername() != "") {
+			$string = "Logged in as: " .  $this->session->getSessionUsername();
+		}
 		return '
 			<form  class="form" method="post" >
 				<fieldset class="fieldset">
-					<legend>Logged in as: "' .  $this->session->getSessionUsername() . '"</legend>
+					<legend> ' . $string . '</legend>
 					<p id="' . self::$messageId . '" class="' . $this->session->getSessionMessageClass() .'">' . $this->session->getSessionUserMessage() .'</p>
 					<div><input type="submit" name="' . self::$logout . '" value="Logout" class="button"/></div>
 				</fieldset>
