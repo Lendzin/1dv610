@@ -11,17 +11,21 @@ class LayoutView {
           <meta charset="utf-8">
           <title>Login Example</title>
         </head>
-        <body>
-          <h1>Assignment 2</h1>
-          ' . $this->renderLinks($session, $loginView) . '
-          ' . $this->renderIsLoggedIn($session) . '
+        <header><p class="unselectable" id="header_text">SITENAME_UNDERSCORE</p></header>
+        <body class="unselectable">
+          <div class="maindiv">
+            <h1>Assignment 2</h1>
+            ' . $this->renderLinks($session, $loginView) . '
+            ' . $this->renderIsLoggedIn($session) . '
           
-          <div class="container">
+            <div class="container">
               ' . $this->selectView($loginView, $registerView) . '
-              
+            
               ' . $this->getTimeTag() . '
+            </div>
           </div>
          </body>
+         <footer><p class="unselectable" id="footer_text">js224nk@student.lnu.se | Jonas Strandqvist</p></footer>
       </html>
     ';
   }

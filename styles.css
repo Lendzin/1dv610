@@ -2,33 +2,44 @@ body {
     padding: 50px;
     font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
     background-color: #5f9cda;
+    width: 1200px;
+    margin: auto;
+  }
+  div {
+    margin: 2px;
   }
   
   h1 {
     margin: 5px;
     padding: 10px;
     background: tomato;
-    width: 42%;
+  }
+  .maindiv {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .form {
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    margin: 5px;
+    background-color: #ff9046;
   }
 
   .notLoggedIn {
     margin: 5px;
     padding: 10px;
     background: orange;
-    width: 42%;
   }
   h2 {
     margin: 5px;
     padding: 10px;
     background: rgb(61, 160, 61);
-    width: 42%;
   }
 
   .loggedIn {
     margin: 5px;
     padding: 10px;
     background: greenyellow;
-    width: 42%;
   }
   
   .alert-fail {
@@ -47,6 +58,7 @@ body {
   }
   
   .links {
+    max-width: 20%;
     text-decoration: none;
     color: #fdf5e6;
     padding: 15px;
@@ -62,7 +74,7 @@ body {
     padding: 3px;
   }
   .time {
-    max-width: 42%;
+
     padding: 10px;
     margin: 5px;
     color: white;
@@ -81,18 +93,11 @@ body {
     font-weight: bold;
   }
 
-  .form {
-    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-    margin: 5px;
-    max-width: 43.1%;
-    background-color: #ff9046;
-  }
-  
+ 
   #header_text {
     background-color: #00685d;
     color: #1dbd18;
     font-size: 15; 
-    width: 50%;
     text-align: center;
     margin: 5px;
   }
@@ -101,7 +106,6 @@ body {
     background-color: #00685d;
     color: #1dbd18;
     font-size: 9; 
-    width: 50%;
     text-align: center;
     margin: 5px;
   }

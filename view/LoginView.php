@@ -65,16 +65,16 @@ class LoginView {
 					<legend>Login - enter Username and password</legend>
 					<p id="' . self::$messageId . '" class="' . $this->session->getSessionMessageClass() .'">' . $this->session->getSessionUserMessage() . '</p>
 					
-					<label for="' . self::$name . '">Username :</label>
-					<input type="text" id="' . self::$name . '" name="' . self::$name . '" value="' . strip_tags($this->session->getSessionUsername()) . '" />
+					<div><label for="' . self::$name . '">Username :</label></div>
+					<div><input type="text" id="' . self::$name . '" name="' . self::$name . '" value="' . strip_tags($this->session->getSessionUsername()) . '" /></div>
 
-					<label for="' . self::$password . '">Password :</label>
-					<input type="password" id="' . self::$password . '" name="' . self::$password . '" />
+					<div><label for="' . self::$password . '">Password :</label></div>
+					<div><input type="password" id="' . self::$password . '" name="' . self::$password . '" /></div>
 
 					<label for="' . self::$keep . '">Keep me logged in  :</label>
 					<input type="checkbox" id="' . self::$keep . '" name="' . self::$keep . '" />
 					
-					<input type="submit" class="button" name="' . self::$login . '" value="login" />
+					<input type="submit" class="button" name="' . self::$login . '" value="Login" />
 				</fieldset>
 			</form>
 		';

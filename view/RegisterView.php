@@ -25,14 +25,14 @@ class RegisterView {
                         <fieldset class="fieldset">
                         <legend>Register a new user - Write username and password</legend>
                             <p id="' . self::$messageId . '" class="' . $this->session->getSessionMessageClass() .'">' . $this->session->getSessionUserMessage() . '</p>
-                            <label for="' . self::$username . '" >Username :</label>
-                            <input type="text" size="20" name="' . self::$username . '" id="' . self::$username . '" value="' . strip_tags($this->session->getSessionUsername()) . '" />
+                            <div><label for="' . self::$username . '" >Username :</label></div>
+                            <div><input type="text" size="20" name="' . self::$username . '" id="' . self::$username . '" value="' . strip_tags($this->session->getSessionUsername()) . '" /></div>
                             <br/>
-                            <label for="' . self::$password . '" >Password  :</label>
-                            <input type="password" size="20" name="' . self::$password . '" id="' . self::$password . '" value="" />
+                            <div><label for="' . self::$password . '" >Password  :</label></div>
+                            <div><input type="password" size="20" name="' . self::$password . '" id="' . self::$password . '" value="" /></div>
                             <br/>
-                            <label for="' . self::$passwordRepeat . '" >Repeat password  :</label>
-                            <input type="password" size="20" name="' . self::$passwordRepeat . '" id="' . self::$passwordRepeat . '" value="" />
+                            <div><label for="' . self::$passwordRepeat . '" >Repeat password  :</label></div>
+                            <div><input type="password" size="20" name="' . self::$passwordRepeat . '" id="' . self::$passwordRepeat . '" value="" /></div>
                             <br/>
                             <input id="submit" type="submit" class="button" name="' . self::$register . '"  value="Register" />
                             <br/>
