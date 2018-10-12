@@ -26,5 +26,6 @@ class RenderController {
         $this->layoutView->render($this->loginView, $this->registerView, $this->session);
         $this->session->unsetSessionUserMessage();
         $this->session->unsetSessionUsername();
+        $this->session->unsetSessionMessageClass();
      }
 }

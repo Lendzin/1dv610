@@ -43,7 +43,7 @@ class LoginView {
 	private function generateLogoutButtonHTML() {
 		return '
 			<form  method="post" >
-				<p id="' . self::$messageId . '">' . $this->session->getSessionUserMessage() .'</p>
+				<p id="' . self::$messageId . '" class="' . $this->session->getSessionMessageClass() .'">' . $this->session->getSessionUserMessage() .'</p>
 				<input type="submit" name="' . self::$logout . '" value="logout"/>
 			</form>
 		';
@@ -57,10 +57,10 @@ class LoginView {
 	private function generateLoginFormHTML() {
 
 		return '
-			<form action="?" method="post" > 
-				<fieldset>
+			<form action="?" class="form" method="post" > 
+				<fieldset class="fieldset">
 					<legend>Login - enter Username and password</legend>
-					<p id="' . self::$messageId . '">' . $this->session->getSessionUserMessage() . '</p>
+					<p id="' . self::$messageId . '" class="' . $this->session->getSessionMessageClass() .'">' . $this->session->getSessionUserMessage() . '</p>
 					
 					<label for="' . self::$name . '">Username :</label>
 					<input type="text" id="' . self::$name . '" name="' . self::$name . '" value="' . strip_tags($this->session->getSessionUsername()) . '" />
@@ -71,7 +71,7 @@ class LoginView {
 					<label for="' . self::$keep . '">Keep me logged in  :</label>
 					<input type="checkbox" id="' . self::$keep . '" name="' . self::$keep . '" />
 					
-					<input type="submit" name="' . self::$login . '" value="login" />
+					<input type="submit" class="button" name="' . self::$login . '" value="login" />
 				</fieldset>
 			</form>
 		';
@@ -93,18 +93,19 @@ class LoginView {
 		return (isset($_GET["register"]));
 	  }
 
-	public function setSessionCookieMessage() : string {
+	public function setSessionCookieMessage() {
 		$messageToSet =  $this->getCookieReturnMessage();
 		$this->session->setSessionUserMessage($messageToSet);
 	}
 	
-	public function setSessionLogoutMessage() : string {
+	public function setSessionLogoutMessage() {
 		$this->logOutUser();
 		$this->session->setSessionUserMessage("Bye bye!");
+		$this->session->setSessionMessageClass("alert-success");
 	}
 
-
 	public function setSessionLoginMessage() : void {
+		$this->session->setSessionMessageClass("alert-fail");
 		$username = $this->getRequestUserName();
 		$message = "";
 		if ( $this->getRequestPassword() == null) {
@@ -116,6 +117,7 @@ class LoginView {
 			$this->session->setSessionUsername($username); 
 		}
 		if ($this->loginIsCorrect()) {
+			$this->session->setSessionMessageClass("alert-success");
 			$this->session->setSessionSecurityKey();
 			$this->session->setSessionLoginStatus($loggedIn = true);
 			if ($this->stayLoggedInStatus()) {
@@ -129,6 +131,36 @@ class LoginView {
 		}
 		$this->session->setSessionUserMessage($message);
 		}
+
+	private function getCookieReturnMessage() : string {
+		$this->session->setSessionMessageClass("alert-fail");
+		$cookie = $_COOKIE['LoginView::CookiePassword'];
+
+		try {
+			list ($username, $generatedKey) = explode(':', $cookie);
+		} catch (Exception $error) {
+			return "Wrong information in cookies";
+		}
+
+		$errorInCookies = $this->checkCookieIssues($username, $generatedKey);
+		
+		if ($username === "LoggedOut") {
+			$this->session->setSessionLoginStatus($loggedIn = false);
+			$this->session->unsetSessionClassMessage();
+			return "";
+		}
+
+		if ($errorInCookies) {
+			$this->logOutUser();
+			return "Wrong information in cookies";
+		}
+		
+ 		$this->session->setSessionLoginStatus(true);
+		$this->session->setSessionUsername($username);
+		$this->session->setSessionSecurityKey();
+		$this->session->setSessionMessageClass("alert-success");
+		return "Welcome back with cookie";
+	}
 
 	private function getRequestUserName() {
 		if (isset($_POST[self::$name])) {
@@ -161,41 +193,14 @@ class LoginView {
 
 	private function createCookie($username) : void {
 		$token = random_bytes(60);
-		$time = time() + (86400 * 30);
+		$time = time() + (86400 * 30); //POSITIVE TIME WHEN SETTING
 		$agent = $this->session->getUserAgent();
 		$generatedKey = $token . $agent;
 		$cookie = $this->getRequestUserName() . ':' . password_hash($generatedKey, PASSWORD_DEFAULT);
-		setcookie('LoginView::CookiePassword', $cookie, $time, "/"); //POSITIVE TIME WHEN ADDING
+		setcookie('LoginView::CookiePassword', $cookie, $time, "/"); 
 		$this->database->saveTokenToDatabase($username, $token);
 		$this->database->saveExpiretimeToDatabase($username, $time);
 		
-	}
-
-	private function getCookieReturnMessage() : string {
-		$cookie = $_COOKIE['LoginView::CookiePassword'];
-
-		try {
-			list ($username, $generatedKey) = explode(':', $cookie);
-		} catch (Exception $error) {
-			return "Wrong information in cookies";
-		}
-
-		$errorInCookies = $this->checkCookieIssues($username, $generatedKey);
-		
-		if ($username === "LoggedOut") {
-			$this->session->setSessionLoginStatus($loggedIn = false);
-			return "";
-		}
-
-		if ($errorInCookies) {
-			$this->logOutUser();
-			return "Wrong information in cookies";
-		}
-		
- 		$this->session->setSessionLoginStatus(true);
-		$this->session->setSessionUsername($username);
-		$this->session->setSessionSecurityKey();
-		return "Welcome back with cookie";
 	}
 
 	private function checkCookieIssues($username, $generatedKey) : bool {
@@ -219,8 +224,8 @@ class LoginView {
 
 	private function removeCookie() : void {
 		$token = random_bytes(60);
-		$time = time() + (-86400 * 30);
+		$time = time() + (-86400 * 30); // NEGATIVE TIME FOR REMOVAL
 		$cookie = "LoggedOut" . ':' . $token;
-		setcookie('LoginView::CookiePassword', $cookie, $time, "/"); // NEGATIVE TIME FOR REMOVAL
+		setcookie('LoginView::CookiePassword', $cookie, $time, "/"); 
 	}
 }

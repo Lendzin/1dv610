@@ -7,7 +7,7 @@ class LayoutView {
     echo '<!DOCTYPE html>
       <html>
         <head>
-          <link rel="stylesheet" href="../styles.css">
+        <link rel="stylesheet" type="text/css" href="styles.css" />
           <meta charset="utf-8">
           <title>Login Example</title>
         </head>
@@ -28,19 +28,19 @@ class LayoutView {
   private function renderLinks( \model\Session $session, LoginView $loginView) {
     if (!$session->getSessionLoginStatus()) {
       if ($loginView->userWantsToRegister()) {
-        return '<a href="?">Back to login</a>';
+        return '<a href="?" class="links">Back to login</a>';
       } else {
-        return '<a href="index.php?register">Register a new user</a>';
+        return '<a href="index.php?register" class="links">Register a new user</a>';
       }
     }
   }
   
   private function renderIsLoggedIn($session) {
     if ($session->getSessionLoginStatus() && $session->validateSession()) {
-      return '<h2>Logged in</h2>';
+      return '<h2 class="LoggedIn">Logged in</h2>';
     }
     else {
-      return '<h2>Not logged in</h2>';
+      return '<h2 class="notLoggedIn">Not logged in</h2>';
     }
   }
 
@@ -60,6 +60,6 @@ class LayoutView {
 
 		$dateString = $dayOfWeek . ", the " . $dayOfMonth . " of ". $month . " " . $year . ", The time is " . $time;
 
-		return "<p>" . $dateString. "</p>";
+		return "<p class='time'>" . $dateString. "</p>";
 	}
 }

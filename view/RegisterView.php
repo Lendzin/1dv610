@@ -21,10 +21,10 @@ class RegisterView {
     public function response () {
         $response = '
                     <h2>Register new user</h2>
-                    <form action="?register" method="post" enctype="multipart/form-data">
-                        <fieldset>
+                    <form action="?register" class="form" method="post" enctype="multipart/form-data">
+                        <fieldset class="fieldset">
                         <legend>Register a new user - Write username and password</legend>
-                            <p id="' . self::$messageId . '">' . $this->session->getSessionUserMessage() . '</p>
+                            <p id="' . self::$messageId . '" class="' . $this->session->getSessionMessageClass() .'">' . $this->session->getSessionUserMessage() . '</p>
                             <label for="' . self::$username . '" >Username :</label>
                             <input type="text" size="20" name="' . self::$username . '" id="' . self::$username . '" value="' . strip_tags($this->session->getSessionUsername()) . '" />
                             <br/>
@@ -34,9 +34,11 @@ class RegisterView {
                             <label for="' . self::$passwordRepeat . '" >Repeat password  :</label>
                             <input type="password" size="20" name="' . self::$passwordRepeat . '" id="' . self::$passwordRepeat . '" value="" />
                             <br/>
-                            <input id="submit" type="submit" name="' . self::$register . '"  value="Register" />
+                            <input id="submit" type="submit" class="button" name="' . self::$register . '"  value="Register" />
                             <br/>
-                        </fieldset>';
+                        </fieldset>
+                        </form>';
+                        
         return $response;
     }
 
@@ -70,10 +72,12 @@ class RegisterView {
         if (count($errorMessages) === 0) {
             $this->database->saveUserToDatabase($username, $password);
             $this->session->setSessionUserMessage("Registered new user.");
+            $this->session->setSessionMessageClass("alert-success");
             $this->session->setSessionUsername($username);
             $this->unsetRegister();
         } else {
             $this->session->setSessionUserMessage($this->returnAllErrors($errorMessages));
+            $this->session->setSessionMessageClass("alert-fail");
             $this->session->setSessionUsername($username);
         }
        

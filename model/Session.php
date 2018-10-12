@@ -13,9 +13,17 @@ class Session {
         } else return "";
         
     }
+    public function unsetSessionUsername() {
+        unset($_SESSION["user"]["username"]);
+    }
+
     
     public function setSessionLoginStatus(bool $loginStatus) {
         $_SESSION["user"]["loginStatus"] = $loginStatus;
+    }
+
+    public function unsetSessionLoginStatus() {
+        unset($_SESSION["user"]["loginStatus"]);
     }
     
     public function getSessionLoginStatus() : bool {
@@ -31,6 +39,18 @@ class Session {
         }
         return "";
     }
+    public function setSessionMessageClass(string $class) {
+        $_SESSION["user"]["messageClass"] = $class;
+    }
+    public function getSessionMessageClass() {
+        if (isset($_SESSION["user"]["messageClass"])) {
+            return $_SESSION["user"]["messageClass"];
+        }
+        
+    }
+    public function unsetSessionMessageClass() {
+        unset($_SESSION["user"]["messageClass"]);
+    }
 
     public function setSessionUserMessage(string $userMessage) {
         $_SESSION["user"]["userMessage"] = $userMessage;
@@ -43,9 +63,6 @@ class Session {
     }
     public function unsetSessionUserMessage() {
         unset($_SESSION["user"]["userMessage"]);
-    }
-    public function unsetSessionUsername() {
-        unset($_SESSION["user"]["username"]);
     }
 
     public function validateSession() {
