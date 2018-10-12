@@ -44,7 +44,7 @@ class LoginView {
 		return '
 			<form  method="post" >
 				<p id="' . self::$messageId . '" class="' . $this->session->getSessionMessageClass() .'">' . $this->session->getSessionUserMessage() .'</p>
-				<input type="submit" name="' . self::$logout . '" value="logout"/>
+				<input type="submit" class="button" name="' . self::$logout . '" value="logout"/>
 			</form>
 		';
 	}
