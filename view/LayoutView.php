@@ -24,7 +24,6 @@ class LayoutView {
             </div>
           </div>
          </body>
-         <footer><p class="unselectable" id="footer_text">js224nk@student.lnu.se | Jonas Strandqvist</p></footer>
       </html>
     ';
   }
