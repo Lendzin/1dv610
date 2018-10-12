@@ -11,7 +11,6 @@ class LayoutView {
           <meta charset="utf-8">
           <title>Login Example</title>
         </head>
-        <header><p class="unselectable" id="header_text">SITENAME_UNDERSCORE</p></header>
         <body class="unselectable">
           <div class="maindiv">
             <h1>Assignment 2</h1>
