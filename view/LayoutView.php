@@ -12,7 +12,7 @@ class LayoutView {
           <title>Login Example</title>
         </head>
         <body class="unselectable">
-        <header><p class="unselectable" id="header_text">SITENAME_UNDERSCORE</p></header>
+        <div><p class="unselectable" id="header_text">SITENAME_UNDERSCORE</p></div>
           <div class="maindiv">
             <h1>Assignment 2</h1>
             ' . $this->renderLinks($session, $loginView) . '
@@ -24,7 +24,7 @@ class LayoutView {
               ' . $this->getTimeTag() . '
             </div>
           </div>
-          <footer><p class="unselectable" id="footer_text">js224nk@student.lnu.se | Jonas Strandqvist</p></footer>
+          <div><p class="unselectable" id="footer_text">js224nk@student.lnu.se | Jonas Strandqvist</p></div>
          </body>
       </html>
     ';
