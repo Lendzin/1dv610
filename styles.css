@@ -20,7 +20,7 @@ body {
   h2 {
     margin: 5px;
     padding: 10px;
-    background: rgb(0, 190, 0);
+    background: rgb(61, 160, 61);
     width: 42%;
   }
 
@@ -39,7 +39,7 @@ body {
     margin-bottom: 15px;
   }
   .alert-success {
-    max-width: 30%;
+    max-width: 50%;
     padding: 10px;
     margin: 5px;
     background-color: #5ceb68 ;
@@ -62,7 +62,7 @@ body {
     padding: 3px;
   }
   .time {
-    max-width: 30%;
+    max-width: 42%;
     padding: 10px;
     margin: 5px;
     color: white;
@@ -84,7 +84,7 @@ body {
   .form {
     font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
     margin: 5px;
-    max-width: 45%;
+    max-width: 43.1%;
     background-color: #ff9046;
   }
   
