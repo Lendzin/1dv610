@@ -43,11 +43,11 @@ class LoginView {
 	private function generateLogoutButtonHTML() {
 		return '
 			<form  class="form" method="post" >
-				<fieldset class="fieldset">
+
 					<legend>Logged in as: "' .  $this->session->getSessionUsername() . '"</legend>
 					<p id="' . self::$messageId . '" class="' . $this->session->getSessionMessageClass() .'">' . $this->session->getSessionUserMessage() .'</p>
-					<input type="submit" class="button" name="' . self::$logout . '" value="logout"/>
-				</fieldset>
+					<input type="submit" name="' . self::$logout . '" value="logout"/>
+
 			</form>
 		';
 	}
