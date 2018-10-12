@@ -40,26 +40,18 @@ class LoginView {
 	* @param $message, String output message
 	* @return  void, BUT writes to standard output!
 	*/
-	// private function generateLogoutButtonHTML() {
-	// 	$string ="";
-	// 	if ($this->session->getSessionUsername() != "") {
-	// 		$string = "Logged in as: " .  $this->session->getSessionUsername();
-	// 	}
-	// 	return '
-	// 		<form  method="post" class="form">
-	// 			<fieldset class="fieldset">
-	// 				<legend> ' . $string . '</legend>
-	// 				<p id="' . self::$messageId . '" class="' . $this->session->getSessionMessageClass() .'">' . $this->session->getSessionUserMessage() .'</p>
-	// 				<div><input type="submit" name="' . self::$logout . '" value="Logout" class="button"/></div>
-	// 			</fieldset>
-	// 		</form>
-	// 	';
-	// }
 	private function generateLogoutButtonHTML() {
+		$string ="";
+		if ($this->session->getSessionUsername() != "") {
+			$string = "Logged in as: " .  $this->session->getSessionUsername();
+		}
 		return '
-			<form  method="post" >
-				<p id="' . self::$messageId . '">' . $this->session->getSessionUserMessage() .'</p>
-				<input type="submit" name="' . self::$logout . '" value="logout"/>
+			<form  class="form" method="post" >
+				<fieldset class="fieldset">
+					<legend> ' . $string . '</legend>
+					<p id="' . self::$messageId . '" class="' . $this->session->getSessionMessageClass() .'">' . $this->session->getSessionUserMessage() .'</p>
+					<div><input type="submit" name="' . self::$logout . '" value="Logout" class="button"/></div>
+				</fieldset>
 			</form>
 		';
 	}
