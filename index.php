@@ -10,6 +10,9 @@ require_once('view/RegisterView.php');
 require_once('view/LayoutView.php');
 require_once('model/Session.php');
 require_once('model/Database.php');
+require_once('model/User.php');
+require_once('model/Username.php');
+require_once('model/Password.php');
 
 //MAKE SURE ERRORS ARE SHOWN... MIGHT WANT TO TURN THIS OFF ON A PUBLIC SERVER
 // error_reporting(E_ALL);

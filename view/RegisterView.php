@@ -10,6 +10,9 @@ class RegisterView {
 
     private $session;
     private $database;
+    private $user;
+    private $rePassword;
+    private $errorMessages;
 
     public function __construct(\model\Session $session, \model\Database $database) {
         $this->session = $session;
@@ -46,64 +49,75 @@ class RegisterView {
         return isset($_POST[self::$register]);
     }
 
-    public function setSessionRegisterMessage() {
+    public function setRegisterVariables() {
+        $this->user = new \model\User($this->getRequestedUsername(), $this->getRequestedPassword());
+        $this->rePassword = $this->getPasswordRepeat();
+    }
+
+    public function setRegisterErrorMessages() : void {
         $errorMessages = [];
-        $username = $this->getRequestedUsername();
-        $password = $this->getRequestedPassword();
-     
-        if ($this->database->userExistsInDatabase($username)) {
+        if ($this->database->userExistsInDatabase($this->user->getName())) {
             array_push($errorMessages, "User exists, pick another username.");
         }
-        
-        if (!(strlen($username) >= 3)) {
+        if (!(strlen($this->user->getName()) >= 3)) {
             array_push($errorMessages, "Username has too few characters, at least 3 characters.");
         }
-
-        if (!(strlen($password) >= 6)) {
-            array_push($errorMessages, "Password has too few characters, at least 6 characters.");            
-        }
-
-        if (($password !== $this->getPasswordRepeat())) {
-            array_push($errorMessages, "Passwords do not match.");
-        }
-        if (preg_match('/[^a-zA-Z0-9]+/', $username) === 1){  //preg_match returns values which has to be compared.
+        try {
+            $UserName = new \model\Username($this->user->getName());
+        } catch (\Exception $error) {
             array_push($errorMessages, "Username contains invalid characters.");
         }
-        if (count($errorMessages) === 0) {
-            $this->database->saveUserToDatabase($username, $password);
-            $this->session->setSessionUserMessage("Registered new user.");
-            $this->session->setSessionMessageClass("alert-success");
-            $this->session->setSessionUsername($username);
-            $this->unsetRegister();
-        } else {
-            $this->session->setSessionUserMessage($this->returnAllErrors($errorMessages));
-            $this->session->setSessionMessageClass("alert-fail");
-            $this->session->setSessionUsername($username);
+        try {
+            $UserPassword = new \model\Password($this->user->getPassword());
+        } catch (\Exception $error) {
+          array_push($errorMessages, "Password has too few characters, at least 6 characters.");
         }
-       
-    }
-    
-    private function getRequestedUsername() {
-        if (isset($_POST[self::$username])) {
-            return $_POST[self::$username];
+        if ($this->user->getPassword() !== $this->rePassword) {
+                array_push($errorMessages, "Passwords do not match.");
         }
+        $this->errorMessages = $errorMessages;
     }
-    private function getRequestedPassword() {
-        if (isset($_POST[self::$password])) {
-            return $_POST[self::$password];
-        }
+
+    public function isUserAccepted() : bool {
+        return count($this->errorMessages) === 0 ? true : false;
     }
-    private function getPasswordRepeat() {
-        if (isset($_POST[self::$passwordRepeat])) {
-            return $_POST[self::$passwordRepeat];
-        }
+
+    public function saveUser() {
+        $this->database->saveUserToDatabase($this->user->getName(), $this->user->getPassword());
     }
-    private function unsetRegister() {
+
+    public function setUserSuccessResponse() {
+        $this->session->setSessionUserMessage("Registered new user.");
+        $this->session->setSessionMessageClass("alert-success");
+    }
+
+    public function setUserNameInForm() {
+        $this->session->setSessionUsername($this->user->getName());
+    }
+
+    public function setUserFailedResponse() {
+        $this->session->setSessionUserMessage($this->returnAllErrors($this->errorMessages));
+        $this->session->setSessionMessageClass("alert-fail");
+    }
+
+    public function unsetRegister() {
         unset($_GET['register']);
         header('Location: ?');
         exit();
     }
 
+    private function getRequestedUsername() {
+        return isset($_POST[self::$username]) ? $_POST[self::$username] : "";
+    }
+
+    private function getRequestedPassword() {
+        return isset($_POST[self::$password]) ? $_POST[self::$password] : "";
+    }
+
+    private function getPasswordRepeat() {
+        return isset($_POST[self::$passwordRepeat]) ? $_POST[self::$passwordRepeat]: "";
+    }
+    
     private function returnAllErrors ($messages) {
         $returnMessage = "";
         for ($count=0; count($messages) > $count; $count++) {

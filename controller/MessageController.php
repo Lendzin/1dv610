@@ -21,8 +21,16 @@ class MessageController {
                 $this->loginView->setSessionCookieMessage();
             }
             if ($this->registerView->triedToRegisterAccount()) {
-                $this->registerView->setSessionRegisterMessage();
-
+                $this->registerView->setRegisterVariables();
+                $this->registerView->setRegisterErrorMessages();
+                if ($this->registerView->isUserAccepted()) {
+                    $this->registerView->saveUser();
+                    $this->registerView->setUserSuccessResponse();
+                    $this->registerView->unsetRegister();
+                } else {
+                    $this->registerView->setUserFailedResponse();
+                }
+                $this->registerView->setUserNameInForm();
             }
             if ($this->loginView->triedLogingIn()) {
                 $this->loginView->setSessionLoginMessage();
