@@ -192,6 +192,12 @@ class LoginView {
 		list ($username, $generatedKey) = explode(':', $cookie);
 		return ($username === "loggedOut") ? true : false;
 	}
+
+	public function unsetCookieLogin() {
+		$this->session->setSessionLoggedIn(false);
+		$this->session->unsetSessionMessageClass();
+		$this->session->setSessionUserMessage("");
+	}
 		
 	public function setSuccessCookieLogin($username) : void {
 			$this->session->setSessionLoggedIn(true);
