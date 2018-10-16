@@ -172,11 +172,12 @@ class LoginView {
 		} catch (Exception $error) {
 			return true;
 		}
-	
+		if ($username === "loggedOut") {
+			return false;
+		}
 		if ($this->foundCookieIssues($username, $generatedKey)) {
 			return true;
 		}
-		$this->user = new \model\User($username, "");  //special, to aquire name in getSuccessCookieLogin() (to avoid list/explode)
 		return false;
 	}
 
@@ -185,13 +186,19 @@ class LoginView {
 		$this->session->setSessionMessageClass("alert-fail");
 		$this->session->setSessionUserMessage("Wrong information in cookies");
 	}
+
+	public function isLoggedOutCookie() {
+		$cookie = $_COOKIE['LoginView::CookiePassword'];
+		list ($username, $generatedKey) = explode(':', $cookie);
+		return ($username === "loggedOut") ? true : false;
+	}
 		
-	public function setSuccessCookieLogin() : void {
-		$this->session->setSessionLoggedIn(true);
-		$this->session->setSessionUsername($this->user->getName()); //set in existCookieIssues() after explode
-		$this->session->setSessionSecurityKey();
-		$this->session->setSessionMessageClass("alert-success");
-		$this->session->setSessionUserMessage("Welcome back with cookie");
+	public function setSuccessCookieLogin($username) : void {
+			$this->session->setSessionLoggedIn(true);
+			$this->session->setSessionUsername($username);
+			$this->session->setSessionSecurityKey();
+			$this->session->setSessionMessageClass("alert-success");
+			$this->session->setSessionUserMessage("Welcome back with cookie");
 	}
 
 	private function getRequestUserName() : string {

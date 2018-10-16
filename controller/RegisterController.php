@@ -17,11 +17,12 @@ class RegisterController {
             if ($this->registerView->isUserAccepted()) {
                 $this->registerView->saveUser();
                 $this->registerView->setUserSuccessResponse();
+                $this->registerView->setUserNameInForm();
                 $this->registerView->unsetRegister();
             } else {
+                $this->registerView->setUserNameInForm();
                 $this->registerView->setUserFailedResponse();
             }
-            $this->registerView->setUserNameInForm();
         }
     }
 }

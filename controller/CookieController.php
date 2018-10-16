@@ -15,7 +15,11 @@ class CookieController {
             if ($this->loginView->existCookieIssues()) {
                 $this->loginView->setFailedCookieLogin();
             } else {
-                $this->loginView->setSuccessCookieLogin();
+                if ($this->loginView->isLoggedOutCookie()) {
+                    $this->loginView->unsetCookieLogin();
+                } else {
+                    $this->loginView->setSuccessCookieLogin();                    
+                }
             }
         }
     }
