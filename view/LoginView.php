@@ -203,7 +203,7 @@ class LoginView {
 		$cookie = $_COOKIE['LoginView::CookiePassword'];
 		list ($username, $generatedKey) = explode(':', $cookie);
 		$this->session->setSessionLoggedIn(true);
-		$this->session->setSessionUsername();
+		$this->session->setSessionUsername($username);
 		$this->session->setSessionSecurityKey();
 		$this->session->setSessionMessageClass("alert-success");
 		$this->session->setSessionUserMessage("Welcome back with cookie");
