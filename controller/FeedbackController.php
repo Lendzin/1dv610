@@ -10,12 +10,11 @@ class FeedbackController {
     private $loginController;
     private $session;
 
-    public function __construct(\view\LoginView $loginView, CookieController $cookieController, RegisterController $registerController,
-        LoginController $loginController, \model\Session $session) {
+    public function __construct(\view\LoginView $loginView, \view\RegisterView $registerView, \model\Session $session) {
         $this->loginView = $loginView;
-        $this->cookieController = $cookieController;
-        $this->registerController = $registerController;
-        $this->loginController = $loginController;
+        $this->cookieController = new CookieController($this->loginView);
+        $this->registerController = new RegisterController($registerView);
+        $this->loginController = new LoginController($this->loginView);
         $this->session = $session;
     }
 

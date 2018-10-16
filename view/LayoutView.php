@@ -2,8 +2,20 @@
 namespace view;
 
 class LayoutView {
+
+  private $loginView;
+  private $registerView;
+  private $session;
+  private $dateObject;
+
+  public function __construct(LoginView $loginView, RegisterView $registerView, \model\Session $session) {
+    $this->dateObject = new \DateTime('now', new \DateTimeZone('Europe/Stockholm'));
+    $this->loginView = $loginView;
+    $this->registerView = $registerView;
+    $this->session = $session;
+  }
   
-  public function render(LoginView $loginView, RegisterView $registerView, \model\Session $session) {
+  public function render() {
     echo '<!DOCTYPE html>
       <html>
         <head>
@@ -15,11 +27,11 @@ class LayoutView {
         <div><p class="unselectable" id="header_text">SITENAME_UNDERSCORE</p></div>
           <div class="maindiv">
             <h1>Assignment 2</h1>
-            ' . $this->renderLinks($session, $loginView) . '
-            ' . $this->renderIsLoggedIn($session) . '
+            ' . $this->renderLinks() . '
+            ' . $this->renderIsLoggedIn() . '
           
             <div class="container">
-              ' . $this->selectView($loginView, $registerView) . '
+              ' . $this->selectView() . '
             
               ' . $this->getTimeTag() . '
             </div>
@@ -29,9 +41,9 @@ class LayoutView {
       </html>
     ';
   }
-  private function renderLinks( \model\Session $session, LoginView $loginView) {
-    if (!$session->sessionLoggedIn()) {
-      if ($loginView->userWantsToRegister()) {
+  private function renderLinks() {
+    if (!$this->session->sessionLoggedIn()) {
+      if ($this->loginView->userWantsToRegister()) {
         return '<a href="?" class="links">Back to login</a>';
       } else {
         return '<a href="index.php?register" class="links">Register a new user</a>';
@@ -39,8 +51,8 @@ class LayoutView {
     }
   }
   
-  private function renderIsLoggedIn($session) {
-    if ($session->sessionLoggedIn() && $session->validateSession()) {
+  private function renderIsLoggedIn() {
+    if ($this->session->sessionLoggedIn() && $this->session->validateSession()) {
       return '<h2 class="loggedIn">Logged in</h2>';
     }
     else {
@@ -48,14 +60,13 @@ class LayoutView {
     }
   }
 
-  private function selectView(LoginView $loginView, RegisterView $registerView) {
-    if ($loginView->userWantsToRegister()) {
-        return $registerView->response();
-    } else return $loginView->response();
+  private function selectView() {
+    if ($this->loginView->userWantsToRegister()) {
+        return $this->registerView->response();
+    } else return $this->loginView->response();
   }
 
   public function getTimeTag() {
-		$this->dateObject = new \DateTime('now', new \DateTimeZone('Europe/Stockholm'));
 		$dayOfWeek = $this->dateObject->format('l');
 		$dayOfMonth = $this->dateObject->format('jS');
 		$month = $this->dateObject->format('F');
