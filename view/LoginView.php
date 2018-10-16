@@ -199,12 +199,14 @@ class LoginView {
 		$this->session->setSessionUserMessage("");
 	}
 		
-	public function setSuccessCookieLogin($username) : void {
-			$this->session->setSessionLoggedIn(true);
-			$this->session->setSessionUsername($username);
-			$this->session->setSessionSecurityKey();
-			$this->session->setSessionMessageClass("alert-success");
-			$this->session->setSessionUserMessage("Welcome back with cookie");
+	public function setSuccessCookieLogin() : void {
+		$cookie = $_COOKIE['LoginView::CookiePassword'];
+		list ($username, $generatedKey) = explode(':', $cookie);
+		$this->session->setSessionLoggedIn(true);
+		$this->session->setSessionUsername();
+		$this->session->setSessionSecurityKey();
+		$this->session->setSessionMessageClass("alert-success");
+		$this->session->setSessionUserMessage("Welcome back with cookie");
 	}
 
 	private function getRequestUserName() : string {
