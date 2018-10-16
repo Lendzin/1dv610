@@ -35,6 +35,32 @@ body {
     padding: 10px;
     background: rgb(61, 160, 61);
   }
+  .messagebox {
+    display: flex;
+    flex-direction: row;
+  }
+  .rightside {
+    border:1px solid black;
+    border-bottom: 5px solid black;
+    margin: 20px;
+    padding: 2px;
+    background: #4bc2fa;
+    flex: 1;
+  }
+  .leftside {
+    border:1px solid black;
+    border-bottom: 5px solid black;
+    margin: 20px;
+    padding: 4px;
+    background: #f8e7c7;
+    flex: 1;
+  }
+  p {
+    margin: 5px;
+  }
+  .boldtext {
+    font-weight: bold;
+  }
 
   .loggedIn {
     margin: 5px;

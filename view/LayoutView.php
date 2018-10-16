@@ -37,7 +37,7 @@ class LayoutView {
             
               ' . $this->renderTimeTag() . '
             </div>
-            <div>
+            <div class="messagebox">
                 ' . $this->newsView->render() . '              
             </div>
           </div>

@@ -18,6 +18,7 @@ require_once('model/Database.php');
 require_once('model/User.php');
 require_once('model/Username.php');
 require_once('model/Password.php');
+require_once('model/Message.php');
 
 //MAKE SURE ERRORS ARE SHOWN... MIGHT WANT TO TURN THIS OFF ON A PUBLIC SERVER
 // error_reporting(E_ALL);

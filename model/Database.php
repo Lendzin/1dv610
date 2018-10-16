@@ -8,6 +8,23 @@ class Database {
     public function __construct() {
         $this->settings = new \AppSettings();
     }
+
+    public function getMessages() {
+        $mysqli = $this->startMySQLi();
+        $string = "SELECT * FROM messages";
+        $result = $mysqli->query($string);
+        $messageArray = [];
+        while ($row = $result->fetch_assoc())
+        {
+            $message = new Message($row['id'], $row['username'], $row['timestamp'], $row['message']);
+            array_push($messageArray, $message);
+        }
+        return $messageArray;
+    }
+
+
+
+
     public function userExistsInDatabase($username) {
         $dbUsername = $this->getItemFromDatabase($username, "username");
         if ($dbUsername) {
