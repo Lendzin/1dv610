@@ -20,18 +20,23 @@ class Database {
     public function saveUserToDatabase(string $username,string $password) {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
         $mysqli = $this->startMySQLi();
-        if (!($prepStatement = $mysqli->prepare("INSERT INTO users (username, password, token, cookie) VALUES (?,?,?,?)"))) {
-            throw new Exception("Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error);
+        try {
+            if (!($prepStatement = $mysqli->prepare("INSERT INTO users (username, password, token, cookie) VALUES (?,?,?,?)"))) {
+                throw new Exception("Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error);
+            }
+            $token = "";
+            $cookie = "";
+            if (!$prepStatement->bind_param("ssss", $username,$hashedPassword,$token,$cookie)) {
+                throw new Exception( "Binding parameters failed: (" . $prepStatement->errno . ") " . $prepStatement->error);
+            }
+            if (!$prepStatement->execute()) {
+                throw new Exception("Execute failed: (" . $prepStatement->errno . ") " . $prepStatement->error);
+            }
+        } catch (Exception $error) {
+            throw $error;
+        } finally {
+            $this->killMySQLi($mysqli);
         }
-        $token = "";
-        $cookie = "";
-        if (!$prepStatement->bind_param("ssss", $username,$hashedPassword,$token,$cookie)) {
-            throw new Exception( "Binding parameters failed: (" . $prepStatement->errno . ") " . $prepStatement->error);
-        }
-        if (!$prepStatement->execute()) {
-            throw new Exception("Execute failed: (" . $prepStatement->errno . ") " . $prepStatement->error);
-        }
-        $this->killMySQLi($mysqli);
     }
 
     public function getPasswordForUser(string $username) {
@@ -58,33 +63,43 @@ class Database {
 
     private function getItemFromDatabase($username, $itemFromDatabase) {
         $mysqli = $this->startMySQLi();
-        if (!($prepStatement = $mysqli->prepare("SELECT * FROM users WHERE username =?"))) {
-            throw new Exception("Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error);
+        try {
+            if (!($prepStatement = $mysqli->prepare("SELECT * FROM users WHERE username =?"))) {
+                throw new Exception("Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error);
+            }
+            if (!$prepStatement->bind_param("s", $username)) {
+                throw new Exception( "Binding parameters failed: (" . $prepStatement->errno . ") " . $prepStatement->error);
+            }
+            if (!$prepStatement->execute()) {
+                throw new Exception("Execute failed: (" . $prepStatement->errno . ") " . $prepStatement->error);
+            }
+            $result = $prepStatement->get_result();
+            $row = $result->fetch_assoc();
+            return $row[$itemFromDatabase];
+        } catch (Exception $error){
+            throw $error;
+        } finally {
+            $this->killMySQLi($mysqli);
         }
-        if (!$prepStatement->bind_param("s", $username)) {
-            throw new Exception( "Binding parameters failed: (" . $prepStatement->errno . ") " . $prepStatement->error);
-        }
-        if (!$prepStatement->execute()) {
-            throw new Exception("Execute failed: (" . $prepStatement->errno . ") " . $prepStatement->error);
-        }
-        $result = $prepStatement->get_result();
-        $row = $result->fetch_assoc();
-        $this->killMySQLi($mysqli);
-        return $row[$itemFromDatabase];
     }
 
     private function updateVariableInDatabase(string $username, string $variableToUpdate, string $preparedStatement) {
         $mysqli = $this->startMySQLi();
-        if (!($prepStatement = $mysqli->prepare($preparedStatement))) {
-            throw new Exception("Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error);
+        try {
+            if (!($prepStatement = $mysqli->prepare($preparedStatement))) {
+                throw new Exception("Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error);
+            }
+            if (!$prepStatement->bind_param("ss", $variableToUpdate, $username)) {
+                throw new Exception( "Binding parameters failed: (" . $prepStatement->errno . ") " . $prepStatement->error);
+            }
+            if (!$prepStatement->execute()) {
+                throw new Exception("Execute failed: (" . $prepStatement->errno . ") " . $prepStatement->error);
+            }
+        } catch (Exception $error) {
+            throw $error;
+        } finally {
+            $this->killMySQLi($mysqli);
         }
-        if (!$prepStatement->bind_param("ss", $variableToUpdate, $username)) {
-            throw new Exception( "Binding parameters failed: (" . $prepStatement->errno . ") " . $prepStatement->error);
-        }
-        if (!$prepStatement->execute()) {
-            throw new Exception("Execute failed: (" . $prepStatement->errno . ") " . $prepStatement->error);
-        }
-        $this->killMySQLi($mysqli);
     }
 
     private function startMySQLi() {
