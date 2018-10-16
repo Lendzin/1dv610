@@ -20,7 +20,7 @@ class LoginController {
                     $this->loginView->setLoginFailedPassword();
                 }
                 if ($this->loginView->usernameNotSet()) {
-                    // $this->loginView->setLoginFailedUsername();
+                    $this->loginView->setLoginFailedUsername();
                 }
             } else {
                 if ($this->loginView->loginIsCorrect()) {
