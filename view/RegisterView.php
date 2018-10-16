@@ -2,6 +2,7 @@
 namespace view;
 
 class RegisterView {
+    
     private static $messageId = "RegisterView::Message";
     private static $username = "RegisterView::UserName";
     private static $password = "RegisterView::Password";
@@ -19,11 +20,9 @@ class RegisterView {
         $this->database = $database;
     }
 
- 
-
-    public function response () {
+     public function response () {
         $response = '
-                    <h2>Register new user</h2>
+                    <h2 class="register">Register new user</h2>
                     <form action="?register" class="form" method="post" enctype="multipart/form-data">
                         <fieldset class="fieldset">
                         <legend>Register a new user - Write username and password</legend>

@@ -30,7 +30,7 @@ body {
     padding: 10px;
     background: orange;
   }
-  h2 {
+  .register {
     margin: 5px;
     padding: 10px;
     background: rgb(61, 160, 61);
@@ -39,7 +39,7 @@ body {
   .loggedIn {
     margin: 5px;
     padding: 10px;
-    background: greenyellow;
+    background: #adff2f;
   }
   
   .alert-fail {
@@ -56,7 +56,9 @@ body {
     background-color: #5ceb68 ;
     margin-bottom: 15px;
   }
-  
+  h2 {
+    
+  }
   .links {
     max-width: 20%;
     text-decoration: none;
@@ -73,8 +75,8 @@ body {
   input {
     padding: 3px;
   }
+  
   .time {
-
     padding: 10px;
     margin: 5px;
     color: white;

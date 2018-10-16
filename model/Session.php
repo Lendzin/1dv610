@@ -18,7 +18,7 @@ class Session {
     }
 
     
-    public function setSessionLoginStatus(bool $loginStatus) {
+    public function setSessionLoggedIn (bool $loginStatus) {
         $_SESSION["user"]["loginStatus"] = $loginStatus;
     }
 
@@ -26,7 +26,7 @@ class Session {
         unset($_SESSION["user"]["loginStatus"]);
     }
     
-    public function getSessionLoginStatus() : bool {
+    public function sessionLoggedIn() : bool {
         if (isset($_SESSION["user"]["loginStatus"])) {
             return $_SESSION["user"]["loginStatus"];
         } else {

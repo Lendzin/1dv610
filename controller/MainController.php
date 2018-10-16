@@ -1,16 +1,16 @@
 <?php
 namespace controller;
 
-class RenderController {
+class MainController {
     private $layoutView;
     private $loginView;
-    private $dateView;
     private $registerView;
-    private $settings;
-    private $user;
     private $session;
     private $database;
-    private $messageController;
+    private $feedbackController;
+    private $registerController;
+    private $loginController;
+    private $cookieController;
 
     public function __construct() {
         $this->database = new \model\Database();
@@ -18,11 +18,15 @@ class RenderController {
         $this->layoutView = new \view\LayoutView();
         $this->loginView = new \view\LoginView($this->session, $this->database);
         $this->registerView = new \view\RegisterView($this->session, $this->database);
-        $this->messageController = new \controller\MessageController($this->loginView, $this->registerView, $this->session);
+        $this->cookieController = new \controller\CookieController($this->loginView);
+        $this->registerController = new \controller\RegisterController($this->registerView);
+        $this->loginController = new \controller\LoginController($this->loginView);
+        $this->feedbackController = new \controller\FeedbackController($this->loginView, $this->cookieController,
+         $this->registerController, $this->loginController, $this->session);
     }
     
     public function render () {
-        $this->messageController->initializeSessionMessage();
+        $this->feedbackController->initializeFeedback();
         $this->layoutView->render($this->loginView, $this->registerView, $this->session);
         $this->session->unsetSessionUserMessage();
         $this->session->unsetSessionUsername();

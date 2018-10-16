@@ -30,7 +30,7 @@ class LayoutView {
     ';
   }
   private function renderLinks( \model\Session $session, LoginView $loginView) {
-    if (!$session->getSessionLoginStatus()) {
+    if (!$session->sessionLoggedIn()) {
       if ($loginView->userWantsToRegister()) {
         return '<a href="?" class="links">Back to login</a>';
       } else {
@@ -40,8 +40,8 @@ class LayoutView {
   }
   
   private function renderIsLoggedIn($session) {
-    if ($session->getSessionLoginStatus() && $session->validateSession()) {
-      return '<h2 class="LoggedIn">Logged in</h2>';
+    if ($session->sessionLoggedIn() && $session->validateSession()) {
+      return '<h2 class="loggedIn">Logged in</h2>';
     }
     else {
       return '<h2 class="notLoggedIn">Not logged in</h2>';

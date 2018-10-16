@@ -12,6 +12,7 @@ class LoginView {
 	
 	private $session;
 	private $database;
+	private $user;
 
 	public function __construct(\model\Session $session, \model\Database $database) {
 		$this->session = $session;
@@ -27,7 +28,7 @@ class LoginView {
 	 */
 	public function response() {
 		$response = '';
-		if ($this->session->getSessionLoginStatus() && $this->session->validateSession()) {
+		if ($this->session->sessionLoggedIn() && $this->session->validateSession()) {
 			$response .= $this->generateLogoutButtonHTML();
 		} else {
 			$response = $this->generateLoginFormHTML();
@@ -98,104 +99,107 @@ class LoginView {
 
 	public function userWantsToRegister () : bool {
 		return (isset($_GET["register"]));
-	  }
-
-	public function setSessionCookieMessage() {
-		$messageToSet =  $this->getCookieReturnMessage();
-		$this->session->setSessionUserMessage($messageToSet);
 	}
-	
-	public function setSessionLogoutMessage() {
+
+	public function isMissingCredentials() {
+		return ($this->passwordNotSet() || $this->usernameNotSet()) ? true : false;
+	}
+
+	public function setSessionLogoutMessage() : void {
 		$this->logOutUser();
 		$this->session->setSessionUserMessage("Bye bye!");
 		$this->session->setSessionMessageClass("alert-success");
 	}
 
-	public function setSessionLoginMessage() : void {
-		$this->session->setSessionMessageClass("alert-fail");
-		$username = $this->getRequestUserName();
-		$message = "";
-		if ( $this->getRequestPassword() == null) {
-			$message = 'Password is missing';
-		}
-		if ($username == null) {
-			$message = 'Username is missing';
-		} else {
-			$this->session->setSessionUsername($username); 
-		}
-		if ($this->loginIsCorrect()) {
-			$this->session->setSessionMessageClass("alert-success");
-			$this->session->setSessionSecurityKey();
-			$this->session->setSessionLoginStatus($loggedIn = true);
-			if ($this->stayLoggedInStatus()) {
-				$this->createCookie($username);
-				$message = "Welcome and you will be remembered";
-			} else {
-				$message = "Welcome";
-			}
-		} else if ($message === "" ){
-			$message = "Wrong name or password";
-		}
-		$this->session->setSessionUserMessage($message);
-		}
+	public function setLoginViewVariables() : void {
+		$this->user = new \model\User($this->getRequestUserName(), $this->getRequestPassword());
+	}
 
-	private function getCookieReturnMessage() : string {
+	public function passwordNotSet() : bool {
+		return $this->user->getPassword() === "" ? true : false;
+	}
+	public function setLoginFailedPassword() {
 		$this->session->setSessionMessageClass("alert-fail");
+		$this->session->setSessionUserMessage('Password is missing');
+	}
+
+	public function usernameNotSet() : bool {
+		return $this->user->getName() === "" ? true : false;
+	}
+
+	public function setLoginFailedUsername() : void {
+		$this->session->setSessionMessageClass("alert-fail");
+		$this->session->setSessionUserMessage('Username is missing');
+	}
+
+	public function setUserNameInForm() : void {
+        $this->session->setSessionUsername($this->user->getName());
+	}
+	
+	public function loginIsCorrect() : bool {
+		$dbPassword = $this->database->getPasswordForUser($this->user->getName());
+		return (password_verify($this->user->getPassword(), $dbPassword)) ? true : false;
+	}
+
+	public function setSuccessSessionLogin() : void {
+		$this->session->setSessionMessageClass("alert-success");
+		$this->session->setSessionUserMessage("Welcome");
+		$this->session->setSessionSecurityKey();
+		$this->session->setSessionLoggedIn(true);
+	}
+
+	public function keepUserLoggedIn() : bool{
+		return isset($_POST[self::$keep]);	
+	}
+
+	public function setCookieForUser() : void {
+		$this->createCookie($this->user->getName());
+	}
+	
+	public function setRememberedLogin() : void {
+		$this->session->setSessionUserMessage("Welcome and you will be remembered");
+	}
+	
+	public function setFailedSessionLogin() : void {
+		$this->session->setSessionMessageClass("alert-fail");
+		$this->session->setSessionUserMessage("Wrong name or password");
+	}
+
+	public function existCookieIssues() : bool {
 		$cookie = $_COOKIE['LoginView::CookiePassword'];
-
 		try {
 			list ($username, $generatedKey) = explode(':', $cookie);
 		} catch (Exception $error) {
-			return "Wrong information in cookies";
+			return true;
 		}
+	
+		if ($this->foundCookieIssues($username, $generatedKey)) {
+			return true;
+		}
+		$this->user = new \model\User($username, "");  //special, to aquire name in getSuccessCookieLogin() (to avoid list/explode)
+		return false;
+	}
 
-		$errorInCookies = $this->checkCookieIssues($username, $generatedKey);
+	public function setFailedCookieLogin() : void {
+		$this->logOutUser();
+		$this->session->setSessionMessageClass("alert-fail");
+		$this->session->setSessionUserMessage("Wrong information in cookies");
+	}
 		
-		if ($username === "LoggedOut") {
-			$this->session->setSessionLoginStatus($loggedIn = false);
-			$this->session->unsetSessionClassMessage();
-			return "";
-		}
-
-		if ($errorInCookies) {
-			$this->logOutUser();
-			return "Wrong information in cookies";
-		}
-		
- 		$this->session->setSessionLoginStatus(true);
-		$this->session->setSessionUsername($username);
+	public function setSuccessCookieLogin() : void {
+		$this->session->setSessionLoggedIn(true);
+		$this->session->setSessionUsername($this->user->getName()); //set in existCookieIssues() after explode
 		$this->session->setSessionSecurityKey();
 		$this->session->setSessionMessageClass("alert-success");
-		return "Welcome back with cookie";
+		$this->session->setSessionUserMessage("Welcome back with cookie");
 	}
 
-	private function getRequestUserName() {
-		if (isset($_POST[self::$name])) {
-			return $_POST[self::$name];
-		} else {
-			return null;
-		}
+	private function getRequestUserName() : string {
+		return isset($_POST[self::$name]) ? $_POST[self::$name] : null;
 	}
 
-	private function getRequestPassword() {
-		if (isset($_POST[self::$password])) {
-			return $_POST[self::$password];
-		} else {
-			return null;
-		}
-	}
-
-	private function loginIsCorrect() : bool {
-		$username = $this->getRequestUserName();
-		$dbPassword = $this->database->getPasswordForUser($username);
-        $password = $this->getRequestPassword();
-		if (password_verify($password, $dbPassword)) {
-			return true;
-		} return false;
-	}
-
-	private function stayLoggedInStatus() : bool{
-		return isset($_POST[self::$keep]);	
+	private function getRequestPassword() : string {
+		return isset($_POST[self::$password]) ? $_POST[self::$password] : null;
 	}
 
 	private function createCookie($username) : void {
@@ -203,14 +207,14 @@ class LoginView {
 		$time = time() + (86400 * 30); //POSITIVE TIME WHEN SETTING
 		$agent = $this->session->getUserAgent();
 		$generatedKey = $token . $agent;
-		$cookie = $this->getRequestUserName() . ':' . password_hash($generatedKey, PASSWORD_DEFAULT);
+		$cookie = $username . ':' . password_hash($generatedKey, PASSWORD_DEFAULT);
 		setcookie('LoginView::CookiePassword', $cookie, $time, "/"); 
 		$this->database->saveTokenToDatabase($username, $token);
 		$this->database->saveExpiretimeToDatabase($username, $time);
 		
 	}
 
-	private function checkCookieIssues($username, $generatedKey) : bool {
+	private function foundCookieIssues($username, $generatedKey) : bool {
 
 		$retrievedUserToken = $this->database->getTokenForUser($username);
 		if (!password_verify(($retrievedUserToken . $this->session->getUserAgent()), $generatedKey)) {
@@ -225,7 +229,7 @@ class LoginView {
 
 	private function logOutUser() : void {
         $this->session->setSessionUserName("");
-        $this->session->setSessionLoginStatus($loggedIn = false);
+        $this->session->setSessionLoggedIn(false);
         $this->removeCookie();
 	}
 

@@ -3,8 +3,11 @@
 //INCLUDE THE FILES NEEDED...
 
 require_once('AppSettings.php');
-require_once('controller/RenderController.php');
-require_once('controller/MessageController.php');
+require_once('controller/MainController.php');
+require_once('controller/FeedbackController.php');
+require_once('controller/LoginController.php');
+require_once('controller/RegisterController.php');
+require_once('controller/CookieController.php');
 require_once('view/LoginView.php');
 require_once('view/RegisterView.php');
 require_once('view/LayoutView.php');
@@ -19,8 +22,5 @@ require_once('model/Password.php');
 // ini_set('display_errors', 'On');
 session_start();
 
-
-
-//CREATE OBJECTS OF THE VIEWS
-$rc = new \controller\RenderController();
-$rc->render();
+$mc = new \controller\MainController();
+$mc->render();
