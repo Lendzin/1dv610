@@ -172,7 +172,7 @@ class LoginView {
 		} catch (Exception $error) {
 			return true;
 		}
-		if ($username === "loggedOut") {
+		if ($username === "LoggedOut") {
 			return false;
 		}
 		if ($this->foundCookieIssues($username, $generatedKey)) {
@@ -190,7 +190,7 @@ class LoginView {
 	public function isLoggedOutCookie() {
 		$cookie = $_COOKIE['LoginView::CookiePassword'];
 		list ($username, $generatedKey) = explode(':', $cookie);
-		return ($username === "loggedOut") ? true : false;
+		return ($username === "LoggedOut") ? true : false;
 	}
 
 	public function unsetCookieLogin() {
