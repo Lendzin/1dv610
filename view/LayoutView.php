@@ -5,13 +5,15 @@ class LayoutView {
 
   private $loginView;
   private $registerView;
+  private $newsView;
   private $session;
   private $dateObject;
 
-  public function __construct(LoginView $loginView, RegisterView $registerView, \model\Session $session) {
+  public function __construct(LoginView $loginView, RegisterView $registerView, \view\NewsView $newsView, \model\Session $session) {
     $this->dateObject = new \DateTime('now', new \DateTimeZone('Europe/Stockholm'));
     $this->loginView = $loginView;
     $this->registerView = $registerView;
+    $this->newsView = $newsView;
     $this->session = $session;
   }
   
@@ -33,7 +35,10 @@ class LayoutView {
             <div class="container">
               ' . $this->selectView() . '
             
-              ' . $this->getTimeTag() . '
+              ' . $this->renderTimeTag() . '
+            </div>
+            <div>
+                ' . $this->newsView->render() . '              
             </div>
           </div>
           <div><p class="unselectable" id="footer_text">js224nk@student.lnu.se | Jonas Strandqvist</p></div>
@@ -66,7 +71,7 @@ class LayoutView {
     } else return $this->loginView->response();
   }
 
-  public function getTimeTag() {
+  public function renderTimeTag() {
 		$dayOfWeek = $this->dateObject->format('l');
 		$dayOfMonth = $this->dateObject->format('jS');
 		$month = $this->dateObject->format('F');
