@@ -8,13 +8,15 @@ class FeedbackController {
     private $cookieController;
     private $registerController;
     private $loginController;
+    private $cookieView;
     private $session;
 
-    public function __construct(\view\LoginView $loginView, \view\RegisterView $registerView, \model\Session $session) {
+    public function __construct(\view\LoginView $loginView, \view\CookieView $cookieView, \view\RegisterView $registerView, \model\Session $session) {
         $this->loginView = $loginView;
-        $this->cookieController = new CookieController($this->loginView);
+        $this->cookieView = $cookieView;
+        $this->cookieController = new CookieController($this->cookieView);
         $this->registerController = new RegisterController($registerView);
-        $this->loginController = new LoginController($this->loginView);
+        $this->loginController = new LoginController($this->loginView, $this->cookieView);
         $this->session = $session;
     }
 
@@ -25,7 +27,7 @@ class FeedbackController {
             $this->loginController->run();
         } else {
             if ($this->loginView->triedLogingOut()) {
-                $this->loginView->setSessionLogoutMessage();
+                $this->cookieView->setSessionLogoutMessage();
             }
         }
     }

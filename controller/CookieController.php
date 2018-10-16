@@ -4,21 +4,21 @@ namespace controller;
 
 class CookieController {
     
-    private $loginView;
+    private $cookieView;
 
-    public function __construct(\view\LoginView $loginView) {
-        $this->loginView = $loginView;
+    public function __construct(\view\CookieView $cookieView) {
+        $this->cookieView = $cookieView;
     }
 
     public function run() {
-        if ($this->loginView->getCookieStatus()) {
-            if ($this->loginView->existCookieIssues()) {
-                $this->loginView->setFailedCookieLogin();
+        if ($this->cookieView->getCookieStatus()) {
+            if ($this->cookieView->existCookieIssues()) {
+                $this->cookieView->setFailedCookieLogin();
             } else {
-                if ($this->loginView->isLoggedOutCookie()) {
-                    $this->loginView->unsetCookieLogin();
+                if ($this->cookieView->isLoggedOutCookie()) {
+                    $this->cookieView->unsetCookieLogin();
                 } else {
-                    $this->loginView->setSuccessCookieLogin();                    
+                    $this->cookieView->setSuccessCookieLogin();
                 }
             }
         }

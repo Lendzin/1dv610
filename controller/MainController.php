@@ -2,19 +2,21 @@
 namespace controller;
 
 class MainController {
+    private $session;
+    private $database;
+    private $cookieView;
     private $layoutView;
     private $loginView;
     private $registerView;
-    private $session;
-    private $database;
     private $feedbackController;
 
     public function __construct() {
         $this->database = new \model\Database();
         $this->session = new \model\Session();
+        $this->cookieView = new \view\CookieView($this->session, $this->database);
         $this->loginView = new \view\LoginView($this->session, $this->database);
         $this->registerView = new \view\RegisterView($this->session, $this->database);
-        $this->feedbackController = new FeedbackController($this->loginView, $this->registerView, $this->session);
+        $this->feedbackController = new FeedbackController($this->loginView, $this->cookieView, $this->registerView, $this->session);
         $this->layoutView = new \view\LayoutView($this->loginView, $this->registerView, $this->session);
     }
     

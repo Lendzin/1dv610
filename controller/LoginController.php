@@ -5,9 +5,11 @@ namespace controller;
 class LoginController {
 
     private $loginView;
+    private $cookieView;
 
-    public function __construct(\view\LoginView $loginView) {
+    public function __construct(\view\LoginView $loginView, \view\CookieView $cookieView) {
         $this->loginView = $loginView;
+        $this->cookieView = $cookieView;
     }
 
     public function run() {
@@ -24,7 +26,8 @@ class LoginController {
                 if ($this->loginView->loginIsCorrect()) {
                     $this->loginView->setSuccessSessionLogin();
                     if ($this->loginView->keepUserLoggedIn()) {
-                        $this->loginView->setCookieForUser();
+                        $this->loginView->setUsernameInForm();
+                        $this->cookieView->setCookieForUser();
                         $this->loginView->setRememberedLogin();
                     }
                 } else {
