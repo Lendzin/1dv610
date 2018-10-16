@@ -37,9 +37,11 @@ class Database {
     public function getPasswordForUser(string $username) {
         return $this->getItemFromDatabase($username, "password");
     }
+
     public function getTokenForUser(string $username) {
         return $this->getItemFromDatabase($username, "token");
     }
+
     public function getCookieExpiretimeForUser(string $username) {
         return $this->getItemFromDatabase($username, "cookie");
     }
@@ -48,26 +50,13 @@ class Database {
         $tokenStatement = "UPDATE users SET token = ? WHERE username = ?";
         $this->updateVariableInDatabase($username, $token, $tokenStatement);
     }
+
     public function saveExpiretimeToDatabase(string $username,string $time) {
         $timeStatement = "UPDATE users SET cookie = ? WHERE username = ?";
         $this->updateVariableInDatabase($username, $time, $timeStatement);
     }
 
-    private function updateVariableInDatabase(string $username, string $variableToUpdate, string $preparedStatement) {
-        $mysqli = $this->startMySQLi();
-        if (!($prepStatement = $mysqli->prepare($preparedStatement))) {
-            throw new Exception("Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error);
-        }
-        if (!$prepStatement->bind_param("ss", $variableToUpdate, $username)) {
-            throw new Exception( "Binding parameters failed: (" . $prepStatement->errno . ") " . $prepStatement->error);
-        }
-        if (!$prepStatement->execute()) {
-            throw new Exception("Execute failed: (" . $prepStatement->errno . ") " . $prepStatement->error);
-        }
-        $this->killMySQLi($mysqli);
-    }
-
-    public function getItemFromDatabase($username, $itemFromDatabase) {
+    private function getItemFromDatabase($username, $itemFromDatabase) {
         $mysqli = $this->startMySQLi();
         if (!($prepStatement = $mysqli->prepare("SELECT * FROM users WHERE username =?"))) {
             throw new Exception("Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error);
@@ -82,6 +71,20 @@ class Database {
         $row = $result->fetch_assoc();
         $this->killMySQLi($mysqli);
         return $row[$itemFromDatabase];
+    }
+
+    private function updateVariableInDatabase(string $username, string $variableToUpdate, string $preparedStatement) {
+        $mysqli = $this->startMySQLi();
+        if (!($prepStatement = $mysqli->prepare($preparedStatement))) {
+            throw new Exception("Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error);
+        }
+        if (!$prepStatement->bind_param("ss", $variableToUpdate, $username)) {
+            throw new Exception( "Binding parameters failed: (" . $prepStatement->errno . ") " . $prepStatement->error);
+        }
+        if (!$prepStatement->execute()) {
+            throw new Exception("Execute failed: (" . $prepStatement->errno . ") " . $prepStatement->error);
+        }
+        $this->killMySQLi($mysqli);
     }
 
     private function startMySQLi() {
