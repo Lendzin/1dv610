@@ -12,8 +12,5 @@ class Username {
         }
         $this->username = $username;
     }
-    public function get() {
-        return $this->username;
-    }
 }
 

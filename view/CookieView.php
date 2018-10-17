@@ -3,15 +3,17 @@ namespace view;
 
 class CookieView {
 
-    private static $cookieName = 'LoginView::CookieName';
-    private static $cookiePassword = 'LoginView::CookiePassword';
+		//NOTE: Usage of 'LoginView::CookiePassword' && 'LoginView::CookieName' in this class, only to support the auto-test.
+
+    private static $cookieName = 'LoginView::CookieName'; 
+    private static $cookiePassword = 'LoginView::CookiePassword'; 
 
     private $session;
     private $database;
     
-    public function __construct(\model\Session $session, \model\Database $database) {
+  	public function __construct(\model\Session $session) {
 		$this->session = $session;
-		$this->database = $database;
+		$this->database = new \model\UserDatabase();
 	}
 
     public function getCookieStatus() : bool {

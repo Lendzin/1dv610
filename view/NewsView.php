@@ -13,9 +13,9 @@ class NewsView {
     private $database;
     private $messages;
     
-    public function __construct(\model\Session $session, \model\Database $database) {
+    public function __construct(\model\Session $session) {
         $this->session = $session;
-        $this->database = $database;
+		$this->database = new \model\MessageDatabase();
     }
 
     public function userAddsMessage() {
@@ -50,13 +50,17 @@ class NewsView {
     }
     
     private function renderLoggedIn() {
-        $renderString = '<form action="?" class="messageform" method="post" >
+        $renderString = '<div class="messagebox"><form action="?" class="messageform" method="post" >
         <p>Create a new text here:</p>
         <textarea name="'. self::$message .'" rows="5" cols="40"></textarea>
         <input type="submit" class="button" name="' . self::$add . '" value="Add" />
-        </form>';
+        </form><span class="flexbox"></span><span class="flexbox"></span></div><div class="messagebox">';
         $count = 0;
+        $divideInt = 0;
         foreach ($this->messages as $key => $message) {
+            if ($this->divCountCheck($divideInt)) {
+                $renderString .= '<div class="messagebox">';
+            }
             if ($this->validateUsername($message->getUsername())) {
                 $count = 2;
                 $renderString .= $this->getBaseRender($count, $message);
@@ -65,25 +69,44 @@ class NewsView {
                 <input type="submit" class="button" name="' . self::$edit . '" value="Edit" />
                 <input type="submit" class="button" name="' . self::$delete . '" value="Delete" />
                 </form></div>';
+                $divideInt++;
+                if ($this->divCountCheck($divideInt)) {
+                    $renderString .= '</div>';
+                }
             } else {
                 $count = 1;
                 $renderString .= $this->getBaseRender($count, $message);
                 $renderString .= '</div>';
+                $divideInt++;
+                if ($this->divCountCheck($divideInt)) {
+                    $renderString .= '</div>';
+                }
             }
         }
         return $renderString;
+    }
+    private function divCountCheck($divideInt) {
+        return $divideInt !== 0 && $divideInt % 3 === 0 ? true : false;
     }
     private function validateUsername($username) {
         return $username === $this->session->getSessionUsername() ? true : false;
     }
    
     private function renderLoggedOut() {
-        $renderString = "";
+        $renderString = '<div class="messagebox">';
         $count = 0;
+        $divideInt = 0;
         foreach ($this->messages as $key => $message) {
+            if ($this->divCountCheck($divideInt)) {
+                $renderString .= '<div class="messagebox">';
+            }
             $renderString .= $this->getBaseRender($count, $message);
             $renderString .= '</div>';
             $count++;
+            $divideInt++;
+            if ($this->divCountCheck($divideInt)) {
+                $renderString .= '</div>';
+            }
         }
         return $renderString;
     }
@@ -92,8 +115,8 @@ class NewsView {
         return '<div '. $this->setClass($count) .
         '"><p><span class="boldtext">Creator: </span>'
         . $message->getUsername() .
-        '</p><p><p><span class="boldtext">Message: </span>'
-        . $message->getMessage() . '</p><p><p><span class="boldtext">Created at: </span>'
+        '</p><p><span class="boldtext">Message: </span>'
+        . $message->getMessage() . '</p><p><span class="boldtext">Created at: </span>'
         . $message->getTimestamp() . '</p>'; 
     }
 

@@ -6,8 +6,8 @@ class RegisterView {
     private static $messageId = "RegisterView::Message";
     private static $username = "RegisterView::UserName";
     private static $password = "RegisterView::Password";
-    private static $passwordRepeat = "RegisterView::PasswordRepeat";
     private static $register = "RegisterView::Register";
+    private static $passwordRepeat = "RegisterView::PasswordRepeat";
 
     private $session;
     private $database;
@@ -15,9 +15,9 @@ class RegisterView {
     private $rePassword;
     private $errorMessages;
 
-    public function __construct(\model\Session $session, \model\Database $database) {
+    public function __construct(\model\Session $session) {
         $this->session = $session;
-        $this->database = $database;
+        $this->database = new \model\UserDatabase();
     }
 
      public function response () {
@@ -26,15 +26,19 @@ class RegisterView {
                     <form action="?register" class="form" method="post" enctype="multipart/form-data">
                         <fieldset class="fieldset">
                         <legend>Register a new user - Write username and password</legend>
-                            <p id="' . self::$messageId . '" class="' . $this->session->getSessionMessageClass() .'">' . $this->session->getSessionUserMessage() . '</p>
+                            <p id="' . self::$messageId . '" class="' . $this->session->getSessionMessageClass() 
+                            .'">' . $this->session->getSessionUserMessage() . '</p>
                             <div><label for="' . self::$username . '" >Username :</label></div>
-                            <div><input type="text" size="20" name="' . self::$username . '" id="' . self::$username . '" value="' . strip_tags($this->session->getSessionUsername()) . '" /></div>
+                            <div><input type="text" size="20" name="' . self::$username . '" id="' . self::$username 
+                            . '" value="' . strip_tags($this->session->getSessionUsername()) . '" /></div>
                             <br/>
                             <div><label for="' . self::$password . '" >Password  :</label></div>
-                            <div><input type="password" size="20" name="' . self::$password . '" id="' . self::$password . '" value="" /></div>
+                            <div><input type="password" size="20" name="' . self::$password . '" id="' 
+                            . self::$password . '" value="" /></div>
                             <br/>
                             <div><label for="' . self::$passwordRepeat . '" >Repeat password  :</label></div>
-                            <div><input type="password" size="20" name="' . self::$passwordRepeat . '" id="' . self::$passwordRepeat . '" value="" /></div>
+                            <div><input type="password" size="20" name="' . self::$passwordRepeat . '" id="' 
+                            . self::$passwordRepeat . '" value="" /></div>
                             <br/>
                             <input id="submit" type="submit" class="button" name="' . self::$register . '"  value="Register" />
                             <br/>
@@ -69,10 +73,10 @@ class RegisterView {
         try {
             $UserPassword = new \model\Password($this->user->getPassword());
         } catch (\Exception $error) {
-          array_push($errorMessages, "Password has too few characters, at least 6 characters.");
+            array_push($errorMessages, "Password has too few characters, at least 6 characters.");
         }
         if ($this->user->getPassword() !== $this->rePassword) {
-                array_push($errorMessages, "Passwords do not match.");
+            array_push($errorMessages, "Passwords do not match.");
         }
         $this->errorMessages = $errorMessages;
     }

@@ -5,7 +5,7 @@ namespace model;
 class Session {
 
     public function setSessionUsername(string $username){
-        $_SESSION["user"]["username"] = $username;
+        $_SESSION["user"]["username"] = strip_tags($username);
     }
     public function getSessionUsername() : string  {
         if (isset($_SESSION["user"]["username"])) {

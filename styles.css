@@ -62,9 +62,15 @@ body {
     font-weight: bold;
   }
   .messageform {
+    margin: 5px;
+    padding: 10px;
     background: #81ee7d;
     align-content: center;
-    flex:0;
+    flex:1;
+  }
+
+  .flexbox {
+    flex:1;
   }
   textarea {
     margin-left: 5px;

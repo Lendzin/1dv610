@@ -13,9 +13,9 @@ class LoginView {
 	private $database;
 	private $user;
 
-	public function __construct(\model\Session $session, \model\Database $database) {
+	public function __construct(\model\Session $session) {
 		$this->session = $session;
-		$this->database = $database;
+		$this->database = new \model\UserDatabase();
 	}
 
 	/**
@@ -67,10 +67,12 @@ class LoginView {
 			<form action="?" class="form" method="post" > 
 				<fieldset class="fieldset">
 					<legend>Login - enter Username and password</legend>
-					<p id="' . self::$messageId . '" class="' . $this->session->getSessionMessageClass() .'">' . $this->session->getSessionUserMessage() . '</p>
+					<p id="' . self::$messageId . '" class="' . $this->session->getSessionMessageClass() 
+					.'">' . $this->session->getSessionUserMessage() . '</p>
 					
 					<div><label for="' . self::$name . '">Username :</label></div>
-					<div><input type="text" id="' . self::$name . '" name="' . self::$name . '" value="' . strip_tags($this->session->getSessionUsername()) . '" /></div>
+					<div><input type="text" id="' . self::$name . '" name="' . self::$name . '" value="' 
+					. $this->session->getSessionUsername() . '" /></div>
 
 					<div><label for="' . self::$password . '">Password :</label></div>
 					<div><input type="password" id="' . self::$password . '" name="' . self::$password . '" /></div>

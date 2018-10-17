@@ -16,6 +16,8 @@ require_once('view/CookieView.php');
 require_once('view/NewsView.php');
 require_once('model/Session.php');
 require_once('model/Database.php');
+require_once('model/UserDatabase.php');
+require_once('model/MessageDatabase.php');
 require_once('model/User.php');
 require_once('model/Username.php');
 require_once('model/Password.php');
@@ -26,5 +28,13 @@ require_once('model/Message.php');
 // ini_set('display_errors', 'On');
 session_start();
 
-$mc = new \controller\MainController();
-$mc->render();
+try {
+    $mainController = new \controller\MainController();
+    $mainController->run();
+} catch (Exception $error) {
+    echo ('There seems to have been an issue while the system was running.');
+}
+finally {
+
+}
+
