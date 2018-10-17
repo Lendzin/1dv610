@@ -10,7 +10,7 @@ CREATE TABLE users (
     password VARCHAR(250) CHARACTER SET latin1 COLLATE latin1_general_cs NOT NULL,
     token VARCHAR(250) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
     cookie VARCHAR(250) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL
-);`
+);
 ```
 
 ```mysqli
@@ -30,8 +30,8 @@ REQUIRED FILE "AppSettings.php" WITH:
 class AppSettings {
 
     public $localhost = 'SERVER_IP_ADRESS';
-    public $user = "USER_LOGIN";
-    public $password = "USER_PASSWORD";
+    public $user = "DATABASE_LOGIN";
+    public $password = "DATABASE_PASSWORD";
     public $database = "DATABASE_NAME";
     public $port = 'DATABASE_PORT';
 
