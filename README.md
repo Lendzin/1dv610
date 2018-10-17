@@ -10,7 +10,8 @@ CREATE TABLE users (
     password VARCHAR(250) CHARACTER SET latin1 COLLATE latin1_general_cs NOT NULL,
     token VARCHAR(250) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
     cookie VARCHAR(250) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL
-);
+);`
+```
 
 ```mysqli
 CREATE TABLE messages (
@@ -19,7 +20,7 @@ CREATE TABLE messages (
     timestamp timestamp DEFAULT NOW(),
     username VARCHAR(30)
 );
-
+```
 
 REQUIRED FILE "AppSettings.php" WITH:
 
@@ -35,8 +36,8 @@ class AppSettings {
     public $port = 'DATABASE_PORT';
 
 }
+```
 
---------------------------------------------
 ¤¤ SETUP FOR DATABASE END ¤¤
 
 
