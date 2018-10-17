@@ -22,32 +22,66 @@ class Database {
         return $messageArray;
     }
 
+    public function saveMessageForUser($username, $message) {
+        $mysqli = $this->startMySQLi();
+        try {
+            if (!($prepStatement = $mysqli->prepare("INSERT INTO messages (username, message) VALUES (?,?)"))) {
+                throw new \Exception("Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error);
+            }
+            if (!$prepStatement->bind_param("ss", $username,$message)) {
+                throw new \Exception( "Binding parameters failed: (" . $prepStatement->errno . ") " . $prepStatement->error);
+            }
+            if (!$prepStatement->execute()) {
+                throw new \Exception("Execute failed: (" . $prepStatement->errno . ") " . $prepStatement->error);
+            }
+        } catch (Exception $error) {
+            throw $error;
+        } finally {
+            $this->killMySQLi($mysqli);
+        }
+    }
 
+    public function deleteMessageWithId($id) {
+        $mysqli = $this->startMySQLi();
+        try {
+            if (!($prepStatement = $mysqli->prepare("DELETE FROM messages WHERE id = ?"))) {
+                throw new \Exception("Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error);
+            }
+            if (!$prepStatement->bind_param("s",$id)) {
+                throw new \Exception( "Binding parameters failed: (" . $prepStatement->errno . ") " . $prepStatement->error);
+            }
+            if (!$prepStatement->execute()) {
+                throw new \Exception("Execute failed: (" . $prepStatement->errno . ") " . $prepStatement->error);
+            }
+        } catch (Exception $error) {
+            throw $error;
+        } finally {
+            $this->killMySQLi($mysqli);
+        }
+    }
 
 
     public function userExistsInDatabase($username) {
         $dbUsername = $this->getItemFromDatabase($username, "username");
-        if ($dbUsername) {
-            return true;
-        } else {
-            return false;
-        }
+        return $dbUsername ? true : false;
     }
 
     public function saveUserToDatabase(string $username,string $password) {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
         $mysqli = $this->startMySQLi();
         try {
-            if (!($prepStatement = $mysqli->prepare("INSERT INTO users (username, password, token, cookie) VALUES (?,?,?,?)"))) {
-                throw new Exception("Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error);
+            if (!($prepStatement = 
+            $mysqli->prepare("INSERT INTO users (username, password, token, cookie) VALUES (?,?,?,?)"))) {
+                throw new \Exception("Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error);
             }
             $token = "";
             $cookie = "";
             if (!$prepStatement->bind_param("ssss", $username,$hashedPassword,$token,$cookie)) {
-                throw new Exception( "Binding parameters failed: (" . $prepStatement->errno . ") " . $prepStatement->error);
+                throw new \Exception( "Binding parameters failed: (" 
+                . $prepStatement->errno . ") " . $prepStatement->error);
             }
             if (!$prepStatement->execute()) {
-                throw new Exception("Execute failed: (" . $prepStatement->errno . ") " . $prepStatement->error);
+                throw new \Exception("Execute failed: (" . $prepStatement->errno . ") " . $prepStatement->error);
             }
         } catch (Exception $error) {
             throw $error;
@@ -82,13 +116,15 @@ class Database {
         $mysqli = $this->startMySQLi();
         try {
             if (!($prepStatement = $mysqli->prepare("SELECT * FROM users WHERE username =?"))) {
-                throw new Exception("Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error);
+                throw new \Exception("Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error);
             }
             if (!$prepStatement->bind_param("s", $username)) {
-                throw new Exception( "Binding parameters failed: (" . $prepStatement->errno . ") " . $prepStatement->error);
+                throw new \Exception( "Binding parameters failed: (" 
+                . $prepStatement->errno . ") " . $prepStatement->error);
             }
             if (!$prepStatement->execute()) {
-                throw new Exception("Execute failed: (" . $prepStatement->errno . ") " . $prepStatement->error);
+                throw new \Exception("Execute failed: (" . $prepStatement->errno 
+                . ") " . $prepStatement->error);
             }
             $result = $prepStatement->get_result();
             $row = $result->fetch_assoc();
@@ -100,17 +136,20 @@ class Database {
         }
     }
 
-    private function updateVariableInDatabase(string $username, string $variableToUpdate, string $preparedStatement) {
+    private function updateVariableInDatabase(string $username,
+     string $variableToUpdate, string $preparedStatement) {
         $mysqli = $this->startMySQLi();
         try {
             if (!($prepStatement = $mysqli->prepare($preparedStatement))) {
-                throw new Exception("Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error);
+                throw new \Exception("Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error);
             }
             if (!$prepStatement->bind_param("ss", $variableToUpdate, $username)) {
-                throw new Exception( "Binding parameters failed: (" . $prepStatement->errno . ") " . $prepStatement->error);
+                throw new \Exception( "Binding parameters failed: (" . $prepStatement->errno . ") " 
+                . $prepStatement->error);
             }
             if (!$prepStatement->execute()) {
-                throw new Exception("Execute failed: (" . $prepStatement->errno . ") " . $prepStatement->error);
+                throw new \Exception("Execute failed: (" . $prepStatement->errno . ") " 
+                . $prepStatement->error);
             }
         } catch (Exception $error) {
             throw $error;
@@ -120,9 +159,10 @@ class Database {
     }
 
     private function startMySQLi() {
-        $mysqli = new \mysqli($this->settings->localhost, $this->settings->user, $this->settings->password, $this->settings->database);
+        $mysqli = new \mysqli($this->settings->localhost, $this->settings->user,
+         $this->settings->password, $this->settings->database);
         if ($mysqli->connect_errno) {
-            throw new Exception("Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error);        
+            throw new \Exception("Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error);        
         } else {
             return $mysqli;
         }

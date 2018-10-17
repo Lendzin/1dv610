@@ -61,6 +61,16 @@ body {
   .boldtext {
     font-weight: bold;
   }
+  .messageform {
+    background: #81ee7d;
+    align-content: center;
+    flex:0;
+  }
+  textarea {
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 40px;
+  }
 
   .loggedIn {
     margin: 5px;

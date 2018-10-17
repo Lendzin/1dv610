@@ -8,6 +8,7 @@ require_once('controller/FeedbackController.php');
 require_once('controller/LoginController.php');
 require_once('controller/RegisterController.php');
 require_once('controller/CookieController.php');
+require_once('controller/NewsController.php');
 require_once('view/LoginView.php');
 require_once('view/RegisterView.php');
 require_once('view/LayoutView.php');

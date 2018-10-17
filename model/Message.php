@@ -16,6 +16,9 @@ class Message {
         $this->message = $message;
     }
 
+    public function getId() {
+        return $this->id;
+    }
     public function getMessage() {
         return $this->message;
     }
