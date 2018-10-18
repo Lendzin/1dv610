@@ -10,7 +10,7 @@ class MessageDatabase extends Database {
         $messageArray = [];
         while ($row = $result->fetch_assoc())
         {
-            $message = new Message($row['id'], $row['username'], $row['timestamp'], $row['message']);
+            $message = new Message($row['id'], $row['username'], $row['timestamp'], $row['message'], $row['edited']);
             array_push($messageArray, $message);
         }
         return $messageArray;

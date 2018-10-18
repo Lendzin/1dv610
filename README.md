@@ -6,7 +6,7 @@
 REQUIRED MYSQLI DATABASE WITH THESE TABLES:
 ```mysqli
 CREATE TABLE users (
-    username VARCHAR(30) PRIMARY KEY CHARACTER SET latin1 COLLATE latin1_general_cs NOT NULL,
+    username VARCHAR(30) CHARACTER SET latin1 COLLATE latin1_general_cs NOT NULL PRIMARY KEY ,
     password VARCHAR(250) CHARACTER SET latin1 COLLATE latin1_general_cs NOT NULL,
     token VARCHAR(250) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
     cookie VARCHAR(250) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL
@@ -17,8 +17,9 @@ CREATE TABLE users (
 CREATE TABLE messages (
     id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     message VARCHAR(150) NOT NULL,
-    timestamp timestamp DEFAULT NOW(),
-    username VARCHAR(30)
+    timestamp TIMESTAMP DEFAULT NOW(),
+    username VARCHAR(30),
+    edited TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP 
 );
 ```
 

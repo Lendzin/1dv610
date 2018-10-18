@@ -42,10 +42,8 @@ class NewsView {
     }
 
     public function editActiveMessage() {
-        var_dump($this->getFormAddMessage());
-        var_dump( $this->getFormMessageId());
         $this->database->updateMessageWithId($this->getFormAddMessage(), $this->getFormMessageId());
-        // $this->forceGetRequestOnRefresh();
+        $this->forceGetRequestOnRefresh();
     }
 
     public function render() {
@@ -179,8 +177,11 @@ class NewsView {
         '"><p><span class="boldtext">Creator: </span>'
         . $message->getUsername() .
         '</p><p><span class="boldtext">Message: </span>'
-        . $this->setCorrectMessageFormat($message->getMessage()) . '</p><p><span class="boldtext">Created at: </span>'
-        . $message->getTimestamp() . '</p>'; 
+        . $this->setCorrectMessageFormat($message->getMessage()) . '</p>
+        <p><span class="boldtext">Created at: </span>'
+        . $message->getTimestamp() . '</p> 
+        <p><span class="boldtext">Last edited: </span>'
+        . $message->getEditedTimestamp() . '</p>';
     }
 
     private function setColorClass($colorNumber) {
