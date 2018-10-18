@@ -27,6 +27,7 @@ class MainController {
         if ($this->session->userIsValidated()) {
             $this->newsController->updateNewsView();
         }
+        $this->newsView->generateMessagesForRenderer();
         $this->layoutView->render();
         $this->session->unsetSessionUserMessage();
         $this->session->unsetSessionMessageClass();

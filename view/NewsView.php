@@ -3,6 +3,7 @@
 namespace view;
 
 class NewsView {
+    
     private static $add = 'NewsView::AddPost';
     private static $edit = 'NewsView::EditPost';
     private static $save = 'NewsView::Save';
@@ -32,6 +33,10 @@ class NewsView {
         return isset($_POST[self::$delete]);
     }
 
+    public function generateMessagesForRenderer() {
+        $this->messages = $this->database->getMessages();
+    }
+
     public function addMessageToDatabase() {
         $this->database->saveMessageForUser($this->getFormAddMessage(), $this->session->getSessionUsername());
         $this->forceGetRequestOnRefresh();
@@ -47,7 +52,6 @@ class NewsView {
     }
 
     public function render() {
-        $this->messages = $this->database->getMessages();
         if ($this->session->userIsValidated()) {
             return $this->renderLoggedIn();
         } else {
@@ -84,11 +88,9 @@ class NewsView {
             <span class="flexbox"></span>
         </div>
         <div class="messagebox">';
-        $divideInt = 0;
+        $numbOfMessages = 0;
         foreach ($this->messages as $key => $message) {
-            if ($this->divCountCheck($divideInt)) {
-                $renderString .= '<div class="messagebox">';
-            }
+            $renderString .= $this->addStartDivBasedOn($numbOfMessages);
             if ($this->validateUsername($message->getUsername())) {
                 if ($this->userWantsToEdit() && ($message->getId() == $this->getFormMessageId())) {
                     $renderString .= 
@@ -100,9 +102,8 @@ class NewsView {
                     <input type="submit" class="button" name="' . self::$cancel . '" value="Cancel"/>
                     <input type="submit" class="button" name="' . self::$save . '" value="Save"/>
                     </form>';
-                    unset($_POST[self::$edit]);
                 } else {
-                    $colorNumber = 2;
+                    $colorNumber = 2; // based on MOD (%), 2 will become 'white'
                     $renderString .= $this->getMessageHTML($colorNumber, $message);
                     $renderString .= '<form action="?"  method="post" >
                     <input type="hidden" name="' . self::$id . '" value ="' . $message->getId() . '" />
@@ -110,21 +111,17 @@ class NewsView {
                     <input type="submit" class="button" name="' . self::$delete . '" value="Delete" />
                     </form></div>';
                 }
-                $divideInt++;
-                if ($this->divCountCheck($divideInt)) {
-                    $renderString .= '</div>';
-                }
+                $numbOfMessages++;
+                $renderString .= $this->addCloseDivBasedOn($numbOfMessages);
             } else {
-                $colorNumber = 1;
+                $colorNumber = 1; // based on MOD (%), 1 will become 'blue'
                 $renderString .= $this->getMessageHTML($colorNumber, $message);
                 $renderString .= '</div>';
-                $divideInt++;
-                if ($this->divCountCheck($divideInt)) {
-                    $renderString .= '</div>';
-                }
+                $numbOfMessages++;
+                $renderString .= $this->addCloseDivBasedOn($numbOfMessages);
             }
         }       
-        $renderString .= $this->addEmptySpansToString($divideInt);
+        $renderString .= $this->addEmptySpansBasedOn($numbOfMessages);
         return $renderString;
     }
 
@@ -138,21 +135,17 @@ class NewsView {
 
     private function renderLoggedOut() {
         $renderString = '<div class="messagebox">';
-        $colorChanger = 0;
-        $divideInt = 0;
+        $colorNumber = 0;
+        $numbOfMessages = 0;
         foreach ($this->messages as $key => $message) {
-            if ($this->divCountCheck($divideInt)) {
-                $renderString .= '<div class="messagebox">';
-            }
-            $renderString .= $this->getMessageHTML($colorChanger, $message);
+            $renderString .= $this->addStartDivBasedOn($numbOfMessages);
+            $renderString .= $this->getMessageHTML($colorNumber, $message);
             $renderString .= '</div>';
-            $colorChanger++;
-            $divideInt++;
-            if ($this->divCountCheck($divideInt)) {
-                $renderString .= '</div>';
-            }
+            $colorNumber++;
+            $numbOfMessages++;
+            $renderString .= $this->addCloseDivBasedOn($numbOfMessages);
         }
-        $renderString .= $this->addEmptySpansToString($divideInt);
+        $renderString .= $this->addEmptySpansBasedOn($numbOfMessages);
         return $renderString;
     }
 
@@ -160,13 +153,17 @@ class NewsView {
         return $username === $this->session->getSessionUsername() ? true : false;
     }
 
-    private function divCountCheck($divideInt) {
-        return $divideInt !== 0 && $divideInt % 3 === 0 ? true : false;
+    private function addStartDivBasedOn($numbOfMessages) {
+        return $numbOfMessages !== 0 && $numbOfMessages % 3 === 0 ? '<div class="messagebox">' : "";
     }
 
-    private function addEmptySpansToString($divideInt) {
+    private function addCloseDivBasedOn($numbOfMessages) {
+        return $numbOfMessages !== 0 && $numbOfMessages % 3 === 0 ? '</div>' : "";
+    }
+
+    private function addEmptySpansBasedOn($numbOfMessages) {
         $returnString = "";
-        for ($i = 3 - ($divideInt % 3); $i != 0; $i--) {
+        for ($i = 3 - ($numbOfMessages % 3); $i != 0; $i--) {
             $returnString .= '<span class="flexbox"></span>';
         }
         return $returnString;
@@ -175,8 +172,8 @@ class NewsView {
     private function getMessageHTML($colorNumber, $message) {
         return '<div '. $this->setColorClass($colorNumber) .
         '"><p><span class="boldtext">Creator: </span>'
-        . $message->getUsername() .
-        '</p><p><span class="boldtext">Message: </span>'
+        . $message->getUsername() .'</p>
+        <p><span class="boldtext">Message: </span>'
         . $this->setCorrectMessageFormat($message->getMessage()) . '</p>
         <p><span class="boldtext">Created at: </span>'
         . $message->getTimestamp() . '</p> 
