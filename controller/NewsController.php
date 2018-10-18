@@ -13,6 +13,7 @@ class NewsController {
     public function updateNewsView() {
         if ($this->newsView->userIsValidated()) {
             if ($this->newsView->userAddsMessage()) {
+                $this->newsView->correctMessageFormat();
                 $this->newsView->addMessageToDatabase();
             }
             if ($this->newsView->userWantsToDelete()) {

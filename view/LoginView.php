@@ -79,7 +79,7 @@ class LoginView {
 
 					<label for="' . self::$keep . '">Keep me logged in  :</label>
 					<input type="checkbox" id="' . self::$keep . '" name="' . self::$keep . '" />
-					
+					<br>
 					<input type="submit" class="button" name="' . self::$login . '" value="Login" />
 				</fieldset>
 			</form>

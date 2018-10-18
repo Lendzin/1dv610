@@ -12,6 +12,7 @@ class NewsView {
     private $session;
     private $database;
     private $messages;
+    private $formatedMessage;
     
     public function __construct(\model\Session $session) {
         $this->session = $session;
@@ -33,8 +34,18 @@ class NewsView {
     public function userIsValidated() {
         return $this->session->sessionLoggedIn() && $this->session->validateSession() ? true : false;
     }
+    public function correctMessageFormat() {
+        $message = $this->getFormAddMessage();
+        var_dump($message);
+        $message = "\n" . $message;
+        $message = wordwrap($message,40,"\n", true);
+        $message = htmlentities($message);
+        $message = nl2br($message);
+        var_dump($message);
+        $this->formatedMessage = $message;
+    }
     public function addMessageToDatabase() {
-        $this->database->saveMessageForUser($this->session->getSessionUsername(), $this->getFormAddMessage());
+        $this->database->saveMessageForUser($this->session->getSessionUsername(), $this->formatedMessage);
     }
     public function deleteActiveMessage() {
         $this->database->deleteMessageWithId($this->getFormMessageId());
@@ -50,20 +61,26 @@ class NewsView {
     }
     
     private function renderLoggedIn() {
-        $renderString = '<div class="messagebox"><form action="?" class="messageform" method="post" >
-        <p>Create a new text here:</p>
-        <textarea name="'. self::$message .'" rows="5" cols="40"></textarea>
-        <input type="submit" class="button" name="' . self::$add . '" value="Add" />
-        </form><span class="flexbox"></span><span class="flexbox"></span></div><div class="messagebox">';
-        $count = 0;
+        $renderString = 
+        '<div class="messagebox">
+            <form action="?" class="messageform" method="post">
+                <p> Create a new note here: </p>
+                <p> Maximum Chars: 100 </p>
+                <textarea maxlength="100" name="'. self::$message .'" rows="5" cols="40"></textarea>
+                <input type="submit" class="button" name="' . self::$add . '" value="Add"/>
+            </form>
+            <span class="flexbox"></span>
+            <span class="flexbox"></span>
+        </div>
+        <div class="messagebox">';
         $divideInt = 0;
         foreach ($this->messages as $key => $message) {
             if ($this->divCountCheck($divideInt)) {
                 $renderString .= '<div class="messagebox">';
             }
             if ($this->validateUsername($message->getUsername())) {
-                $count = 2;
-                $renderString .= $this->getBaseRender($count, $message);
+                $colorNumber = 2;
+                $renderString .= $this->getMessageHTML($colorNumber, $message);
                 $renderString .= '<form action="?" class="form" method="post" >
                 <input type="hidden" name="' . self::$id . '" value ="' . $message->getId() . '" />
                 <input type="submit" class="button" name="' . self::$edit . '" value="Edit" />
@@ -74,45 +91,57 @@ class NewsView {
                     $renderString .= '</div>';
                 }
             } else {
-                $count = 1;
-                $renderString .= $this->getBaseRender($count, $message);
+                $colorNumber = 1;
+                $renderString .= $this->getMessageHTML($colorNumber, $message);
                 $renderString .= '</div>';
                 $divideInt++;
                 if ($this->divCountCheck($divideInt)) {
                     $renderString .= '</div>';
                 }
             }
-        }
+        }       
+        $renderString .= $this->addEmptySpansToString($divideInt);
         return $renderString;
     }
-    private function divCountCheck($divideInt) {
-        return $divideInt !== 0 && $divideInt % 3 === 0 ? true : false;
-    }
-    private function validateUsername($username) {
-        return $username === $this->session->getSessionUsername() ? true : false;
-    }
-   
+
     private function renderLoggedOut() {
         $renderString = '<div class="messagebox">';
-        $count = 0;
+        $colorChanger = 0;
         $divideInt = 0;
         foreach ($this->messages as $key => $message) {
             if ($this->divCountCheck($divideInt)) {
                 $renderString .= '<div class="messagebox">';
             }
-            $renderString .= $this->getBaseRender($count, $message);
+            $renderString .= $this->getMessageHTML($colorChanger, $message);
             $renderString .= '</div>';
-            $count++;
+            $colorChanger++;
             $divideInt++;
             if ($this->divCountCheck($divideInt)) {
                 $renderString .= '</div>';
             }
         }
+        $renderString .= $this->addEmptySpansToString($divideInt);
         return $renderString;
     }
+    
+    private function validateUsername($username) {
+        return $username === $this->session->getSessionUsername() ? true : false;
+    }
 
-    private function getBaseRender($count, $message) {
-        return '<div '. $this->setClass($count) .
+    private function divCountCheck($divideInt) {
+        return $divideInt !== 0 && $divideInt % 3 === 0 ? true : false;
+    }
+
+    private function addEmptySpansToString($divideInt) {
+        $returnString = "";
+        for ($i = 3 - ($divideInt % 3); $i != 0; $i--) {
+            $returnString .= '<span class="flexbox"></span>';
+        }
+        return $returnString;
+    }
+
+    private function getMessageHTML($colorNumber, $message) {
+        return '<div '. $this->setColorClass($colorNumber) .
         '"><p><span class="boldtext">Creator: </span>'
         . $message->getUsername() .
         '</p><p><span class="boldtext">Message: </span>'
@@ -120,8 +149,8 @@ class NewsView {
         . $message->getTimestamp() . '</p>'; 
     }
 
-    private function setClass($count) {
-        return $count % 2 === 0 ? 'class="leftside"' :  'class="rightside"';
+    private function setColorClass($colorNumber) {
+        return $colorNumber % 2 === 0 ? 'class="whitepost"' :  'class="bluepost"';
     }
 
     private function getFormAddMessage() {

@@ -16,7 +16,7 @@ CREATE TABLE users (
 ```mysqli
 CREATE TABLE messages (
     id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    message VARCHAR(100) NOT NULL,
+    message VARCHAR(150) NOT NULL,
     timestamp timestamp DEFAULT NOW(),
     username VARCHAR(30)
 );

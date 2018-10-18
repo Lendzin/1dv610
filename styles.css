@@ -39,21 +39,28 @@ body {
     display: flex;
     flex-direction: row;
   }
-  .rightside {
+  .bluepost {
     border:1px solid black;
     border-bottom: 5px solid black;
     margin: 20px;
     padding: 2px;
     background: #4bc2fa;
     flex: 1;
+    word-wrap: break-word;
   }
-  .leftside {
+  .whitepost {
     border:1px solid black;
     border-bottom: 5px solid black;
     margin: 20px;
     padding: 4px;
     background: #f8e7c7;
     flex: 1;
+    word-wrap: break-word;
+  }
+  .flexbox {
+    flex:1;
+    margin: 20px;
+    padding: 4px;
   }
   p {
     margin: 5px;
@@ -69,9 +76,6 @@ body {
     flex:1;
   }
 
-  .flexbox {
-    flex:1;
-  }
   textarea {
     margin-left: 5px;
     margin-right: 5px;
@@ -124,7 +128,10 @@ body {
   }
 
   .button {
+    padding: 2px;
     margin: 5px;
+    margin-right: 20px;
+    width: 120px;
   }
   
   .fieldset {
