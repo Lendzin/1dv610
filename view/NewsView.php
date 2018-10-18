@@ -3,7 +3,7 @@
 namespace view;
 
 class NewsView {
-    
+
     private static $add = 'NewsView::AddPost';
     private static $edit = 'NewsView::EditPost';
     private static $save = 'NewsView::Save';
@@ -52,11 +52,7 @@ class NewsView {
     }
 
     public function render() {
-        if ($this->session->userIsValidated()) {
-            return $this->renderLoggedIn();
-        } else {
-            return $this->renderLoggedOut();
-        }
+        return $this->session->userIsValidated() ? $this->renderLoggedIn() : $this->renderLoggedOut();
     }
     private function userWantsToEdit() {
         return isset($_POST[self::$edit]);
