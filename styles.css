@@ -40,6 +40,8 @@ body {
     flex-direction: row;
   }
   .bluepost {
+    display: flex;
+    flex-direction: column;
     border:1px solid black;
     border-bottom: 5px solid black;
     margin: 20px;
@@ -49,12 +51,15 @@ body {
     word-wrap: break-word;
   }
   .whitepost {
+    display: flex;
+    flex-direction: column;
     border:1px solid black;
     border-bottom: 5px solid black;
     margin: 20px;
     padding: 4px;
     background: #f8e7c7;
     flex: 1;
+    justify-content: flex-start;
     word-wrap: break-word;
   }
   .flexbox {
@@ -76,10 +81,20 @@ body {
     flex:1;
   }
 
+  .editform {
+    border:1px solid black;
+    border-bottom: 5px solid black;
+    margin: 20px;
+    padding: 4px;
+    background: #f8e7c7;
+    align-content: center;
+    flex:1;
+  }
+
   textarea {
     margin-left: 5px;
     margin-right: 5px;
-    margin-top: 40px;
+    margin-top: 20px;
   }
 
   .loggedIn {
@@ -132,6 +147,8 @@ body {
     margin: 5px;
     margin-right: 20px;
     width: 120px;
+    justify-self: flex-end;
+    align-content: flex-end;
   }
   
   .fieldset {

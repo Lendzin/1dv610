@@ -21,7 +21,7 @@ class FeedbackController {
     }
 
     public function initializeFeedback() {
-        if (!$this->session->sessionLoggedIn()) {
+        if (!$this->session->userIsValidated()) {
             $this->cookieController->run();
             $this->registerController->run();
             $this->loginController->run();

@@ -42,7 +42,7 @@ class LayoutView {
         </html>';
     }
     private function renderLinks() {
-        if (!$this->session->sessionLoggedIn()) {
+        if (!$this->session->userIsValidated()) {
             if ($this->loginView->userWantsToRegister()) {
                 return '<a href="?" class="links">Back to login</a>';
             } else return '<a href="index.php?register" class="links">Register a new user</a>';
@@ -50,7 +50,7 @@ class LayoutView {
     }
   
     private function renderIsLoggedIn() {
-        if ($this->session->sessionLoggedIn() && $this->session->validateSession()) {
+        if ($this->session->userIsValidated()) {
             return '<h2 class="loggedIn">Logged in</h2>';
         } else return '<h2 class="notLoggedIn">Not logged in</h2>';
     }

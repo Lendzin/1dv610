@@ -27,7 +27,7 @@ class LoginView {
 	 */
 	public function response() {
 		$response = '';
-		if ($this->session->sessionLoggedIn() && $this->session->validateSession()) {
+		if ($this->session->userIsValidated()) {
 			$response .= $this->generateLogoutButtonHTML();
 		} else {
 			$response = $this->generateLoginFormHTML();

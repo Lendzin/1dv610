@@ -24,10 +24,11 @@ class MainController {
     
     public function run() {
         $this->feedbackController->initializeFeedback();
-        $this->newsController->updateNewsView();
+        if ($this->session->userIsValidated()) {
+            $this->newsController->updateNewsView();
+        }
         $this->layoutView->render();
         $this->session->unsetSessionUserMessage();
-        // $this->session->unsetSessionUsername();
         $this->session->unsetSessionMessageClass();
      }
 }

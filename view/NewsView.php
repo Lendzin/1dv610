@@ -5,14 +5,15 @@ namespace view;
 class NewsView {
     private static $add = 'NewsView::AddPost';
     private static $edit = 'NewsView::EditPost';
+    private static $save = 'NewsView::Save';
     private static $delete = 'NewsView::DeletePost';
     private static $message = 'NewsView::Message';
-    private static $id = 'NewsView::Id'; 
+    private static $id = 'NewsView::Id';
+    private static $cancel = "NewsView::Cancel";
 
     private $session;
     private $database;
     private $messages;
-    private $formatedMessage;
     
     public function __construct(\model\Session $session) {
         $this->session = $session;
@@ -23,49 +24,61 @@ class NewsView {
         return isset($_POST[self::$add]);
     }
 
-    public function userWantsToEdit() {
-        return isset($_POST[self::$edit]);
+    public function userWantsToSaveEdit() {
+        return isset($_POST[self::$save]);
     }
 
     public function userWantsToDelete() {
         return isset($_POST[self::$delete]);
     }
 
-    public function userIsValidated() {
-        return $this->session->sessionLoggedIn() && $this->session->validateSession() ? true : false;
-    }
-    public function correctMessageFormat() {
-        $message = $this->getFormAddMessage();
-        var_dump($message);
-        $message = "\n" . $message;
-        $message = wordwrap($message,40,"\n", true);
-        $message = htmlentities($message);
-        $message = nl2br($message);
-        var_dump($message);
-        $this->formatedMessage = $message;
-    }
     public function addMessageToDatabase() {
-        $this->database->saveMessageForUser($this->session->getSessionUsername(), $this->formatedMessage);
+        $this->database->saveMessageForUser($this->getFormAddMessage(), $this->session->getSessionUsername());
+        $this->forceGetRequestOnRefresh();
     }
     public function deleteActiveMessage() {
-        $this->database->deleteMessageWithId($this->getFormMessageId());
+        $this->database->deleteMessageWithId($this->getFormMessageId(), $this->session->getSessionUsername());
+        $this->forceGetRequestOnRefresh();
+    }
+
+    public function editActiveMessage() {
+        var_dump($this->getFormAddMessage());
+        var_dump( $this->getFormMessageId());
+        $this->database->updateMessageWithId($this->getFormAddMessage(), $this->getFormMessageId());
+        // $this->forceGetRequestOnRefresh();
     }
 
     public function render() {
         $this->messages = $this->database->getMessages();
-        if ($this->session->sessionLoggedIn()) {
+        if ($this->session->userIsValidated()) {
             return $this->renderLoggedIn();
         } else {
             return $this->renderLoggedOut();
         }
     }
+    private function userWantsToEdit() {
+        return isset($_POST[self::$edit]);
+    }
+
+    private function forceGetRequestOnRefresh() {
+        header('Location: ?');
+        exit();
+    }
+
+    private function getFormAddMessage() {
+        return isset($_POST[self::$message]) ? $_POST[self::$message] : null;
+    }
     
+    private function getFormMessageId() {
+        return isset($_POST[self::$id]) ? $_POST[self::$id] : null;
+    }
+
     private function renderLoggedIn() {
         $renderString = 
         '<div class="messagebox">
             <form action="?" class="messageform" method="post">
                 <p> Create a new note here: </p>
-                <p> Maximum Chars: 100 </p>
+                <p> <span class="boldtext">Maximum Chars: </span>: 100 </p>
                 <textarea maxlength="100" name="'. self::$message .'" rows="5" cols="40"></textarea>
                 <input type="submit" class="button" name="' . self::$add . '" value="Add"/>
             </form>
@@ -79,13 +92,26 @@ class NewsView {
                 $renderString .= '<div class="messagebox">';
             }
             if ($this->validateUsername($message->getUsername())) {
-                $colorNumber = 2;
-                $renderString .= $this->getMessageHTML($colorNumber, $message);
-                $renderString .= '<form action="?" class="form" method="post" >
-                <input type="hidden" name="' . self::$id . '" value ="' . $message->getId() . '" />
-                <input type="submit" class="button" name="' . self::$edit . '" value="Edit" />
-                <input type="submit" class="button" name="' . self::$delete . '" value="Delete" />
-                </form></div>';
+                if ($this->userWantsToEdit() && ($message->getId() == $this->getFormMessageId())) {
+                    $renderString .= 
+                    '<form action="?" class="editform" method="post">
+                    <p><span class="boldtext">Editing note for: </span>' . $message->getUsername() . '</p>
+                    <p><span class="boldtext">Maxiumum Chars: </span>: 100 </p>
+                    <textarea maxlength="100" name="'. self::$message .'" rows="5" cols="40">' . $message->getMessage() . '</textarea>
+                    <input type="hidden" name="' . self::$id . '" value ="' . $message->getId() . '" />
+                    <input type="submit" class="button" name="' . self::$cancel . '" value="Cancel"/>
+                    <input type="submit" class="button" name="' . self::$save . '" value="Save"/>
+                    </form>';
+                    unset($_POST[self::$edit]);
+                } else {
+                    $colorNumber = 2;
+                    $renderString .= $this->getMessageHTML($colorNumber, $message);
+                    $renderString .= '<form action="?"  method="post" >
+                    <input type="hidden" name="' . self::$id . '" value ="' . $message->getId() . '" />
+                    <input type="submit" class="button" name="' . self::$edit . '" value="Edit" />
+                    <input type="submit" class="button" name="' . self::$delete . '" value="Delete" />
+                    </form></div>';
+                }
                 $divideInt++;
                 if ($this->divCountCheck($divideInt)) {
                     $renderString .= '</div>';
@@ -102,6 +128,14 @@ class NewsView {
         }       
         $renderString .= $this->addEmptySpansToString($divideInt);
         return $renderString;
+    }
+
+    private function setCorrectMessageFormat($message) {
+        $formatedMessage = "\n" . $message;
+        $formatedMessage = wordwrap($formatedMessage,40,"\n", true);
+        $formatedMessage = htmlentities($formatedMessage);
+        $formatedMessage = nl2br($formatedMessage);
+        return $formatedMessage;
     }
 
     private function renderLoggedOut() {
@@ -123,7 +157,7 @@ class NewsView {
         $renderString .= $this->addEmptySpansToString($divideInt);
         return $renderString;
     }
-    
+
     private function validateUsername($username) {
         return $username === $this->session->getSessionUsername() ? true : false;
     }
@@ -145,19 +179,11 @@ class NewsView {
         '"><p><span class="boldtext">Creator: </span>'
         . $message->getUsername() .
         '</p><p><span class="boldtext">Message: </span>'
-        . $message->getMessage() . '</p><p><span class="boldtext">Created at: </span>'
+        . $this->setCorrectMessageFormat($message->getMessage()) . '</p><p><span class="boldtext">Created at: </span>'
         . $message->getTimestamp() . '</p>'; 
     }
 
     private function setColorClass($colorNumber) {
         return $colorNumber % 2 === 0 ? 'class="whitepost"' :  'class="bluepost"';
-    }
-
-    private function getFormAddMessage() {
-        return isset($_POST[self::$message]) ? $_POST[self::$message] : null;
-    }
-
-    private function getFormMessageId() {
-        return isset($_POST[self::$id]) ? $_POST[self::$id] : null;
     }
 }

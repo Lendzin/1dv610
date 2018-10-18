@@ -32,6 +32,7 @@ try {
     $mainController = new \controller\MainController();
     $mainController->run();
 } catch (Exception $error) {
+    echo $error;
     echo ('There seems to have been an issue while the system was running.');
 }
 finally {
