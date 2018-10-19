@@ -28,7 +28,7 @@ class LayoutView {
             <body class="unselectable">
                 <div><p class="unselectable header">SITENAME_UNDERSCORE</p></div>
                 <div class="maindiv">
-                    <h1>Assignment 3</h1>
+                    <h1>Assignment 4</h1>
                     ' . $this->renderLinks() . '
                     ' . $this->renderIsLoggedIn() . '
                     <div class="container">
