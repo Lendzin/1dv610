@@ -5,7 +5,7 @@
 Generally you'd need a location for your server where this system should run,
 
 example: http://www.digitalocean.com, with a created droplet running ubuntu 18.04
-If you did choose this option, the below resources can be helpful.
+<br>If you did choose this option, the below resources can be helpful.
 
 <h3>Resources for installing and getting a web-server for php up and running:</h3>
 https://www.digitalocean.com/community/tutorials/how-to-install-linux-nginx-mysql-php-lemp-stack-ubuntu-18-04
@@ -34,7 +34,7 @@ Required for working application/system
 ---
 
 1.  Moving all files of the project to the location where you would present the data to your server.
-    For Ubuntu, the HTML folder would work wonders. (assuming you have setup your server correctly)
+    <br>For Ubuntu, the HTML folder would work wonders. (assuming you have setup your server correctly)
 
 2. Following the "SETUP FOR DATABASE".
 
