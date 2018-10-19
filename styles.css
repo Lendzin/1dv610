@@ -106,12 +106,14 @@ body {
     background-color: #db5f5f;
     margin: 5px;
     margin-bottom: 15px;
+    max-width: 40%;
     padding: 10px;
   }
   .alert-success {
     background-color: #5ceb68 ;
     margin: 5px;
     margin-bottom: 15px;
+    max-width: 40%;
     padding: 10px;
   }
   .links {
