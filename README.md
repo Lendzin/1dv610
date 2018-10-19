@@ -1,4 +1,4 @@
-# ASSIGNMENT 3 :: 1DV610, AUTUMN 2018
+# ASSIGNMENT 4 :: 1DV610, AUTUMN 2018
 
 <h3>The basis for this project is this:</h3>
 https://coursepress.lnu.se/kurs/introduktiontillmjukvarukvalitet/assignments/a4-requirements-and-code-quality/
