@@ -30,7 +30,7 @@ https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-phpmy
 
 https://hostadvice.com/how-to/how-to-harden-nginx-web-server-on-ubuntu-18-04/
 
-Required for working application/system
+:: Required for working application/system
 ---
 
 1.  Moving all files of the project to the location where you would present the data to your server.
@@ -38,10 +38,10 @@ Required for working application/system
 
 2. Following the "SETUP FOR DATABASE".
 
-Setup for database
+:: Setup for database
 ---
 
-<h3>REQUIRED MYSQLI DATABASE WITH THESE TABLES:</h3>
+<h3>REQUIRED MySQLI Database with these tables:</h3>
 ```mysqli
 CREATE TABLE users (
     username VARCHAR(30) CHARACTER SET latin1 COLLATE latin1_general_cs NOT NULL PRIMARY KEY ,
