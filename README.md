@@ -38,6 +38,7 @@ https://hostadvice.com/how-to/how-to-harden-nginx-web-server-on-ubuntu-18-04/
 ---
 
 <h3>REQUIRED MySQLI Database with these tables:</h3>
+
 ```mysqli
 CREATE TABLE users (
     username VARCHAR(30) CHARACTER SET latin1 COLLATE latin1_general_cs NOT NULL PRIMARY KEY ,
