@@ -7,7 +7,9 @@ https://coursepress.lnu.se/kurs/introduktiontillmjukvarukvalitet/assignments/a2-
 
 <h3>Shortly:</h3>
 
-* This project is a login-application, with some extra use-cases design by me, Jonas Strandqvist.
+* This project is a login-application, with extra features, designed by: Jonas Strandqvist.
+(with initial work from Daniel Toll:
+https://github.com/dntoll/1dv610/blob/master/assignments/A2_resources/startup.zip)
 
 * Login application handles:
     1. Registering a user, with feedback on success or fail.
