@@ -17,7 +17,7 @@ class Session {
         unset($_SESSION["user"]["username"]);
     }
 
-    
+   
     public function setSessionLoginStatus(bool $loginStatus) {
         $_SESSION["user"]["loginStatus"] = $loginStatus;
     }

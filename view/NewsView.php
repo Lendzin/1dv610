@@ -118,6 +118,7 @@ class NewsView {
             }
         }       
         $renderString .= $this->addEmptySpansBasedOn($numbOfMessages);
+        $renderString .= '</div>';
         return $renderString;
     }
 
@@ -142,6 +143,7 @@ class NewsView {
             $renderString .= $this->addCloseDivBasedOn($numbOfMessages);
         }
         $renderString .= $this->addEmptySpansBasedOn($numbOfMessages);
+        $renderString .= '</div>';
         return $renderString;
     }
 
@@ -167,7 +169,7 @@ class NewsView {
 
     private function getMessageHTML($colorNumber, $message) {
         return '<div '. $this->setColorClass($colorNumber) .
-        '"><p><span class="boldtext">Creator: </span>'
+        '><p><span class="boldtext">Creator: </span>'
         . $message->getUsername() .'</p>
         <p><span class="boldtext">Message: </span>'
         . $this->setCorrectMessageFormat($message->getMessage()) . '</p>
