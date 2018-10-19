@@ -81,7 +81,7 @@ class RegisterView {
         $this->errorMessages = $errorMessages;
     }
 
-    public function isUserAccepted() : bool {
+    public function userIsAccepted() : bool {
         return count($this->errorMessages) === 0 ? true : false;
     }
 
@@ -89,7 +89,7 @@ class RegisterView {
         $this->database->saveUserToDatabase($this->user->getName(), $this->user->getPassword());
     }
 
-    public function setUserSuccessResponse() {
+    public function setRegisterSuccessResponse() {
         $this->session->setSessionUserMessage("Registered new user.");
         $this->session->setSessionMessageClass("alert-success");
     }
@@ -98,7 +98,7 @@ class RegisterView {
         $this->session->setSessionUsername($this->user->getName());
     }
 
-    public function setUserFailedResponse() {
+    public function setRegisterFailedResponse() {
         $this->session->setSessionUserMessage($this->returnAllErrors($this->errorMessages));
         $this->session->setSessionMessageClass("alert-fail");
     }

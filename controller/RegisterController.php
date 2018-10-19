@@ -14,14 +14,14 @@ class RegisterController {
         if ($this->registerView->triedToRegisterAccount()) {
             $this->registerView->setRegisterVariables();
             $this->registerView->setRegisterErrorMessages();
-            if ($this->registerView->isUserAccepted()) {
+            if ($this->registerView->userIsAccepted()) {
                 $this->registerView->saveUser();
-                $this->registerView->setUserSuccessResponse();
+                $this->registerView->setRegisterSuccessResponse();
                 $this->registerView->setUserNameInForm();
                 $this->registerView->unsetRegister();
             } else {
                 $this->registerView->setUserNameInForm();
-                $this->registerView->setUserFailedResponse();
+                $this->registerView->setRegisterFailedResponse();
             }
         }
     }

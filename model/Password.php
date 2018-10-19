@@ -2,6 +2,7 @@
 
 namespace model;
 
+// Can be used to add more rules at a later time.
 class Password {
 
     private $password;
