@@ -6,8 +6,9 @@ https://coursepress.lnu.se/kurs/introduktiontillmjukvarukvalitet/assignments/a4-
 https://coursepress.lnu.se/kurs/introduktiontillmjukvarukvalitet/assignments/a2-coding-with-requirements/
 
 <h3>Shortly:</h3>
+
 * This project is a login-application, with some extra use-cases design by me, Jonas Strandqvist.
-<br>
+
 * Login application handles:
     1. Registering a user, with feedback on success or fail.
     2. Logging in a user, with feedback on success or fail.
