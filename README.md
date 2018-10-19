@@ -1,4 +1,26 @@
-# Login_1DV610
+# ASSIGNMENT 3 :: 1DV610, AUTUMN 2018
+
+<h3>The basis for this project is this:</h3>
+https://coursepress.lnu.se/kurs/introduktiontillmjukvarukvalitet/assignments/a4-requirements-and-code-quality/
+<h4>Which in its turn is based on: </h4>
+https://coursepress.lnu.se/kurs/introduktiontillmjukvarukvalitet/assignments/a2-coding-with-requirements/
+
+<h3>Shortly:</h3>
+* This project is a login-application, with some extra use-cases design by me, Jonas Strandqvist.
+<br>
+* Login application handles:
+    1. Registering a user, with feedback on success or fail.
+    2. Logging in a user, with feedback on success or fail.
+    3. Keeping a user online with cookies and session, including security features for hijacking and tampering.
+    
+* Implemented use cases:
+    1. Rendering of messages from seperate database on page, 
+    <br>for logged out user with: "creator", "time of creation", "time of edit" and a "message (max 100 chars)".
+    2. Creating of said messages when logged in.
+    3. Deleting of said messages when logged in as creator.
+    4. Editing of said messages when logged in as creator.
+    5. A text showing which user is logged in, after logging in.
+
 :: Server setup help
 ---
 
