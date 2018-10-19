@@ -30,7 +30,7 @@ https://github.com/dntoll/1dv610/blob/master/assignments/A2_resources/startup.zi
 <h3>Manual and Automated testing for the login application</h3>
 
 1. Manual: https://github.com/dntoll/1dv610/blob/master/assignments/A2_resources/TestCases.md
-2. http://csquiz.lnu.se:25083/index.php by filling out username/password for the login, aswell as server adress.
+2. Automated: http://csquiz.lnu.se:25083/index.php fill out username/password, aswell as server adress.
 
 <h3>Manual Testing of extended use cases</h3>
 1. Manual testing: <a href="https://github.com/Lendzin/1dv610/wiki/Manual-Testing-of-Extra-Use-Cases-in-Login-Application-for-Assignment-4,-1DV610-Autumn-2018">Link to Manual testing</a>
