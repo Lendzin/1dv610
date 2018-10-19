@@ -58,8 +58,9 @@ CREATE TABLE messages (
 );
 ```
 
-<h3>REQUIRED FILE "AppSettings.php" (filled with informatition you have for your database) WITH:</h3>
-
+<h3>REQUIRED FILE "AppSettings.php" with filled out content:</h3>
+* Content in file should represent what your settings are for your database.
+* Location of file should be the same as your index.php, aka the starting folder of your application.
 ```php
 <?php
 
