@@ -26,7 +26,7 @@ class LayoutView {
                 <title>Login Example</title>
             </head>
             <body class="unselectable">
-                <div><p class="unselectable" id="header_text">SITENAME_UNDERSCORE</p></div>
+                <div><p class="unselectable header">SITENAME_UNDERSCORE</p></div>
                 <div class="maindiv">
                     <h1>Assignment 3</h1>
                     ' . $this->renderLinks() . '
@@ -37,7 +37,7 @@ class LayoutView {
                     </div>
                     ' . $this->newsView->render() . '              
                 </div>
-                <div><p class="unselectable" id="footer_text">js224nk@student.lnu.se | Jonas Strandqvist</p></div>
+                <div><p class="unselectable footer">js224nk@student.lnu.se | Jonas Strandqvist</p></div>
             </body>
         </html>';
     }
