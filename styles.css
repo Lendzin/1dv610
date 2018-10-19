@@ -293,6 +293,7 @@ body {
     color: #fdf5e6;
     display: inline-block;
     margin: 5px;
+    max-width: 40%;
     padding: 15px;
     text-decoration: none;
     -webkit-user-drag: none;
