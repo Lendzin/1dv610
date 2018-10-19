@@ -15,8 +15,7 @@ https://coursepress.lnu.se/kurs/introduktiontillmjukvarukvalitet/assignments/a2-
     3. Keeping a user online with cookies and session, including security features for hijacking and tampering.
     
 * Implemented use cases:
-    1. Rendering of messages from seperate database on page, 
-    <br>for logged out user with: "creator", "time of creation", "time of edit" and a "message (max 100 chars)".
+    1. Rendering of messages from seperate database on page for logged out user with:<br> "creator", "time of creation", "time of edit" and a "message (max 100 chars)".
     2. Creating of said messages when logged in.
     3. Deleting of said messages when logged in as creator.
     4. Editing of said messages when logged in as creator.
