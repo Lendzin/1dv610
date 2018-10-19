@@ -12,22 +12,18 @@ https://www.digitalocean.com/community/tutorials/how-to-install-linux-nginx-mysq
 https://linuxconfig.org/how-to-setup-the-nginx-web-server-on-ubuntu-18-04-bionic-beaver-linux
 
 <h3>Resources in case "SSL" is something of interest:</h3>
-
 https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-18-04
 https://helpdesk.ssls.com/hc/en-us/articles/203427642-How-to-install-a-SSL-certificate-on-a-NGINX-server
 https://certbot.eff.org/lets-encrypt/ubuntubionic-nginx
 
 <h3>About virtual hosting:</h3>
-
 https://www.digitalocean.com/community/tutorials/how-to-set-up-nginx-server-blocks-virtual-hosts-on-ubuntu-16-04
 
 <h3>Installing phpmyadmin, for GUI access to your database, and also good for adding things, with or without code:</h3>
-
 https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-phpmyadmin-with-nginx-on-ubuntu-16-04
 
 
 <h3>Tips for increased security:</h3>
-
 https://hostadvice.com/how-to/how-to-harden-nginx-web-server-on-ubuntu-18-04/
 
 :: Required for working application/system
