@@ -19,7 +19,7 @@ class LayoutView {
     public function render() {
         echo 
         '<!DOCTYPE html>
-        <html lang="eng">
+        <html lang="en">
             <head>
                 <link rel="stylesheet" type="text/css" href="styles.css" />
                 <meta charset="utf-8">
