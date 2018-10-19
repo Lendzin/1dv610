@@ -155,11 +155,11 @@ class LoginView {
 	}
 
 	private function getRequestUserName() : string {
-		return isset($_POST[self::$name]) ? $_POST[self::$name] : null;
+		return isset($_POST[self::$name]) ? $_POST[self::$name] : "";
 	}
 
 	private function getRequestPassword() : string {
-		return isset($_POST[self::$password]) ? $_POST[self::$password] : null;
+		return isset($_POST[self::$password]) ? $_POST[self::$password] : "";
 	}
 
 }
