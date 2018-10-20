@@ -27,7 +27,7 @@ class CookieView {
 		} catch (Exception $error) {
 			return true;
 		}
-		if ($username === "LoggedOut") {
+		if ($username === "") {
 			return false;
 		}
 		if ($this->foundCookieIssues($username, $generatedKey)) {
@@ -45,7 +45,7 @@ class CookieView {
     public function isLoggedOutCookie() {
 		$cookie = $_COOKIE['LoginView::CookiePassword'];
 		list ($username, $generatedKey) = explode(':', $cookie);
-		return ($username === "LoggedOut") ? true : false;
+		return ($username === "") ? true : false;
 	}
 
 	public function unsetCookieLogin() {
@@ -106,7 +106,7 @@ class CookieView {
 	private function removeCookie() : void {
 		$token = random_bytes(60);
 		$time = time() + (-86400 * 30); // NEGATIVE TIME FOR REMOVAL
-		$cookie = "LoggedOut" . ':' . $token;
+		$cookie = "" . ':' . $token;
 		setcookie('LoginView::CookiePassword', $cookie, $time, "/"); 
 	}
 }
