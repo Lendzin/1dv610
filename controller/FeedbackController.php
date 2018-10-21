@@ -11,7 +11,8 @@ class FeedbackController {
     private $cookieView;
     private $session;
 
-    public function __construct(\view\LoginView $loginView, \view\CookieView $cookieView, \view\RegisterView $registerView, \model\Session $session) {
+    public function __construct(\view\LoginView $loginView, \view\CookieView $cookieView,
+     \view\RegisterView $registerView, \model\Session $session) {
         $this->loginView = $loginView;
         $this->cookieView = $cookieView;
         $this->cookieController = new CookieController($this->cookieView);
