@@ -30,7 +30,7 @@ class RegisterView {
                             .'">' . $this->session->getSessionUserMessage() . '</p>
                             <div><label for="' . self::$username . '" >Username :</label></div>
                             <div><input type="text" size="20" name="' . self::$username . '" id="' . self::$username 
-                            . '" value="' . strip_tags($this->session->getSessionUsername()) . '" /></div>
+                            . '" value="' . $this->session->getSessionUsername() . '" /></div>
                             <br/>
                             <div><label for="' . self::$password . '" >Password  :</label></div>
                             <div><input type="password" size="20" name="' . self::$password . '" id="' 

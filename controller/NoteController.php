@@ -18,7 +18,7 @@ class NoteController {
                 $this->noteView->deleteActiveMessage();
             }
             if ($this->noteView->userWantsToSaveEdit()) {
-                $this->noteView->editActiveMessage();
+                $this->noteView->updateActiveMessage();
             }                
     }
 }

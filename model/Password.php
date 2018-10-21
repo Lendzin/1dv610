@@ -15,7 +15,7 @@ class Password {
         $this->password = $password;
     }
 
-    public function get() {
+    public function get() : string {
         return $this->password;
     }
 }

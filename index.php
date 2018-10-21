@@ -34,7 +34,7 @@ try {
 } catch (Exception $error) {
     // LOG ERROR 
     // haven't found how to log an error in nginx without throwing.
-    header('Location: ?'); 
+    header('Location: ?'); // reset app on error, untested.
     exit();
 }
 

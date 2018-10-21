@@ -24,7 +24,7 @@ class Username {
         $this->username = $username;
     }
 
-    public function get() {
+    public function get() : string {
         return $this->username;
     }
 }

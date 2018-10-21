@@ -18,7 +18,7 @@ class Database {
             return $mysqli;
         }
     }
-    protected function killMySQLi($mysqli) {
+    protected function killMySQLi($mysqli) : void {
         $thread = $mysqli->thread_id;
         $mysqli->kill($thread);
         $mysqli->close();

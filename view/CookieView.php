@@ -3,7 +3,7 @@ namespace view;
 
 class CookieView {
 
-		//NOTE: Usage of 'LoginView::CookiePassword' && 'LoginView::CookieName' in this class, only to support the auto-test.
+	//NOTE: Usage of 'LoginView::CookiePassword' && 'LoginView::CookieName' in this class, only to support the auto-test.
 
     private static $cookieName = 'LoginView::CookieName'; 
     private static $cookiePassword = 'LoginView::CookiePassword'; 
@@ -17,7 +17,7 @@ class CookieView {
 	}
 
     public function getCookieStatus() : bool {
-		return isset($_COOKIE['LoginView::CookiePassword']);
+			return isset($_COOKIE['LoginView::CookiePassword']);
     }
     
     public function existCookieIssues() : bool {
@@ -42,13 +42,13 @@ class CookieView {
 		$this->session->setSessionUserMessage("Wrong information in cookies");
     }
     
-    public function isLoggedOutCookie() {
+    public function isLoggedOutCookie() : bool {
 		$cookie = $_COOKIE['LoginView::CookiePassword'];
 		list ($username, $generatedKey) = explode(':', $cookie);
 		return ($username === "") ? true : false;
 	}
 
-	public function unsetCookieLogin() {
+	public function unsetCookieLogin() : void {
 		$this->session->setSessionLoggedOut();
 		$this->session->unsetSessionMessageClass();
 		$this->session->setSessionUserMessage("");
@@ -66,31 +66,27 @@ class CookieView {
 
     public function setCookieForUser() : void {
 		$this->createCookie($this->session->getSessionUsername());
-	}
+    }
 
-    public function setSessionLogoutMessage() : void {
-		$this->logOutUser();
-		$this->session->setSessionUserMessage("Bye bye!");
-		$this->session->setSessionMessageClass("alert-success");
-	}
-
-    private function logOutUser() : void {
+    private function logOutUser() : void { 
         $this->session->setSessionUserName("");
         $this->session->setSessionLoggedOut();
         $this->removeCookie();
     }
+
+    public function setSessionLogoutMessage() : void { 
+		$this->logOutUser();
+		$this->session->setSessionUserMessage("Bye bye!");
+		$this->session->setSessionMessageClass("alert-success");
+	}
     
     private function foundCookieIssues($username, $generatedKey) : bool {
-
 		$retrievedUserToken = $this->database->getTokenForUser($username);
 		if (!password_verify(($retrievedUserToken . $this->session->getUserAgent()), $generatedKey)) {
 			return true;
 		}
 		$retrievedCookieExpireTime = intval($this->database->getCookieExpiretimeForUser($username));
-		if (time() > $retrievedCookieExpireTime) {
-			return true;
-		}
-		return false;
+		return time() > $retrievedCookieExpireTime ? true : false;
     }
     private function createCookie($username) : void {
 		$token = random_bytes(60);

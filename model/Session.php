@@ -14,7 +14,6 @@ class Session {
 
     public function getSessionUsername() : string  {
         return isset($_SESSION["user"]["username"]) ? $_SESSION["user"]["username"] : "";
-        
     }
 
     public function unsetSessionUsername() : void {

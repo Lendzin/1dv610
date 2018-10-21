@@ -16,7 +16,7 @@ class LayoutView {
         $this->session = $session;
     }
   
-    public function render() {
+    public function render() : void {
         echo 
         '<!DOCTYPE html>
         <html lang="en">
@@ -41,24 +41,21 @@ class LayoutView {
             </body>
         </html>';
     }
-    private function renderLinks() {
+    private function renderLinks() : string {
         if (!$this->session->userIsValidated()) {
-            if ($this->loginView->userWantsToRegister()) {
-                return '<a href="?" class="links">Back to login</a>';
-            } else return '<a href="index.php?register" class="links">Register a new user</a>';
+            return $this->loginView->userWantsToRegister() ? '<a href="?" class="links">Back to login</a>' 
+            : '<a href="index.php?register" class="links">Register a new user</a>';
         }
     }
   
-    private function renderIsLoggedIn() {
-        if ($this->session->userIsValidated()) {
-            return '<h2 class="loggedIn">Logged in</h2>';
-        } else return '<h2 class="notLoggedIn">Not logged in</h2>';
+    private function renderIsLoggedIn() : string {
+        return $this->session->userIsValidated() ? '<h2 class="loggedIn">Logged in</h2>' 
+        : '<h2 class="notLoggedIn">Not logged in</h2>';
     }
 
     private function selectView() {
-        if ($this->loginView->userWantsToRegister()) {
-            return $this->registerView->response();
-        } else return $this->loginView->response();
+        return $this->loginView->userWantsToRegister() ? $this->registerView->response() 
+        : $this->loginView->response();
     }
 
     public function renderTimeTag() {

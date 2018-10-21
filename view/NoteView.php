@@ -37,41 +37,41 @@ class NoteView {
         $this->messages = $this->database->getMessages();
     }
 
-    public function addMessageToDatabase() {
+    public function addMessageToDatabase() : void {
         $this->database->saveMessageForUser($this->getFormAddMessage(), $this->session->getSessionUsername());
         $this->forceGetRequestOnRefresh();
     }
-    public function deleteActiveMessage() {
+    public function deleteActiveMessage() : void {
         $this->database->deleteMessageWithId($this->getFormMessageId(), $this->session->getSessionUsername());
         $this->forceGetRequestOnRefresh();
     }
 
-    public function editActiveMessage() {
+    public function updateActiveMessage() : void {
         $this->database->updateMessageWithId($this->getFormAddMessage(), $this->getFormMessageId());
         $this->forceGetRequestOnRefresh();
     }
 
-    public function render() {
+    public function render() : string {
         return $this->session->userIsValidated() ? $this->renderLoggedIn() : $this->renderLoggedOut();
     }
     private function userWantsToEdit() {
         return isset($_POST[self::$edit]);
     }
 
-    private function forceGetRequestOnRefresh() {
+    private function forceGetRequestOnRefresh() : void {
         header('Location: ?');
         exit();
     }
 
-    private function getFormAddMessage() {
-        return isset($_POST[self::$message]) ? $_POST[self::$message] : null;
+    private function getFormAddMessage() : string {
+        return isset($_POST[self::$message]) ? $_POST[self::$message] : "";
     }
     
-    private function getFormMessageId() {
-        return isset($_POST[self::$id]) ? $_POST[self::$id] : null;
+    private function getFormMessageId() : int {
+        return isset($_POST[self::$id]) ? $_POST[self::$id] : 0; //message id can never be 0
     }
 
-    private function renderLoggedIn() {
+    private function renderLoggedIn() : string {
         $renderString = 
         '<div class="messagebox">
             <form action="?" class="messageform" method="post">
@@ -122,7 +122,7 @@ class NoteView {
         return $renderString;
     }
 
-    private function setCorrectMessageFormat($message) {
+    private function setCorrectMessageFormat($message) : string {
         $formatedMessage = "\n" . $message;
         $formatedMessage = wordwrap($formatedMessage,40,"\n", true);
         $formatedMessage = htmlentities($formatedMessage);
@@ -130,7 +130,7 @@ class NoteView {
         return $formatedMessage;
     }
 
-    private function renderLoggedOut() {
+    private function renderLoggedOut() : string {
         $renderString = '<div class="messagebox">';
         $colorNumber = 0;
         $numbOfMessages = 0;
@@ -147,19 +147,19 @@ class NoteView {
         return $renderString;
     }
 
-    private function validateUsername($username) {
+    private function validateUsername($username) : bool {
         return $username === $this->session->getSessionUsername() ? true : false;
     }
 
-    private function addStartDivBasedOn($numbOfMessages) {
+    private function addStartDivBasedOn($numbOfMessages) : string {
         return $numbOfMessages !== 0 && $numbOfMessages % 3 === 0 ? '<div class="messagebox">' : "";
     }
 
-    private function addCloseDivBasedOn($numbOfMessages) {
+    private function addCloseDivBasedOn($numbOfMessages) : string {
         return $numbOfMessages !== 0 && $numbOfMessages % 3 === 0 ? '</div>' : "";
     }
 
-    private function addEmptySpansBasedOn($numbOfMessages) {
+    private function addEmptySpansBasedOn($numbOfMessages) : string {
         $returnString = "";
         for ($i = 3 - ($numbOfMessages % 3); $i != 0; $i--) {
             $returnString .= '<span class="flexbox"></span>';
@@ -167,7 +167,7 @@ class NoteView {
         return $returnString;
     }
 
-    private function getMessageHTML($colorNumber, $message) {
+    private function getMessageHTML($colorNumber, $message) : string {
         return '<div '. $this->setColorClass($colorNumber) .
         '><p><span class="boldtext">Creator: </span>'
         . $message->getUsername() .'</p>
@@ -179,7 +179,7 @@ class NoteView {
         . $message->getEditedTimestamp() . '</p>';
     }
 
-    private function setColorClass($colorNumber) {
+    private function setColorClass($colorNumber) : string {
         return $colorNumber % 2 === 0 ? 'class="whitepost"' :  'class="bluepost"';
     }
 }
