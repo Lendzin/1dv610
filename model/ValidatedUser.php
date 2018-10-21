@@ -11,8 +11,8 @@ class ValidatedUser {
         try {
             $this->username = $username;
             $this->password = $password;
-        } catch (\Exception $error) {
-
+        } catch (Exception $error) {
+            throw new \Exception("Failed to create ValidatedUser: " . $error);
         }
 
     }

@@ -3,7 +3,7 @@ namespace model;
 
 class MessageDatabase extends Database {
 
-    public function getMessages() {
+    public function getMessages() : Array {
         $mysqli = $this->startMySQLi();
         $string = "SELECT * FROM messages";
         $result = $mysqli->query($string);
@@ -16,22 +16,22 @@ class MessageDatabase extends Database {
         return $messageArray;
     }
 
-    public function updateMessageWithId($message, $id) {
+    public function updateMessageWithId(string $message, int $id) {
         $statement = "UPDATE messages SET message = ? WHERE id = ?";
         $this->executeFirstOnSecondByStatement($message, $id, $statement);
     }
 
-    public function saveMessageForUser($message, $username) {
+    public function saveMessageForUser(string $message, string $username) {
         $statement = "INSERT INTO messages (message, username) VALUES (?,?)";
         $this->executeFirstOnSecondByStatement($message, $username, $statement);
     }
 
-    public function deleteMessageWithId($id, $username) {
+    public function deleteMessageWithId(string $id, string $username) {
         $statement = "DELETE FROM messages WHERE id = ? AND username = ?";
         $this->executeFirstOnSecondByStatement($id, $username, $statement);
     }
 
-    private function executeFirstOnSecondByStatement($first, $second, $statement) {
+    private function executeFirstOnSecondByStatement(string $first, string $second, string $statement) {
         $mysqli = $this->startMySQLi();
         try {
             if (!($prepStatement = $mysqli->prepare($statement))) {

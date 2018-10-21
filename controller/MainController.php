@@ -6,28 +6,28 @@ class MainController {
     private $cookieView;
     private $layoutView;
     private $loginView;
-    private $newsView;
+    private $noteView;
     private $registerView;
     private $feedbackController;
-    private $newsController;
+    private $noteController;
 
     public function __construct() {
         $this->session = new \model\Session();
-        $this->newsView = new \view\newsView($this->session);
+        $this->noteView = new \view\NoteView($this->session);
         $this->cookieView = new \view\CookieView($this->session);
         $this->loginView = new \view\LoginView($this->session);
         $this->registerView = new \view\RegisterView($this->session);
-        $this->newsController = new NewsController($this->newsView);
+        $this->noteController = new NoteController($this->noteView);
         $this->feedbackController = new FeedbackController($this->loginView, $this->cookieView, $this->registerView, $this->session);
-        $this->layoutView = new \view\LayoutView($this->loginView, $this->registerView, $this->newsView, $this->session);
+        $this->layoutView = new \view\LayoutView($this->loginView, $this->registerView, $this->noteView, $this->session);
     }
     
     public function run() {
         $this->feedbackController->initializeFeedback();
         if ($this->session->userIsValidated()) {
-            $this->newsController->updateNewsView();
+            $this->noteController->updatenoteView();
         }
-        $this->newsView->generateMessagesForRenderer();
+        $this->noteView->generateMessagesForRenderer();
         $this->layoutView->render();
         $this->session->unsetSessionUserMessage();
         $this->session->unsetSessionMessageClass();

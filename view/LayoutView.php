@@ -5,14 +5,14 @@ class LayoutView {
 
     private $loginView;
     private $registerView;
-    private $newsView;
+    private $noteView;
     private $session;
     private $dateObject;
 
-    public function __construct(LoginView $loginView, RegisterView $registerView, \view\NewsView $newsView, \model\Session $session) {
+    public function __construct(LoginView $loginView, RegisterView $registerView, \view\NoteView $noteView, \model\Session $session) {
         $this->loginView = $loginView;
         $this->registerView = $registerView;
-        $this->newsView = $newsView;
+        $this->noteView = $noteView;
         $this->session = $session;
     }
   
@@ -35,7 +35,7 @@ class LayoutView {
                         ' . $this->selectView() . '
                         ' . $this->renderTimeTag() . '
                     </div>
-                    ' . $this->newsView->render() . '              
+                    ' . $this->noteView->render() . '              
                 </div>
                 <div><p class="unselectable footer">js224nk@student.lnu.se | Jonas Strandqvist</p></div>
             </body>

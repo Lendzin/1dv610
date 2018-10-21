@@ -2,15 +2,15 @@
 
 namespace view;
 
-class NewsView {
+class NoteView {
 
-    private static $add = 'NewsView::AddPost';
-    private static $edit = 'NewsView::EditPost';
-    private static $save = 'NewsView::Save';
-    private static $delete = 'NewsView::DeletePost';
-    private static $message = 'NewsView::Message';
-    private static $id = 'NewsView::Id';
-    private static $cancel = "NewsView::Cancel";
+    private static $add = 'NoteView::AddPost';
+    private static $edit = 'NoteView::EditPost';
+    private static $save = 'NoteView::Save';
+    private static $delete = 'NoteView::DeletePost';
+    private static $message = 'NoteView::Message';
+    private static $id = 'NoteView::Id';
+    private static $cancel = "NoteView::Cancel";
 
     private $session;
     private $database;
