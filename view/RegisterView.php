@@ -70,6 +70,10 @@ class RegisterView {
             new \model\Username($this->user->getName());
         } catch (\model\UsernameInvalidCharsException $error) {
             array_push($errorMessages, "Username contains invalid characters.");
+        } catch (\model\UsernameTooShortException $error) {
+            //Do nothing, with these requirements.
+        } catch (\model\UserExistsException $error) {
+            //Do nothing, with these requirements.
         }
         try {
             new \model\Password($this->user->getPassword());
