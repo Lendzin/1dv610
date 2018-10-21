@@ -4,11 +4,11 @@ namespace model;
 
 class Session {
 
-    public function userIsValidated() {
+    public function userIsValidated() : bool {
         return $this->sessionLoggedIn() && $this->validateSession() ? true : false;
     }
  
-    public function setSessionUsername(string $username){
+    public function setSessionUsername(string $username) : void {
         $_SESSION["user"]["username"] = strip_tags($username);
     }
 
@@ -17,18 +17,18 @@ class Session {
         
     }
 
-    public function unsetSessionUsername() {
+    public function unsetSessionUsername() : void {
         unset($_SESSION["user"]["username"]);
     }
     
-    public function setSessionLoggedIn (bool $loginStatus) {
-        $_SESSION["user"]["loginStatus"] = $loginStatus;
+    public function setSessionLoggedIn () {
+        $_SESSION["user"]["loggedIn"] = true;
     }
 
-    public function unsetSessionLoginStatus() {
-        unset($_SESSION["user"]["loginStatus"]);
+    public function setSessionLoggedOut () {
+        $_SESSION["user"]["loggedIn"] = false;
     }
-    
+
     public function getUserAgent() : string {
         return isset($_SERVER["HTTP_USER_AGENT"]) ? $_SERVER["HTTP_USER_AGENT"] : "";
     }
@@ -37,11 +37,11 @@ class Session {
         $_SESSION["user"]["messageClass"] = $class;
     }
 
-    public function getSessionMessageClass() {
+    public function getSessionMessageClass() : string {
         return isset($_SESSION["user"]["messageClass"]) ? $_SESSION["user"]["messageClass"] : "";
     }
 
-    public function unsetSessionMessageClass() {
+    public function unsetSessionMessageClass() : void {
         unset($_SESSION["user"]["messageClass"]);
     }
 
@@ -53,20 +53,20 @@ class Session {
          return isset($_SESSION["user"]["userMessage"]) ? $_SESSION["user"]["userMessage"] : "";
     }
 
-    public function unsetSessionUserMessage() {
+    public function unsetSessionUserMessage() : void {
         unset($_SESSION["user"]["userMessage"]);
     }
 
-    public function setSessionSecurityKey() {
+    public function setSessionSecurityKey() : void {
         $_SESSION["user"]["securityKey"] = md5($_SERVER['HTTP_USER_AGENT']);
     }
 
-    private function validateSession() {
+    private function validateSession() : bool {
         return isset($_SESSION["user"]["securityKey"]) ? $this->getSessionSecurityKey() === md5($_SERVER['HTTP_USER_AGENT']) : false;
     }
 
     private function sessionLoggedIn() : bool {
-        return isset($_SESSION["user"]["loginStatus"]) ? $_SESSION["user"]["loginStatus"] : false;
+        return isset($_SESSION["user"]["loggedIn"]) ? $_SESSION["user"]["loggedIn"] : false;
     }
 
     private function getSessionSecurityKey() : string  {

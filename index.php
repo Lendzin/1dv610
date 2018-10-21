@@ -19,9 +19,14 @@ require_once('model/Database.php');
 require_once('model/UserDatabase.php');
 require_once('model/MessageDatabase.php');
 require_once('model/User.php');
+require_once('model/ValidatedUser.php');
 require_once('model/Username.php');
 require_once('model/Password.php');
 require_once('model/Message.php');
+require_once('model/errors/PasswordTooShortException.php');
+require_once('model/errors/UsernameInvalidCharsException.php');
+require_once('model/errors/UsernameTooShortException.php');
+require_once('model/errors/UserExistsException.php');
 
 //MAKE SURE ERRORS ARE SHOWN... MIGHT WANT TO TURN THIS OFF ON A PUBLIC SERVER
 // error_reporting(E_ALL);

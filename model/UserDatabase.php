@@ -8,8 +8,8 @@ class UserDatabase extends Database {
         return $dbUsername ? true : false;
     }
 
-    public function saveUserToDatabase(string $username,string $password) {
-        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+    public function saveValidatedUserToDatabase(ValidatedUser $user) {
+        $hashedPassword = password_hash($user->getValidatedPassword(), PASSWORD_DEFAULT);
         $mysqli = $this->startMySQLi();
         try {
             if (!($prepStatement = 
@@ -18,7 +18,7 @@ class UserDatabase extends Database {
             }
             $token = "";
             $cookie = "";
-            if (!$prepStatement->bind_param("ssss", $username,$hashedPassword,$token,$cookie)) {
+            if (!$prepStatement->bind_param("ssss", $user->getValidatedName(),$hashedPassword,$token,$cookie)) {
                 throw new \Exception( "Binding parameters failed: (" 
                 . $prepStatement->errno . ") " . $prepStatement->error);
             }
@@ -49,12 +49,12 @@ class UserDatabase extends Database {
         $this->updateVariableInDatabase($username, $token, $tokenStatement);
     }
 
-    public function saveExpiretimeToDatabase(string $username,string $time) {
+    public function saveExpiretimeToDatabase(string $username, string $time) {
         $timeStatement = "UPDATE users SET cookie = ? WHERE username = ?";
         $this->updateVariableInDatabase($username, $time, $timeStatement);
     }
 
-    private function getItemFromDatabase($username, $itemFromDatabase) {
+    private function getItemFromDatabase(string $username, string $itemFromDatabase) {
         $mysqli = $this->startMySQLi();
         try {
             if (!($prepStatement = $mysqli->prepare("SELECT * FROM users WHERE username =?"))) {

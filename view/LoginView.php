@@ -138,7 +138,7 @@ class LoginView {
 		$this->session->setSessionMessageClass("alert-success");
 		$this->session->setSessionUserMessage("Welcome");
 		$this->session->setSessionSecurityKey();
-		$this->session->setSessionLoggedIn(true);
+		$this->session->setSessionLoggedIn();
 	}
 
 	public function keepUserLoggedIn() : bool{

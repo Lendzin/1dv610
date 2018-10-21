@@ -49,7 +49,7 @@ class CookieView {
 	}
 
 	public function unsetCookieLogin() {
-		$this->session->setSessionLoggedIn(false);
+		$this->session->setSessionLoggedOut();
 		$this->session->unsetSessionMessageClass();
 		$this->session->setSessionUserMessage("");
 	}
@@ -57,7 +57,7 @@ class CookieView {
 	public function setSuccessCookieLogin() : void {
 		$cookie = $_COOKIE['LoginView::CookiePassword'];
 		list ($username, $generatedKey) = explode(':', $cookie);
-		$this->session->setSessionLoggedIn(true);
+		$this->session->setSessionLoggedIn();
 		$this->session->setSessionUsername($username);
 		$this->session->setSessionSecurityKey();
 		$this->session->setSessionMessageClass("alert-success");
@@ -76,7 +76,7 @@ class CookieView {
 
     private function logOutUser() : void {
         $this->session->setSessionUserName("");
-        $this->session->setSessionLoggedIn(false);
+        $this->session->setSessionLoggedOut();
         $this->removeCookie();
     }
     

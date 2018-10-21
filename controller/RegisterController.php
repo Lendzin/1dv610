@@ -15,7 +15,7 @@ class RegisterController {
             $this->registerView->setRegisterVariables();
             $this->registerView->setRegisterErrorMessages();
             if ($this->registerView->userIsAccepted()) {
-                $this->registerView->saveUser();
+                $this->registerView->saveValidatedUser();
                 $this->registerView->setRegisterSuccessResponse();
                 $this->registerView->setUserNameInForm();
                 $this->registerView->unsetRegister();

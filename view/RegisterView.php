@@ -57,6 +57,7 @@ class RegisterView {
         $this->rePassword = $this->getPasswordRepeat();
     }
 
+
     public function setRegisterErrorMessages() : void {
         $errorMessages = [];
         if ($this->database->userExistsInDatabase($this->user->getName())) {
@@ -66,13 +67,13 @@ class RegisterView {
             array_push($errorMessages, "Username has too few characters, at least 3 characters.");
         }
         try {
-            $UserName = new \model\Username($this->user->getName());
-        } catch (\Exception $error) {
+            new \model\Username($this->user->getName());
+        } catch (\model\UsernameInvalidCharsException $error) {
             array_push($errorMessages, "Username contains invalid characters.");
         }
         try {
-            $UserPassword = new \model\Password($this->user->getPassword());
-        } catch (\Exception $error) {
+            new \model\Password($this->user->getPassword());
+        } catch (\model\PasswordTooShortException $error) {
             array_push($errorMessages, "Password has too few characters, at least 6 characters.");
         }
         if ($this->user->getPassword() !== $this->rePassword) {
@@ -85,8 +86,11 @@ class RegisterView {
         return count($this->errorMessages) === 0 ? true : false;
     }
 
-    public function saveUser() {
-        $this->database->saveUserToDatabase($this->user->getName(), $this->user->getPassword());
+    public function saveValidatedUser() {
+        $user = new \model\ValidatedUser(new \model\Username($this->user->getName())
+        , new \model\Password($this->user->getPassword()));
+        var_dump($user);
+        $this->database->saveValidatedUserToDatabase($user);
     }
 
     public function setRegisterSuccessResponse() {
