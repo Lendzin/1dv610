@@ -33,7 +33,7 @@ try {
     $mainController->run();
 } catch (Exception $error) {
     // LOG ERROR 
-    // haven't found how to log an error in nginx without throwing.
+    // haven't found how to log an error in nginx without throwing, and throwing negates reset.
     header('Location: ?'); // reset app on error, untested.
     exit();
 }
