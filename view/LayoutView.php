@@ -46,6 +46,7 @@ class LayoutView {
             return $this->loginView->userWantsToRegister() ? '<a href="?" class="links">Back to login</a>' 
             : '<a href="index.php?register" class="links">Register a new user</a>';
         }
+        return "";
     }
   
     private function renderIsLoggedIn() : string {
