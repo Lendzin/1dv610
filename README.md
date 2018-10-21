@@ -30,7 +30,7 @@ https://github.com/dntoll/1dv610/blob/master/assignments/A2_resources/startup.zi
 <h3>Manual and Automated testing for the login application</h3>
 
 1. Manual: https://github.com/dntoll/1dv610/blob/master/assignments/A2_resources/TestCases.md
-(this will not look the same using the "styles.css" file, included in this release)
+<br>(this will not look the same using the "styles.css" file, included in this release)
 2. Automated: http://csquiz.lnu.se:25083/index.php fill out username/password, aswell as server adress.
 
 <h3>Manual Testing of extended use cases</h3>
