@@ -25,7 +25,7 @@ class MainController {
     public function run() {
         $this->feedbackController->initializeFeedback();
         if ($this->session->userIsValidated()) {
-            $this->noteController->updatenoteView();
+            $this->noteController->updateNoteView();
         }
         $this->noteView->generateMessagesForRenderer();
         $this->layoutView->render();

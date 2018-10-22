@@ -18,13 +18,6 @@ class LoginView {
 		$this->database = new \model\UserDatabase();
 	}
 
-	/**
-	 * Create HTTP response
-	 *
-	 * Should be called after a login attempt has been determined
-	 *
-	 * @return  void BUT writes to standard output and cookies!
-	 */
 	public function response() {
 		$response = '';
 		if ($this->session->userIsValidated()) {
@@ -35,11 +28,6 @@ class LoginView {
 		return $response;
 	}
 
-	/**
-	* Generate HTML code on the output buffer for the logout button
-	* @param $message, String output message
-	* @return  void, BUT writes to standard output!
-	*/
 	private function generateLogoutButtonHTML() {
 		$string ="";
 		if ($this->session->getSessionUsername() != "") {
@@ -56,11 +44,6 @@ class LoginView {
 		';
 	}
 	
-	/**
-	* Generate HTML code on the output buffer for the logout button
-	* @param $message, String output message
-	* @return  void, BUT writes to standard output!
-	*/
 	private function generateLoginFormHTML() {
 
 		return '
